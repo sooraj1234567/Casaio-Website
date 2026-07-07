@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+
+{% block title %}Verify OTP{% endblock %}
+
+{% block content %}
+
+<div class="container mt-5" style="max-width:500px;">
+
+    <div class="card shadow p-4">
+
+        <h2 class="text-center mb-4">Email Verification</h2>
+
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-info">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        <form method="POST">
+
+            {% csrf_token %}
+
+            <input
+                type="text"
+                name="otp"
+                class="form-control mb-3"
+                placeholder="Enter 6-digit OTP"
+                required
+            >
+
+            <button class="btn btn-warning w-100">
+                Verify OTP
+            </button>
+
+        </form>
+
+    </div>
+
+</div>
+
+{% endblock %}

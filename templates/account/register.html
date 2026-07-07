@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Register{% endblock %}
+
+{% block content %}
+
+<div class="container mt-5 mb-5">
+
+	<div class="row justify-content-center">
+
+		<div class="col-md-6">
+
+			<div class="card shadow-lg border-0 rounded-4 p-4">
+
+				<h2 class="text-center mb-4">Create Account</h2>
+
+				{% if messages %}
+				{% for message in messages %}
+				<div class="alert alert-info">
+					{{ message }}
+				</div>
+				{% endfor %}
+				{% endif %}
+
+				<form method="POST">
+
+					{% csrf_token %}
+
+					<div class="mb-3">
+						<label>Username</label>
+						<input type="text" name="username" class="form-control" required="">
+                    </div>
+
+					<div class="mb-3">
+						<label>Email</label>
+						<input type="email" name="email" class="form-control" required="">
+                    </div>
+
+					<div class="mb-3">
+						<label>Password</label>
+						<input type="password" name="password" class="form-control" required="">
+                    </div>
+
+					<button class="btn btn-warning w-100">
+						Register
+					</button>
+
+				</form>
+
+				<div class="text-center mt-3">
+					Already have an account?
+					<a href="{% url 'login' %}">Login</a>
+				</div>
+
+			</div>
+
+		</div>
+
+	</div>
+
+</div>
+
+{% endblock %}

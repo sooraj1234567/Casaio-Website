@@ -1,0 +1,180 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>{% block title %}Casaio{% endblock %}</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="{% static 'css/login.css' %}">
+
+    <style>
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+            font-family:'Poppins',sans-serif;
+        }
+
+        body{
+            background:#f8f9fa;
+            color:#333;
+        }
+
+        :root{
+            --primary:#ff6a00;
+            --secondary:#4a4a4a;
+            --light:#ffffff;
+            --background:#f8f9fa;
+        }
+
+        .navbar{
+            background:white;
+            box-shadow:0 2px 12px rgba(0,0,0,.08);
+        }
+
+        .navbar-brand{
+            font-size:28px;
+            font-weight:700;
+            color:var(--primary)!important;
+        }
+
+        .nav-link{
+            color:#555!important;
+            font-weight:500;
+        }
+
+        .nav-link:hover{
+            color:var(--primary)!important;
+        }
+
+        .btn-casaio{
+            background:var(--primary);
+            color:white;
+            border:none;
+            border-radius:10px;
+            padding:10px 24px;
+            font-weight:600;
+            transition:.3s;
+        }
+
+        .btn-casaio:hover{
+            background:#e65c00;
+            color:white;
+        }
+
+        .card{
+            border:none;
+            border-radius:18px;
+            box-shadow:0 8px 25px rgba(0,0,0,.08);
+        }
+
+        footer{
+            background:#212529;
+            color:white;
+            padding:25px;
+            margin-top:60px;
+            text-align:center;
+        }
+    </style>
+
+    {% block css %}{% endblock %}
+
+</head>
+<body>
+
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg sticky-top">
+    <div class="container">
+
+        <img src="{% static 'images/logo.png' %}" alt="Casaio" class="navbar-brand" href="/" width="150px">
+
+        <button class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#menu">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="menu">
+
+            <ul class="navbar-nav ms-auto">
+
+                <li class="nav-item">
+                    <a class="nav-link" href="/">Home</a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Products</a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Categories</a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'login' %}">
+                        Login
+                    </a>
+                </li>
+
+                <li class="nav-item ms-2">
+                    <a href="{% url 'register' %}" class="btn btn-casaio">
+                        Register
+                    </a>
+                </li>
+
+            </ul>
+
+        </div>
+
+    </div>
+</nav>
+
+<!-- Messages -->
+<div class="container mt-3">
+
+{% if messages %}
+    {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}">
+            {{ message }}
+        </div>
+    {% endfor %}
+{% endif %}
+
+</div>
+
+<!-- Main Content -->
+<div class="container my-5">
+
+    {% block content %}
+    {% endblock %}
+
+</div>
+
+<!-- Footer -->
+<footer>
+
+    <h5>Casaio</h5>
+
+    <p>Your Premium Shopping Destination.</p>
+
+    <small>© 2026 Casaio. All Rights Reserved.</small>
+
+</footer>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
+
+{% block js %}
+{% endblock %}
+
+</body>
+</html>
