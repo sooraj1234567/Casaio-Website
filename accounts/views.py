@@ -91,3 +91,6 @@ def user_login(request):
 
 def user_logout(request):
     return render(request, "account/logout.html")
+
+def home(request):
+    return render(request, 'home/home.html')

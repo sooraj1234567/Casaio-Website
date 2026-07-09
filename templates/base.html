@@ -16,7 +16,16 @@
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
+    <link
+  rel="stylesheet"
+  href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"
+/>
+
+<link rel="stylesheet"
+href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
     <link rel="stylesheet" href="{% static 'css/login.css' %}">
+    <link rel="stylesheet" href="{% static 'css/home.css' %}">
 
     <style>
         *{
@@ -175,6 +184,49 @@
 
 {% block js %}
 {% endblock %}
+
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+
+<script>
+
+const swiper = new Swiper(".arrivalSwiper", {
+
+    loop:true,
+
+    spaceBetween:25,
+
+    navigation:{
+        nextEl:".swiper-button-next",
+        prevEl:".swiper-button-prev",
+    },
+
+    breakpoints:{
+
+        0:{
+            slidesPerView:1
+        },
+
+        576:{
+            slidesPerView:2
+        },
+
+        768:{
+            slidesPerView:2
+        },
+
+        992:{
+            slidesPerView:3
+        },
+
+        1200:{
+            slidesPerView:4
+        }
+
+    }
+
+});
+
+</script>
 
 </body>
 </html>
