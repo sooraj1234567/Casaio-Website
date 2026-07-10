@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Login OTP{% endblock %}
+
+{% block content %}
+
+<section class="otp-section">
+
+    <div class="container">
+
+        <div class="row justify-content-center">
+
+            <div class="col-md-5">
+
+                <div class="otp-card">
+
+                    <h2>Email Verification</h2>
+
+                    <p>
+                        Enter the OTP sent to your registered email.
+                    </p>
+
+                    <form method="POST">
+
+                        {% csrf_token %}
+
+                        <input
+                            type="text"
+                            name="otp"
+                            class="form-control mb-3"
+                            placeholder="Enter OTP"
+                            maxlength="6"
+                            required
+                        >
+
+                        <button class="btn btn-warning w-100">
+                            Verify OTP
+                        </button>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+{% endblock %}

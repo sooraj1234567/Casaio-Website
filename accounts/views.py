@@ -73,24 +73,171 @@ def verify_otp(request):
     return render(request, "account/verify_otp.html")
 
 def user_login(request):
+
     if request.method == "POST":
+
         username = request.POST["username"]
         password = request.POST["password"]
 
-        user = authenticate(request, username=username, password=password)
+        user = authenticate(
+            request,
+            username=username,
+            password=password
+        )
 
-        if user is not None:
-            login(request, user)
-            messages.success(request, "Login successful")
-            return redirect("/home")  # Redirect to a home page or dashboard
+        if user:
+
+            otp = str(random.randint(100000,999999))
+
+            otp_storage[user.email] = {
+                "otp": otp,
+                "user_id": user.id
+            }
+
+            request.session["login_email"] = user.email
+
+            send_mail(
+                subject="Casaio Login OTP",
+                message=f"Your login OTP is: {otp}",
+                from_email=settings.EMAIL_HOST_USER,
+                recipient_list=[user.email],
+                fail_silently=False,
+            )
+
+            messages.success(request,"OTP sent to your email.")
+
+            return redirect("login_otp")
+
         else:
-            messages.error(request, "Invalid username or password")
 
-    return render(request, "account/login.html")
+            messages.error(request,"Invalid username or password")
 
+    return render(request,"account/login.html")
+
+def login_otp(request):
+
+    if request.method == "POST":
+
+        entered_otp = request.POST["otp"]
+
+        email = request.session.get("login_email")
+
+        if email in otp_storage:
+
+            if otp_storage[email]["otp"] == entered_otp:
+
+                user = User.objects.get(
+                    id=otp_storage[email]["user_id"]
+                )
+
+                login(request,user)
+
+                del otp_storage[email]
+
+                messages.success(request,"Login Successful")
+
+                return redirect("home")
+
+            else:
+
+                messages.error(request,"Invalid OTP")
+
+    return render(request,"account/login_otp.html")
 
 def user_logout(request):
     return render(request, "account/logout.html")
 
 def home(request):
     return render(request, 'home/home.html')
+
+def forgot_password(request):
+
+    if request.method == "POST":
+
+        email = request.POST["email"]
+
+        try:
+
+            user = User.objects.get(email=email)
+
+            otp = str(random.randint(100000,999999))
+
+            otp_storage[email] = {
+                "otp": otp,
+                "user_id": user.id,
+                "purpose": "forgot_password"
+            }
+
+            request.session["reset_email"] = email
+
+            send_mail(
+                subject="Casaio Password Reset OTP",
+                message=f"Your OTP is: {otp}",
+                from_email=settings.EMAIL_HOST_USER,
+                recipient_list=[email],
+                fail_silently=False,
+            )
+
+            messages.success(request,"OTP sent successfully.")
+
+            return redirect("forgot_password_otp")
+
+        except User.DoesNotExist:
+
+            messages.error(request,"Email not registered.")
+
+    return render(request,"account/forgot_password.html")
+
+def forgot_password_otp(request):
+
+    if request.method == "POST":
+
+        entered_otp = request.POST["otp"]
+        email = request.session.get("reset_email")
+
+        if email in otp_storage:
+
+            if (
+                otp_storage[email]["otp"] == entered_otp
+                and otp_storage[email]["purpose"] == "forgot_password"
+            ):
+
+                return redirect("reset_password")
+
+            else:
+                messages.error(request, "Invalid OTP")
+
+    return render(request, "account/forgot_password_otp.html")
+
+def reset_password(request):
+
+    email = request.session.get("reset_email")
+
+    if not email:
+        messages.error(request, "Session expired.")
+        return redirect("forgot_password")
+
+    if request.method == "POST":
+
+        password = request.POST["password"]
+        confirm = request.POST["confirm_password"]
+
+        if password != confirm:
+            messages.error(request, "Passwords do not match")
+            return redirect("reset_password")
+
+        user = User.objects.get(email=email)
+
+        user.set_password(password)
+        user.save()
+
+        if email in otp_storage:
+            del otp_storage[email]
+
+        request.session.pop("reset_email", None)
+
+        messages.success(request, "Password updated successfully")
+
+        return redirect("login")
+
+    return render(request, "account/reset_password.html")

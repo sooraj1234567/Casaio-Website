@@ -1,64 +1,118 @@
-{% extends "base.html" %}
+{% extends 'base.html' %}
 {% load static %}
 
-{% block title %}Register{% endblock %}
+{% block title %}Register | Casaio{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/register.css' %}">
+{% endblock %}
 
 {% block content %}
 
-<div class="container mt-5 mb-5">
+<section class="register-section">
+    <div class="container">
+        <div class="row justify-content-center align-items-center">
 
-	<div class="row justify-content-center">
+            <div class="col-lg-6 col-md-8 col-sm-10">
 
-		<div class="col-md-6">
+                <div class="register-card">
 
-			<div class="card shadow-lg border-0 rounded-4 p-4">
-
-				<h2 class="text-center mb-4">Create Account</h2>
-
-				{% if messages %}
-				{% for message in messages %}
-				<div class="alert alert-info">
-					{{ message }}
-				</div>
-				{% endfor %}
-				{% endif %}
-
-				<form method="POST">
-
-					{% csrf_token %}
-
-					<div class="mb-3">
-						<label>Username</label>
-						<input type="text" name="username" class="form-control" required="">
+                    <div class="text-center mb-4">
+                        <h2>Create Your Account</h2>
+                        <p>Join Casaio and start shopping with us.</p>
                     </div>
 
-					<div class="mb-3">
-						<label>Email</label>
-						<input type="email" name="email" class="form-control" required="">
+                    <!-- Django Messages -->
+                    {% if messages %}
+                        {% for message in messages %}
+                            <div class="alert alert-{{ message.tags }}">
+                                {{ message }}
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+
+                    <form method="POST">
+                        {% csrf_token %}
+
+                        <!-- Username -->
+                        <div class="mb-3">
+                            <label class="form-label">Username</label>
+                            <input
+                                type="text"
+                                class="form-control"
+                                name="username"
+                                placeholder="Enter your username"
+                                required
+                            >
+                        </div>
+
+                        <!-- Email -->
+                        <div class="mb-3">
+                            <label class="form-label">Email Address</label>
+                            <input
+                                type="email"
+                                class="form-control"
+                                name="email"
+                                placeholder="Enter your email"
+                                required
+                            >
+                        </div>
+
+                        <!-- Password -->
+                        <div class="mb-4">
+                            <label class="form-label">Password</label>
+
+                            <div class="password-wrapper">
+
+                                <input
+                                    type="password"
+                                    class="form-control"
+                                    id="password"
+                                    name="password"
+                                    placeholder="Create a password"
+                                    required
+                                >
+
+                                <span class="toggle-password" onclick="togglePassword()">
+                                    👁
+                                </span>
+
+                            </div>
+                        </div>
+
+                        <!-- Register Button -->
+                        <button type="submit" class="register-btn">
+                            Create Account
+                        </button>
+
+                    </form>
+
+                    <div class="login-link">
+                        Already have an account?
+                        <a href="{% url 'login' %}">
+                            Login
+                        </a>
                     </div>
 
-					<div class="mb-3">
-						<label>Password</label>
-						<input type="password" name="password" class="form-control" required="">
-                    </div>
+                </div>
 
-					<button class="btn btn-warning w-100">
-						Register
-					</button>
+            </div>
 
-				</form>
+        </div>
+    </div>
+</section>
 
-				<div class="text-center mt-3">
-					Already have an account?
-					<a href="{% url 'login' %}">Login</a>
-				</div>
+<script>
+function togglePassword() {
 
-			</div>
+    const password = document.getElementById("password");
 
-		</div>
-
-	</div>
-
-</div>
+    if (password.type === "password") {
+        password.type = "text";
+    } else {
+        password.type = "password";
+    }
+}
+</script>
 
 {% endblock %}

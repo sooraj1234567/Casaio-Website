@@ -1,11 +1,12 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load socialaccount %}
 
 {% block title %}Login{% endblock %}
 
-{% block content %}
-
 <div class="login-container">
+
+{% block content %}
 
     <div class="login-card">
 
@@ -49,16 +50,16 @@
               <span>OR</span>
             </div>
 
-            <button type="button" class="google-btn">
-                <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/google/google-original.svg" width="20">
+            <a href="{% provider_login_url 'google' %}" class="google-btn">
+                <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/google/google-original.svg" width="20" alt="Google">
                 Continue with Google
-            </button>
+            </a>
 
         </form>
 
         <div class="extra-links">
 
-            <a href="#">
+            <a href="{% url 'forgot_password' %}">
                 Forgot Password?
             </a>
 
@@ -72,6 +73,8 @@
         </div>
 
     </div>
+
+    {% endblock %}
 
 </div>
 
@@ -90,4 +93,3 @@
     }
     </script>
 
-{% endblock %}
