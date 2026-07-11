@@ -1,0 +1,100 @@
+{% load static %}
+
+<header class="main-header">
+
+    <div class="container">
+
+        <div class="header-wrapper">
+
+            <!-- Logo -->
+            <div class="logo">
+
+                <a href="/">
+
+                    <img src="{% static 'images/logo.png' %}" alt="Casaio">
+
+                </a>
+
+            </div>
+
+            <!-- Search -->
+            <div class="header-search">
+
+                <form action="#" method="GET">
+
+                    <input
+                        type="text"
+                        name="q"
+                        placeholder="Search for products...">
+
+                    <select name="category">
+
+                        <option value="">All Categories</option>
+                        <option>Kitchen</option>
+                        <option>Furniture</option>
+                        <option>Home Decor</option>
+                        <option>Lighting</option>
+                        <option>Storage</option>
+
+                    </select>
+
+                    <button type="submit">
+
+                        <i class="bi bi-search"></i>
+
+                    </button>
+
+                </form>
+
+            </div>
+
+            <!-- Icons -->
+            <div class="header-icons">
+
+                {% if user.is_authenticated %}
+
+                <a href="#" class="icon-box">
+
+                    <i class="bi bi-person-circle"></i>
+
+                    <span>Account</span>
+
+                </a>
+
+                {% else %}
+
+                <a href="{% url 'login' %}" class="icon-box">
+
+                    <i class="bi bi-person"></i>
+
+                    <span>Sign In</span>
+
+                </a>
+
+                {% endif %}
+
+                <a href="#" class="icon-box">
+
+                    <i class="bi bi-heart"></i>
+
+                    <span>Wishlist</span>
+
+                </a>
+
+                <a href="#" class="icon-box cart-icon">
+
+                    <i class="bi bi-cart3"></i>
+
+                    <span>Cart</span>
+
+                    <span class="cart-count">0</span>
+
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</header>

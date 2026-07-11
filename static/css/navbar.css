@@ -1,0 +1,65 @@
+/* ==========================
+NAVBAR
+========================== */
+
+.casaio-navbar{
+    background:#fff;
+    border-top:1px solid #eee;
+    border-bottom:1px solid #eee;
+    box-shadow:0 3px 12px rgba(0,0,0,.05);
+    position:sticky;
+    top:0;
+    z-index:999;
+}
+
+.casaio-navbar .nav-link{
+    color:#333;
+    font-weight:500;
+    padding:16px 18px;
+    transition:.3s;
+}
+
+.casaio-navbar .nav-link:hover,
+.casaio-navbar .nav-link.active{
+    color:#ff6a00;
+}
+
+.casaio-navbar .dropdown-menu{
+    border-radius:12px;
+}
+
+.casaio-navbar .dropdown-item{
+    padding:10px 18px;
+    transition:.3s;
+}
+
+.casaio-navbar .dropdown-item:hover{
+    background:#ff6a00;
+    color:#fff;
+}
+
+.casaio-navbar .btn-warning{
+    background:#ff6a00;
+    border:none;
+}
+
+.casaio-navbar .btn-warning:hover{
+    background:#e65c00;
+}
+
+.welcome-user{
+    font-weight:600;
+    color:#333;
+}
+
+@media(max-width:991px){
+
+    .casaio-navbar .nav-link{
+        padding:10px 0;
+    }
+
+    .casaio-navbar .d-flex{
+        margin-top:15px;
+    }
+
+}
