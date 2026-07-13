@@ -3,116 +3,220 @@
 
 {% block title %}Register | Casaio{% endblock %}
 
-{% block extra_css %}
-<link rel="stylesheet" href="{% static 'css/register.css' %}">
-{% endblock %}
-
 {% block content %}
 
-<section class="register-section">
-    <div class="container">
-        <div class="row justify-content-center align-items-center">
+<div id="container" class="auth-container">
 
-            <div class="col-lg-6 col-md-8 col-sm-10">
+    <!-- Left Side -->
 
-                <div class="register-card">
+    <div class="auth-left">
 
-                    <div class="text-center mb-4">
-                        <h2>Create Your Account</h2>
-                        <p>Join Casaio and start shopping with us.</p>
+        <div class="left-content">
+
+            <img src="{% static 'images/logo.png' %}"
+                 class="auth-logo"
+                 alt="Casaio">
+
+            <h1>Join Casaio Today!</h1>
+
+            <p>
+
+                Create your Casaio account and enjoy premium shopping with secure payments,
+                exclusive offers and lightning-fast delivery.
+
+            </p>
+
+            <ul class="features">
+
+                <li>✔ Exclusive Member Offers</li>
+
+                <li>✔ Fast Delivery</li>
+
+                <li>✔ Secure Payments</li>
+
+                <li>✔ Easy Returns</li>
+
+            </ul>
+
+        </div>
+
+    </div>
+
+    <!-- Right Side -->
+
+    <div class="auth-right">
+
+        <div class="form-box">
+
+            <h2>Create Account</h2>
+
+            <p>
+
+                Fill in your details to create your Casaio account.
+
+            </p>
+
+            <!-- Django Messages -->
+
+            {% if messages %}
+
+                {% for message in messages %}
+
+                    <div class="alert alert-{{ message.tags }}">
+
+                        {{ message }}
+
                     </div>
 
-                    <!-- Django Messages -->
-                    {% if messages %}
-                        {% for message in messages %}
-                            <div class="alert alert-{{ message.tags }}">
-                                {{ message }}
-                            </div>
-                        {% endfor %}
-                    {% endif %}
+                {% endfor %}
 
-                    <form method="POST">
-                        {% csrf_token %}
+            {% endif %}
 
-                        <!-- Username -->
-                        <div class="mb-3">
-                            <label class="form-label">Username</label>
-                            <input
-                                type="text"
-                                class="form-control"
-                                name="username"
-                                placeholder="Enter your username"
-                                required
-                            >
-                        </div>
+            <!-- Register Form -->
 
-                        <!-- Email -->
-                        <div class="mb-3">
-                            <label class="form-label">Email Address</label>
-                            <input
-                                type="email"
-                                class="form-control"
-                                name="email"
-                                placeholder="Enter your email"
-                                required
-                            >
-                        </div>
+            <form method="POST">
 
-                        <!-- Password -->
-                        <div class="mb-4">
-                            <label class="form-label">Password</label>
+                {% csrf_token %}
 
-                            <div class="password-wrapper">
+                <!-- Username -->
 
-                                <input
-                                    type="password"
-                                    class="form-control"
-                                    id="password"
-                                    name="password"
-                                    placeholder="Create a password"
-                                    required
-                                >
+                <input
+                    type="text"
+                    class="form-control"
+                    name="username"
+                    placeholder="Enter Username"
+                    required>
 
-                                <span class="toggle-password" onclick="togglePassword()">
-                                    👁
-                                </span>
+                <!-- Email -->
 
-                            </div>
-                        </div>
+                <input
+                    type="email"
+                    class="form-control"
+                    name="email"
+                    placeholder="Enter Email Address"
+                    required>
 
-                        <!-- Register Button -->
-                        <button type="submit" class="register-btn">
-                            Create Account
-                        </button>
+                <!-- Password -->
 
-                    </form>
+                <div class="password-box">
 
-                    <div class="login-link">
-                        Already have an account?
-                        <a href="{% url 'login' %}">
-                            Login
-                        </a>
-                    </div>
+                    <input
+                        type="password"
+                        id="password"
+                        class="form-control"
+                        name="password"
+                        placeholder="Create Password"
+                        required>
+
+                    <span class="toggle-password"
+                          onclick="togglePassword()">
+
+                        <i class="bi bi-eye"></i>
+
+                    </span>
 
                 </div>
+
+                <!-- Terms -->
+
+                <div class="remember-row">
+
+                    <label>
+
+                        <input type="checkbox" required>
+
+                        I agree to the Terms & Conditions
+
+                    </label>
+
+                </div>
+
+                <!-- Register Button -->
+
+                <button type="submit">
+
+                    Create Account
+
+                </button>
+
+            </form>
+
+            <!-- Divider -->
+
+            <div class="divider">
+
+                <span>OR</span>
+
+            </div>
+
+            <!-- Google Signup Button (UI only) -->
+
+            {% load socialaccount %}
+
+<a href="{% provider_login_url 'google' %}" class="google-btn">
+
+    <img
+        src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/google/google-original.svg"
+        alt="Google">
+
+    Continue with Google
+
+</a>
+
+            <!-- Login Link -->
+
+            <div class="bottom-text">
+
+                Already have an account?
+
+                <a href="{% url 'login' %}">
+
+                    Login
+
+                </a>
 
             </div>
 
         </div>
+
     </div>
-</section>
+
+</div>
+
+{% endblock %}
+
+{% block js %}
 
 <script>
-function togglePassword() {
 
-    const password = document.getElementById("password");
+function togglePassword(){
 
-    if (password.type === "password") {
-        password.type = "text";
-    } else {
-        password.type = "password";
+    const password=document.getElementById("password");
+
+    const icon=document.querySelector(".toggle-password i");
+
+    if(password.type==="password"){
+
+        password.type="text";
+
+        icon.classList.remove("bi-eye");
+
+        icon.classList.add("bi-eye-slash");
+
     }
+
+    else{
+
+        password.type="password";
+
+        icon.classList.remove("bi-eye-slash");
+
+        icon.classList.add("bi-eye");
+
+    }
+
 }
+
 </script>
 
 {% endblock %}
