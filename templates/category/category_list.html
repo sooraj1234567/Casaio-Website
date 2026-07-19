@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+
+{% block title %}Categories{% endblock %}
+
+{% block content %}
+
+<div class="container py-5">
+
+    <h1 class="category-title">Shop by Category</h1>
+
+    <p class="category-subtitle">
+        Discover our premium home décor and kitchen collections.
+    </p>
+
+    <div class="row g-4">
+
+        {% for category in categories %}
+
+        <div class="col-lg-4 col-md-6">
+
+            <div class="category-card">
+
+                <img src="{{ category.image.url }}"
+                     alt="{{ category.name }}"
+                     class="w-100">
+
+                <div class="category-body">
+
+                    <h5>{{ category.name }}</h5>
+
+                    <p>{{ category.description|truncatewords:15 }}</p>
+
+                    <a href="{% url 'category_detail' category.slug %}" class="category-btn">
+                    View Products
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        {% empty %}
+
+        <div class="col-12 text-center">
+            <h4>No Categories Available</h4>
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+</div>
+
+{% endblock %}

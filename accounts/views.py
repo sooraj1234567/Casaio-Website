@@ -145,6 +145,9 @@ def login_otp(request):
     return render(request,"account/login_otp.html")
 
 def user_logout(request):
+    logout(request)
+    messages.success(request, "You have been logged out successfully.")
+    return redirect("login")
     return render(request, "account/logout.html")
 
 def home(request):

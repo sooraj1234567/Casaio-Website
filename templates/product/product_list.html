@@ -1,0 +1,357 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Products | Casaio{% endblock %}
+
+
+{% block content %}
+
+<div class="product-page">
+
+    <!-- Breadcrumb -->
+
+    <div class="container">
+
+        <nav class="breadcrumb-nav">
+
+            <a href="{% url 'home' %}">Home</a>
+
+            <span>/</span>
+
+            <span>Products</span>
+
+        </nav>
+
+    </div>
+
+    <!-- Page Header -->
+
+    <div class="container page-header">
+
+        <div class="page-title">
+
+            <h2>Our Products</h2>
+
+            <p>
+                Showing {{ page_obj.paginator.count }} Products
+            </p>
+
+        </div>
+
+        <div class="page-tools">
+
+            <form method="GET" class="search-form">
+
+                {% if selected_category %}
+                <input type="hidden"
+                       name="category"
+                       value="{{ selected_category }}">
+                {% endif %}
+
+                <div class="search-box">
+
+                    <i class="fa fa-search"></i>
+
+                    <input
+                        type="text"
+                        name="search"
+                        value="{{ search }}"
+                        placeholder="Search products...">
+
+                </div>
+
+                <select
+                    name="sort"
+                    onchange="this.form.submit()">
+
+                    <option value="">Featured</option>
+
+                    <option value="low"
+                    {% if sort == "low" %}selected{% endif %}>
+                        Price: Low → High
+                    </option>
+
+                    <option value="high"
+                    {% if sort == "high" %}selected{% endif %}>
+                        Price: High → Low
+                    </option>
+
+                    <option value="new"
+                    {% if sort == "new" %}selected{% endif %}>
+                        Newest
+                    </option>
+
+                </select>
+
+            </form>
+
+        </div>
+
+    </div>
+
+    <!-- Main Content -->
+
+    <div class="container">
+
+        <div class="shop-layout">
+
+            <!-- ======================
+                 FILTER SIDEBAR
+            ======================= -->
+
+            <aside class="filters">
+
+                <div class="filter-card">
+
+                    <div class="filter-header">
+
+                        <h4>Filters</h4>
+
+                        <a href="{% url 'product_list' %}">
+                            Clear All
+                        </a>
+
+                    </div>
+
+                    <hr>
+
+                    <!-- Categories -->
+
+                    <div class="filter-section">
+
+                        <h5>Categories</h5>
+
+                        {% for category in main_categories %}
+
+                        <label class="checkbox">
+
+                            <input
+                                type="radio"
+                                name="category"
+                                onclick="window.location='?category={{ category.slug }}'"
+
+                                {% if selected_category == category.slug %}
+                                checked
+                                {% endif %}>
+
+                            <span>{{ category.name }}</span>
+
+                        </label>
+
+                        {% endfor %}
+
+                    </div>
+
+                    <hr>
+
+                    <!-- Sub Categories -->
+
+                    <div class="filter-section">
+
+                        <h5>Sub Categories</h5>
+
+                        {% for category in subcategories %}
+
+                        <label class="checkbox">
+
+                            <input
+                                type="radio"
+                                onclick="window.location='?category={{ category.slug }}'"
+
+                                {% if selected_category == category.slug %}
+                                checked
+                                {% endif %}>
+
+                            <span>{{ category.name }}</span>
+
+                        </label>
+
+                        {% endfor %}
+
+                    </div>
+
+                    <hr>
+
+                    <!-- Price -->
+
+                    <div class="filter-section">
+
+                        <h5>Price</h5>
+
+                        <label class="checkbox">
+                            <input type="checkbox">
+                            <span>Under ₹500</span>
+                        </label>
+
+                        <label class="checkbox">
+                            <input type="checkbox">
+                            <span>₹500 - ₹1000</span>
+                        </label>
+
+                        <label class="checkbox">
+                            <input type="checkbox">
+                            <span>₹1000 - ₹3000</span>
+                        </label>
+
+                        <label class="checkbox">
+                            <input type="checkbox">
+                            <span>Above ₹3000</span>
+                        </label>
+
+                    </div>
+
+                </div>
+
+            </aside>
+
+            <!-- ======================
+                 PRODUCT GRID
+            ======================= -->
+
+            <section class="products">
+
+                <div class="product-grid">
+
+                    {% for product in products %}
+
+                    <div class="product-card">
+
+                        <div class="product-image">
+
+                            <img
+                                src="{{ product.image.url }}"
+                                alt="{{ product.name }}">
+
+                            <button class="wishlist">
+
+                                <i class="far fa-heart"></i>
+
+                            </button>
+
+                        </div>
+
+                        <div class="product-content">
+
+                            <small>
+
+                                {{ product.category.name }}
+
+                            </small>
+
+                            <h3>
+
+                                {{ product.name }}
+
+                            </h3>
+
+                            <p>
+
+                                {{ product.description|truncatewords:10 }}
+
+                            </p>
+
+                            <div class="price">
+
+                                ₹{{ product.price }}
+
+                            </div>
+
+                            {% if product.stock > 0 %}
+
+                            <span class="stock in-stock">
+
+                                In Stock
+
+                            </span>
+
+                            {% else %}
+
+                            <span class="stock out-stock">
+
+                                Out of Stock
+
+                            </span>
+
+                            {% endif %}
+
+                            <a
+                                href="{% url 'product_detail' product.slug %}"
+                                class="details-btn">
+
+                                View Details
+
+                            </a>
+
+                        </div>
+
+                    </div>
+
+                    {% empty %}
+
+                    <div class="empty-products">
+
+                        <i class="fa-solid fa-box-open"></i>
+
+                        <h3>No Products Found</h3>
+
+                        <p>
+                            Try another category or search.
+                        </p>
+
+                    </div>
+
+                    {% endfor %}
+
+                </div>
+
+                <!-- Pagination -->
+
+                {% if page_obj.has_other_pages %}
+
+                <div class="pagination-box">
+
+                    {% if page_obj.has_previous %}
+
+                    <a href="?page={{ page_obj.previous_page_number }}">
+
+                        Previous
+
+                    </a>
+
+                    {% endif %}
+
+                    {% for page in page_obj.paginator.page_range %}
+
+                    <a
+                        href="?page={{ page }}"
+                        class="{% if page_obj.number == page %}active{% endif %}">
+
+                        {{ page }}
+
+                    </a>
+
+                    {% endfor %}
+
+                    {% if page_obj.has_next %}
+
+                    <a href="?page={{ page_obj.next_page_number }}">
+
+                        Next
+
+                    </a>
+
+                    {% endif %}
+
+                </div>
+
+                {% endif %}
+
+            </section>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

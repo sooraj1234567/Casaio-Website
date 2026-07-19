@@ -46,6 +46,9 @@ INSTALLED_APPS = [
     'allauth.socialaccount.providers.google',
 
     'accounts',
+    'category',
+    'product',
+    'cart',
 ]
 
 SITE_ID = 1
@@ -135,6 +138,10 @@ USE_TZ = True
 STATIC_URL = 'static/'
 
 STATICFILES_DIRS = [BASE_DIR/'static']
+
+# Media Files
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
 
 AUTH_USER_MODEL = 'accounts.CustomUser'
 

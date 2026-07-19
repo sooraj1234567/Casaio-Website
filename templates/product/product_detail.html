@@ -1,0 +1,260 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}
+{{ product.name }} | Casaio
+{% endblock %}
+
+{% block content %}
+
+<div class="container py-5">
+
+    <div class="row g-5">
+
+        <!-- =========================
+             PRODUCT IMAGE
+        ========================== -->
+
+        <div class="col-lg-6">
+
+            <!-- Main Image -->
+            <div class="border rounded shadow-sm p-2 mb-3">
+
+                <img
+                    id="main-image"
+                    src="{{ product.image.url }}"
+                    alt="{{ product.name }}"
+                    class="img-fluid rounded w-100"
+                    style="height:500px; object-fit:cover;">
+
+            </div>
+
+            <!-- Gallery -->
+
+            <div class="d-flex flex-wrap gap-3">
+
+                <!-- Main Image Thumbnail -->
+
+                <img
+                    src="{{ product.image.url }}"
+                    onclick="changeImage(this)"
+                    class="border rounded"
+                    width="90"
+                    height="90"
+                    style="object-fit:cover; cursor:pointer;">
+
+                {% for image in product.images.all %}
+
+                <img
+                    src="{{ image.image.url }}"
+                    onclick="changeImage(this)"
+                    class="border rounded"
+                    width="90"
+                    height="90"
+                    style="object-fit:cover; cursor:pointer;">
+
+                {% endfor %}
+
+            </div>
+
+        </div>
+
+        <!-- =========================
+             PRODUCT DETAILS
+        ========================== -->
+
+        <div class="col-lg-6">
+
+            <small class="text-muted">
+
+                {{ product.category.name }}
+
+            </small>
+
+            <h1 class="fw-bold mt-2">
+
+                {{ product.name }}
+
+            </h1>
+
+            <h2 class="text-warning fw-bold mt-3">
+
+                ₹{{ product.price }}
+
+            </h2>
+
+            <hr>
+
+            <p class="text-muted">
+
+                {{ product.description }}
+
+            </p>
+
+            <!-- Stock -->
+
+            {% if product.stock > 0 %}
+
+            <div class="mb-3">
+
+                <span class="badge bg-success p-2">
+
+                    In Stock ({{ product.stock }})
+
+                </span>
+
+            </div>
+
+            {% else %}
+
+            <div class="mb-3">
+
+                <span class="badge bg-danger p-2">
+
+                    Out of Stock
+
+                </span>
+
+            </div>
+
+            {% endif %}
+
+            <!-- =========================
+                 PRODUCT VARIANTS
+            ========================== -->
+
+            {% if product.variants.all %}
+
+            <hr>
+
+            <h5 class="mb-3">
+
+                Select Options
+
+            </h5>
+
+            {% regroup product.variants.all by variant_name as variant_groups %}
+
+            {% for group in variant_groups %}
+
+            <div class="mb-3">
+
+                <label class="form-label fw-bold">
+
+                    {{ group.grouper }}
+
+                </label>
+
+                <select class="form-select">
+
+                    {% for variant in group.list %}
+
+                    <option>
+
+                        {{ variant.variant_value }}
+
+                        {% if variant.additional_price > 0 %}
+                        (+₹{{ variant.additional_price }})
+                        {% endif %}
+
+                    </option>
+
+                    {% endfor %}
+
+                </select>
+
+            </div>
+
+            {% endfor %}
+
+            {% endif %}
+
+            <!-- Quantity -->
+
+            <div class="mt-4">
+
+                <label class="form-label fw-bold">
+
+                    Quantity
+
+                </label>
+
+                <input
+                    type="number"
+                    class="form-control"
+                    value="1"
+                    min="1"
+                    max="{{ product.stock }}"
+                    style="width:120px;">
+
+            </div>
+
+            <!-- Buttons -->
+
+            <div class="mt-4 d-flex gap-3">
+
+                <button class="btn btn-warning btn-lg" id="addToCartBtn" data-product-id="{{ product.id }}">
+    
+                    🛒 Add to Cart
+
+                </button>
+
+                <button class="btn btn-outline-dark btn-lg">
+
+                    ❤ Wishlist
+
+                </button>
+
+            </div>
+
+            <hr>
+
+            <!-- Extra Info -->
+
+            <div class="mt-4">
+
+                <p>
+
+                    <strong>Category :</strong>
+
+                    {{ product.category.name }}
+
+                </p>
+
+                <p>
+
+                    <strong>Availability :</strong>
+
+                    {% if product.is_available %}
+                        Available
+                    {% else %}
+                        Not Available
+                    {% endif %}
+
+                </p>
+
+            </div>
+
+            <a href="{% url 'product_list' %}" class="btn btn-secondary mt-3">
+
+                ← Back to Products
+
+            </a>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+
+function changeImage(img){
+
+    document.getElementById("main-image").src = img.src;
+
+}
+
+</script>
+
+{% endblock %}

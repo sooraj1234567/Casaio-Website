@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+
+{% block title %}
+{{ category.name }} | Casaio
+{% endblock %}
+
+{% block content %}
+
+<div class="container py-5">
+
+    <h1 class="mb-3">
+        {{ category.name }}
+    </h1>
+
+    <p class="text-muted mb-5">
+        {{ category.description }}
+    </p>
+
+    {% if subcategories %}
+
+    <h3 class="mb-4">
+        Explore Subcategories
+    </h3>
+
+    <div class="row g-4">
+
+        {% for subcategory in subcategories %}
+
+        <div class="col-lg-3 col-md-4 col-sm-6">
+
+            <div class="card h-100 shadow-sm">
+
+                <img src="{{ subcategory.image.url }}"
+                     class="card-img-top"
+                     style="height:220px; object-fit:cover;">
+
+                <div class="card-body text-center">
+
+                    <h5>{{ subcategory.name }}</h5>
+
+                    <a href="#"
+                       class="btn btn-warning mt-2">
+                        View Products
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+    {% else %}
+
+    <div class="alert alert-info">
+
+        No subcategories found.
+
+    </div>
+
+    {% endif %}
+
+    <a href="{% url 'category_list' %}"
+       class="btn btn-dark mt-5">
+
+        ← Back to Categories
+
+    </a>
+
+</div>
+
+{% endblock %}

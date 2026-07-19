@@ -61,6 +61,10 @@
 
                 </a>
 
+                <a href="{% url 'logout' %}" class="btn btn-outline-danger btn-sm" >
+                logout
+                </a>
+
                 {% else %}
 
                 <a href="{% url 'login' %}" class="icon-box">
@@ -81,13 +85,18 @@
 
                 </a>
 
-                <a href="#" class="icon-box cart-icon">
+                <a href="#" id="cartToggle" class="position-relative">
 
-                    <i class="bi bi-cart3"></i>
+                    <i class="bi bi-cart3 fs-4"></i>
 
-                    <span>Cart</span>
+                    <span
+                        id="cartBadge"
+                        class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
+                        style="display:none;">
 
-                    <span class="cart-count">0</span>
+                        0
+
+                    </span>
 
                 </a>
 
