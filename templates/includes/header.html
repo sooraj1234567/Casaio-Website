@@ -53,17 +53,64 @@
 
                 {% if user.is_authenticated %}
 
-                <a href="#" class="icon-box">
+                <!-- User Profile Dropdown -->
+                <div class="user-profile-dropdown">
 
-                    <i class="bi bi-person-circle"></i>
+                    <button class="user-profile-toggle" id="userProfileToggle">
+                        <i class="bi bi-person-circle"></i>
+                    </button>
 
-                    <span>Account</span>
+                    <div class="user-dropdown-menu" id="userDropdownMenu">
 
-                </a>
+                        <!-- User Info Header -->
+                        <div class="dropdown-user-header">
+                            <div class="user-avatar">
+                                <i class="bi bi-person-circle"></i>
+                            </div>
+                            <div class="user-info">
+                                <p class="user-name">{{ user.first_name|default:user.username }}</p>
+                                <p class="user-email">{{ user.email }}</p>
+                            </div>
+                        </div>
 
-                <a href="{% url 'logout' %}" class="btn btn-outline-danger btn-sm" >
-                logout
-                </a>
+                        <hr class="dropdown-divider">
+
+                        <!-- Menu Items -->
+                        <a href="#" class="dropdown-item">
+                            <i class="bi bi-person"></i>
+                            <span>My Profile</span>
+                        </a>
+
+                        <a href="#" class="dropdown-item">
+                            <i class="bi bi-bag-check"></i>
+                            <span>My Orders</span>
+                        </a>
+
+                        <a href="#" class="dropdown-item">
+                            <i class="bi bi-bookmark-heart"></i>
+                            <span>Wishlist</span>
+                        </a>
+
+                        <a href="#" class="dropdown-item">
+                            <i class="bi bi-map"></i>
+                            <span>Saved Addresses</span>
+                        </a>
+
+                        <a href="#" class="dropdown-item">
+                            <i class="bi bi-gear"></i>
+                            <span>Settings</span>
+                        </a>
+
+                        <hr class="dropdown-divider">
+
+                        <a href="{% url 'logout' %}" class="dropdown-item logout">
+                            <i class="bi bi-box-arrow-right"></i>
+                            <span>Logout</span>
+                        </a>
+
+                    </div>
+
+                </div>
 
                 {% else %}
 

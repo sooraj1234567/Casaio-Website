@@ -72,27 +72,6 @@ def get_cart_data(request):
     })
 
 @login_required
-def remove_from_cart(request, item_id):
-
-    if request.method != "POST":
-        return JsonResponse({"success": False})
-
-    try:
-        cart = request.user.cart
-        item = cart.items.get(id=item_id)
-
-        item.delete()
-
-        return JsonResponse({
-            "success": True
-        })
-
-    except Exception:
-        return JsonResponse({
-            "success": False
-        })
-
-@login_required
 @require_POST
 def remove_from_cart(request, item_id):
     try:

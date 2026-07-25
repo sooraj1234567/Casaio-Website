@@ -50,6 +50,24 @@ class Order(models.Model):
         decimal_places=2
     )
 
+    razorpay_order_id = models.CharField(
+    max_length=255,
+    blank=True,
+    null=True
+    )
+
+    razorpay_payment_id = models.CharField(
+        max_length=255,
+        blank=True,
+        null=True
+    )
+
+    razorpay_signature = models.CharField(
+        max_length=500,
+        blank=True,
+        null=True
+    )
+
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):

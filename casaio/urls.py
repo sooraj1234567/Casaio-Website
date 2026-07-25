@@ -26,10 +26,12 @@ urlpatterns = [
     path('', include('accounts.urls')),
     path('', include('category.urls')),
     path('', include('product.urls')),
-    path('cart/', include('cart.urls')),
-    path('checkout/', include('checkout.urls')),
+    path('cart/', include('cart.urls', namespace='cart')),
+    path('checkout/', include('checkout.urls', namespace='checkout')),
 
     path('accounts/', include('allauth.urls')),
+    path('orders/', include('orders.urls', namespace='orders')),
+    path('payments/', include('payments.urls', namespace='payments')),
 ]
 
 if settings.DEBUG:

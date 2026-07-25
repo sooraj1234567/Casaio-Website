@@ -141,3 +141,13 @@ document.addEventListener("click", function (e) {
     });
 
 });
+
+document.querySelectorAll('input[name="paymentMethod"]').forEach(radio => {
+
+    radio.addEventListener("change", function () {
+
+        document.getElementById("selectedPaymentMethod").value = this.value;
+
+    });
+
+});

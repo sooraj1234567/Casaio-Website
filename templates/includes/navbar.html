@@ -77,13 +77,7 @@
 
                 {% if user.is_authenticated %}
 
-                    <span class="welcome-user">
-                        Hi, {{ user.first_name|default:user.username }}
-                    </span>
-
-                    <a href="#" class="btn btn-outline-dark btn-sm">
-                        My Account
-                    </a>
+                    <!-- User is logged in, profile dropdown is in header -->
 
                 {% else %}
 

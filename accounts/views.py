@@ -130,7 +130,7 @@ def login_otp(request):
                     id=otp_storage[email]["user_id"]
                 )
 
-                login(request,user)
+                login(request,user, backend="django.contrib.auth.backends.ModelBackend")
 
                 del otp_storage[email]
 
