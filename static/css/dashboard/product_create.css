@@ -1,0 +1,160 @@
+.form-card{
+    background:#fff;
+    border-radius:var(--radius);
+    box-shadow:var(--shadow);
+    padding:35px;
+}
+
+.form-grid{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:25px;
+}
+
+.form-group{
+    display:flex;
+    flex-direction:column;
+}
+
+.full-width{
+    grid-column:1 / -1;
+}
+
+.form-group label{
+    margin-bottom:8px;
+    font-weight:600;
+    color:var(--dark);
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea{
+
+    width:100%;
+    padding:12px 15px;
+    border:1px solid var(--border);
+    border-radius:12px;
+    outline:none;
+    font-size:15px;
+}
+
+.form-group textarea{
+    resize:vertical;
+}
+
+.checkbox{
+    flex-direction:row;
+    align-items:center;
+    gap:12px;
+}
+
+.save-btn{
+    margin-top:30px;
+    padding:14px 28px;
+    border:none;
+    border-radius:12px;
+    background:var(--primary);
+    color:#fff;
+    cursor:pointer;
+    font-weight:600;
+    transition:var(--transition);
+}
+
+.save-btn:hover{
+    background:var(--primary-hover);
+}
+
+.gallery-preview{
+
+    display:flex;
+    flex-wrap:wrap;
+    gap:15px;
+    margin-top:20px;
+}
+
+.gallery-preview img{
+
+    width:120px;
+    height:120px;
+    object-fit:cover;
+    border-radius:12px;
+    border:1px solid #ddd;
+    box-shadow:0 5px 15px rgba(0,0,0,.08);
+}
+
+.current-image{
+
+    margin-bottom:20px;
+}
+
+.preview-image{
+
+    width:180px;
+    height:180px;
+    object-fit:cover;
+    border-radius:14px;
+    border:1px solid var(--border);
+}
+
+.existing-gallery{
+
+    margin-top:40px;
+}
+
+.gallery-grid{
+
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(160px,1fr));
+    gap:20px;
+    margin-top:20px;
+}
+
+.gallery-card{
+
+    position:relative;
+}
+
+.gallery-card img{
+
+    width:100%;
+    height:170px;
+    object-fit:cover;
+    border-radius:14px;
+    border:1px solid var(--border);
+}
+
+.delete-image-btn{
+
+    position:absolute;
+    top:10px;
+    right:10px;
+
+    width:36px;
+    height:36px;
+
+    border-radius:50%;
+
+    background:var(--danger);
+
+    color:#fff;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    text-decoration:none;
+
+    transition:.3s;
+}
+
+.delete-image-btn:hover{
+
+    transform:scale(1.08);
+}
+
+@media(max-width:768px){
+
+    .form-grid{
+        grid-template-columns:1fr;
+    }
+}

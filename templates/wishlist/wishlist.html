@@ -1,0 +1,125 @@
+{% extends "base.html" %}
+
+{% block title %}My Wishlist{% endblock %}
+
+{% block content %}
+
+<div class="container py-5">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <h2 class="fw-bold">
+            <i class="bi bi-heart-fill text-danger"></i>
+            My Wishlist
+        </h2>
+
+        <a href="/" class="btn btn-outline-dark">
+            Continue Shopping
+        </a>
+
+    </div>
+
+    {% if wishlist_items %}
+
+    <div class="row">
+
+        {% for item in wishlist_items %}
+
+        <div class="col-lg-3 col-md-4 col-sm-6 mb-4"
+            id="wishlist-item-{{ item.product.id }}">
+
+            <div class="card h-100 shadow-sm border-0 rounded-4">
+
+                {% if item.product.image %}
+                    <img
+                        src="{{ item.product.image.url }}"
+                        class="card-img-top"
+                        alt="{{ item.product.name }}"
+                        style="height:260px;object-fit:cover;">
+                {% else %}
+                    <img
+                        src="https://placehold.co/400x400?text=No+Image"
+                        class="card-img-top"
+                        alt="No Image"
+                        style="height:260px;object-fit:cover;">
+                {% endif %}
+
+                <div class="card-body">
+
+                    <h5 class="fw-semibold">
+                        {{ item.product.name }}
+                    </h5>
+
+                    <h4 class="text-primary fw-bold">
+                        ₹{{ item.product.selling_price }}
+                    </h4>
+
+                </div>
+
+                <div class="card-footer bg-white border-0">
+
+                    <a href="{% url 'product_detail' item.product.slug %}"
+                       class="btn btn-dark w-100 mb-2">
+
+                        <i class="bi bi-eye"></i>
+                        View Product
+
+                    </a>
+
+                    <a href="#"
+                       class="btn btn-warning w-100 mb-2 move-to-cart-btn"
+                       data-product-id="{{ item.product.id }}">
+
+                        <i class="bi bi-cart-plus"></i>
+                        Move to Cart
+
+                    </a>
+
+                    <a href="#"
+                       class="btn btn-outline-danger w-100 remove-wishlist-btn"
+                       data-product-id="{{ item.product.id }}">
+
+                        <i class="bi bi-trash"></i>
+                        Remove
+
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+    {% else %}
+
+    <div class="text-center py-5">
+
+        <i class="bi bi-heart"
+           style="font-size:90px;color:#d1d5db;"></i>
+
+        <h3 class="mt-4 fw-bold">
+            Your Wishlist is Empty
+        </h3>
+
+        <p class="text-muted mb-4">
+            Save your favourite products and buy them later.
+        </p>
+
+        <a href="/" class="btn btn-dark px-4">
+
+            <i class="bi bi-bag"></i>
+            Start Shopping
+
+        </a>
+
+    </div>
+
+    {% endif %}
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,304 @@
+{% extends "dashboard/AdBase.html" %}
+
+{% block title %}Categories{% endblock %}
+
+{% block page_title %}Categories{% endblock %}
+
+{% block content %}
+
+<div class="page-header">
+
+    <div>
+        <h1>Categories</h1>
+        <p>Manage your store category.</p>
+    </div>
+
+    <a href="{% url 'dashboard:category_create' %}" class="add-btn">
+        <i class="fas fa-plus"></i>
+        Add Category
+    </a>
+
+</div>
+
+
+<div class="filter-bar">
+
+    <form method="GET" class="search-form">
+
+        <input
+            type="text"
+            name="search"
+            placeholder="Search categories..."
+            value="{{ search }}"
+        >
+
+        <button type="submit">
+            <i class="fas fa-search"></i>
+        </button>
+
+    </form>
+
+</div>
+
+
+<div class="table-card">
+
+    <table class="dashboard-table">
+
+        <thead>
+
+            <tr>
+                <th>Image</th>
+                <th>Category</th>
+                <th>Parent</th>
+                <th>Products</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+
+        </thead>
+
+        <tbody>
+
+            {% for category in page_obj %}
+
+            <tr>
+
+                <td>
+                    {% if category.image %}
+                        <img src="{{ category.image.url }}" class="table-image">
+                    {% else %}
+                        <div class="no-image">No Image</div>
+                    {% endif %}
+                </td>
+
+                <td>
+
+                    <div class="category-name">
+
+                        <span class="category-indent">
+
+                            {% for i in "123456789"|make_list %}
+
+                                {% if forloop.counter <= category.level %}
+
+                                    &mdash;
+
+                                {% endif %}
+
+                            {% endfor %}
+
+                        </span>
+
+                        {{ category.name }}
+
+                    </div>
+
+                </td>
+
+                <td class="parent-name">
+                    {{ category.parent|default:"—" }}
+                </td>
+
+                <td>{{ category.product_count }}</td>
+
+                <td>
+                    {% if category.is_active %}
+                        <span class="status-badge status-active">Active</span>
+                    {% else %}
+                        <span class="status-badge status-inactive">Inactive</span>
+                    {% endif %}
+                </td>
+
+                <td>
+
+                    <div class="action-buttons">
+
+                        <a href="{% url 'dashboard:category_update' category.id %}" class="action-btn edit">
+                            <i class="fas fa-edit"></i>
+                        </a>
+
+                        <a
+                            class="btn-delete"
+                            data-bs-toggle="modal"
+                            data-bs-target="#deleteCategoryModal{{ category.id }}"
+                        >
+                            <i class="fa-solid fa-trash"></i>
+                        </a>
+
+                    </div>
+
+                </td>
+
+            </tr>
+
+            <div
+                class="modal fade"
+                id="deleteCategoryModal{{ category.id }}"
+                tabindex="-1"
+            >
+
+                <div class="modal-dialog">
+
+                    <div class="modal-content">
+
+                        <div class="modal-header">
+
+                            <h5 class="modal-title">
+                                Delete Category
+                            </h5>
+
+                            <button
+                                type="button"
+                                class="btn-close"
+                                data-bs-dismiss="modal">
+                            </button>
+
+                        </div>
+
+                        <div class="modal-body">
+
+                            Are you sure you want to delete
+
+                            <strong>{{ category.name }}</strong>?
+
+                        </div>
+
+                        <div class="modal-footer">
+
+                            <button
+                                type="button"
+                                class="btn btn-secondary"
+                                data-bs-dismiss="modal"
+                            >
+                                Cancel
+                            </button>
+
+                            <form
+                                method="POST"
+                                action="{% url 'dashboard:category_delete' category.id %}"
+                            >
+
+                                {% csrf_token %}
+
+                                <button
+                                    type="submit"
+                                    class="btn btn-danger"
+                                >
+                                    Delete
+                                </button>
+
+                            </form>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            {% empty %}
+
+            <tr class="empty-row">
+                <td colspan="5">
+                    No categories found.
+                </td>
+            </tr>
+
+            {% endfor %}
+
+        </tbody>
+
+    </table>
+
+</div>
+
+<div class="modal fade" id="deleteProductModal" tabindex="-1">
+
+    <div class="modal-dialog modal-dialog-centered">
+
+        <div class="modal-content">
+
+            <div class="modal-header">
+
+                <h5 class="modal-title">
+                    Delete Product
+                </h5>
+
+                <button
+                    type="button"
+                    class="btn-close"
+                    data-bs-dismiss="modal">
+                </button>
+
+            </div>
+
+            <form method="post" id="deleteProductForm">
+
+                {% csrf_token %}
+
+                <div class="modal-body">
+
+                    <p>
+                        Are you sure you want to delete
+                        <strong id="productName"></strong>?
+                    </p>
+
+                    <p class="text-danger mb-0">
+                        This action cannot be undone.
+                    </p>
+
+                </div>
+
+                <div class="modal-footer">
+
+                    <button
+                        type="button"
+                        class="btn btn-secondary"
+                        data-bs-dismiss="modal">
+                        Cancel
+                    </button>
+
+                    <button
+                        type="submit"
+                        class="btn btn-danger">
+                        Delete
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<div class="pagination">
+
+    {% if page_obj.has_previous %}
+
+        <a href="?page={{ page_obj.previous_page_number }}&search={{ search }}">
+            Previous
+        </a>
+
+    {% endif %}
+
+    <span>
+        Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+    </span>
+
+    {% if page_obj.has_next %}
+
+        <a href="?page={{ page_obj.next_page_number }}&search={{ search }}">
+            Next
+        </a>
+
+    {% endif %}
+
+</div>
+
+{% endblock %}

@@ -22,7 +22,7 @@ def checkout_page(request):
     if cart:
 
         for item in cart.items.all():
-            subtotal += item.product.price * item.quantity
+            subtotal += item.product.selling_price * item.quantity
 
     context = {
         "form": form,

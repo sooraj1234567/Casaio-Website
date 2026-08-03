@@ -1,0 +1,201 @@
+.dashboard-header{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    margin-bottom:40px;
+
+}
+
+.dashboard-header h1{
+
+    font-size:42px;
+
+    margin-bottom:12px;
+
+}
+
+.dashboard-header p{
+
+    color:var(--gray);
+
+    font-size:18px;
+
+}
+
+.stats-grid{
+
+    display:grid;
+
+    grid-template-columns:repeat(4,minmax(240px,1fr));
+
+    gap:25px;
+
+}
+
+.stat-card{
+
+    background:#fff;
+
+    border-radius:18px;
+
+    padding:40px;
+
+    display:flex;
+
+    align-items:center;
+
+    gap:18px;
+
+    box-shadow:var(--shadow);
+
+    transition:.3s;
+
+}
+
+.stat-card:hover{
+
+    transform:translateY(-5px);
+
+}
+
+.stat-icon{
+
+    width:65px;
+
+    height:65px;
+
+    border-radius:18px;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    font-size:24px;
+
+    color:#fff;
+
+}
+
+.revenue{
+
+    background:#22c55e;
+
+}
+
+.orders{
+
+    background:#ff6a00;
+
+}
+
+.users{
+
+    background:#3b82f6;
+
+}
+
+.products{
+
+    background:#8b5cf6;
+
+}
+
+.stat-card h5{
+
+    color:#777;
+
+    font-weight:500;
+
+    margin-bottom:8px;
+
+}
+
+.stat-card h2{
+
+    font-size:30px;
+
+}
+
+.dashboard-section{
+    margin-top:40px;
+    background:#fff;
+    border-radius:var(--radius);
+    box-shadow:var(--shadow);
+    padding:25px;
+}
+
+.section-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:20px;
+}
+
+.section-header h3{
+    font-size:22px;
+}
+
+.view-all{
+    color:var(--primary);
+    font-weight:600;
+}
+
+.table-wrapper{
+    overflow-x:auto;
+}
+
+.orders-table{
+    width:100%;
+    border-collapse:collapse;
+}
+
+.orders-table th{
+    text-align:left;
+    padding:15px;
+    border-bottom:2px solid var(--border);
+    color:var(--gray);
+    font-size:14px;
+}
+
+.orders-table td{
+    padding:18px 15px;
+    border-bottom:1px solid var(--border);
+}
+
+.status{
+    padding:6px 14px;
+    border-radius:30px;
+    font-size:13px;
+    font-weight:600;
+}
+
+.status.pending{
+    background:#fff7e6;
+    color:#f59e0b;
+}
+
+.status.confirmed{
+    background:#e8f5ff;
+    color:#2563eb;
+}
+
+.status.shipped{
+    background:#eef4ff;
+    color:#4f46e5;
+}
+
+.status.delivered{
+    background:#eafaf0;
+    color:#22c55e;
+}
+
+.status.cancelled{
+    background:#fdecec;
+    color:#ef4444;
+}

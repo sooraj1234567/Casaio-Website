@@ -1,5 +1,6 @@
 from django.conf import settings
 from django.db import models
+from django.utils import timezone
 
 
 class Order(models.Model):
@@ -15,6 +16,18 @@ class Order(models.Model):
         ("shipped", "Shipped"),
         ("delivered", "Delivered"),
         ("cancelled", "Cancelled"),
+    )
+
+    order_number = models.CharField(
+        max_length=30,
+        unique=True,
+        blank=True,
+        null=True
+    )
+
+    cancelled_at = models.DateTimeField(
+        null=True,
+        blank=True
     )
 
     user = models.ForeignKey(
@@ -70,8 +83,29 @@ class Order(models.Model):
 
     created_at = models.DateTimeField(auto_now_add=True)
 
+    cancelled_at = models.DateTimeField(
+        null=True,
+        blank=True
+    )
+
+    def save(self, *args, **kwargs):
+
+        if not self.order_number:
+
+            super().save(*args, **kwargs)
+
+            date = timezone.now().strftime("%Y%m%d")
+
+            self.order_number = f"CAS-{date}-{self.id:06d}"
+
+            super().save(update_fields=["order_number"])
+
+            return
+
+        super().save(*args, **kwargs)
+
     def __str__(self):
-        return f"Order #{self.id}"
+        return self.order_number or f"Order #{self.id}"
 
 class OrderItem(models.Model):
 
@@ -88,10 +122,14 @@ class OrderItem(models.Model):
 
     quantity = models.PositiveIntegerField()
 
-    price = models.DecimalField(
+    selling_price = models.DecimalField(
         max_digits=10,
         decimal_places=2
     )
+
+    @property
+    def total_price(self):
+        return self.selling_price * self.quantity
 
     def __str__(self):
         return self.product.name

@@ -1,0 +1,206 @@
+{% extends "dashboard/AdBase.html" %}
+
+{% block title %}
+Order Details
+{% endblock %}
+
+{% block page_title %}
+Order Details
+{% endblock %}
+
+{% block content %}
+
+<div class="order-header">
+
+    <div>
+
+        <h1>{{ order.order_number }}</h1>
+
+        <p>
+            Placed on {{ order.created_at|date:"d M Y • h:i A" }}
+        </p>
+
+    </div>
+
+    <span class="status {{ order.status }}">
+        {{ order.get_status_display }}
+    </span>
+
+</div>
+
+
+<div class="detail-grid">
+
+    <!-- Customer -->
+
+    <div class="detail-card">
+
+        <h3>Customer Information</h3>
+
+        <div class="info-row">
+            <strong>Name</strong>
+            <span>{{ order.user.username }}</span>
+        </div>
+
+        <div class="info-row">
+            <strong>Email</strong>
+            <span>{{ order.user.email }}</span>
+        </div>
+
+        <div class="info-row">
+            <strong>Phone</strong>
+            <span>{{ order.address.phone_number }}</span>
+        </div>
+
+    </div>
+
+
+    <!-- Address -->
+
+    <div class="detail-card">
+
+        <h3>Shipping Address</h3>
+
+        <p>{{ order.address.full_name }}</p>
+        <p>{{ order.address.house_name }}</p>
+        <p>{{ order.address.area }}</p>
+        <p>{{ order.address.city }}</p>
+        <p>{{ order.address.state }}</p>
+        <p>{{ order.address.pincode }}</p>
+
+    </div>
+
+</div>
+
+
+<div class="detail-card">
+
+    <h3>Ordered Products</h3>
+
+    <table class="orders-table">
+
+        <thead>
+
+            <tr>
+
+                <th>Product</th>
+                <th>Qty</th>
+                <th>Price</th>
+                <th>Total</th>
+
+            </tr>
+
+        </thead>
+
+        <tbody>
+
+            {% for item in order.items.all %}
+
+            <tr>
+
+                <td>{{ item.product.name }}</td>
+
+                <td>{{ item.quantity }}</td>
+
+                <td>£{{ item.price }}</td>
+
+                <td>£{{ item.total_price }}</td>
+
+            </tr>
+
+            {% endfor %}
+
+        </tbody>
+
+    </table>
+
+</div>
+
+
+<div class="detail-card">
+
+    <h3>Payment Summary</h3>
+
+    <div class="info-row">
+
+        <strong>Payment Method</strong>
+
+        <span>{{ order.get_payment_method_display }}</span>
+
+    </div>
+
+    <div class="info-row">
+
+        <strong>Payment Status</strong>
+
+        <span>
+
+            {% if order.payment_status %}
+
+                Paid
+
+            {% else %}
+
+                Pending
+
+            {% endif %}
+
+        </span>
+
+    </div>
+
+    <div class="info-row">
+
+        <strong>Subtotal</strong>
+
+        <span>£{{ order.subtotal }}</span>
+
+    </div>
+
+    <div class="info-row">
+
+        <strong>Total</strong>
+
+        <span>£{{ order.total }}</span>
+
+    </div>
+
+</div>
+
+<div class="detail-card">
+
+    <h3>Order Actions</h3>
+
+    <form method="POST"
+          action="{% url 'dashboard:update_order_status' order.id %}">
+
+        {% csrf_token %}
+
+        <div class="action-row">
+
+            <select name="status" class="status-select">
+
+                {% for value,label in order.STATUS_CHOICES %}
+
+                    <option value="{{ value }}"
+                        {% if order.status == value %}selected{% endif %}>
+                        {{ label }}
+                    </option>
+
+                {% endfor %}
+
+            </select>
+
+            <button type="submit" class="update-btn">
+
+                Update Status
+
+            </button>
+
+        </div>
+
+    </form>
+
+</div>
+
+{% endblock %}

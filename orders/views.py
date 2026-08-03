@@ -1,6 +1,9 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
+from django.views.decorators.http import require_POST
 from django.db import transaction
+from django.contrib import messages
+from django.utils import timezone
 
 from cart.models import Cart
 from checkout.models import Address
@@ -48,7 +51,7 @@ def place_order(request):
     subtotal = 0
 
     for item in cart.items.all():
-        subtotal += item.product.price * item.quantity
+        subtotal += item.product.selling_price * item.quantity
 
     order = Order.objects.create(
         user=request.user,
@@ -65,7 +68,7 @@ def place_order(request):
             order=order,
             product=item.product,
             quantity=item.quantity,
-            price=item.product.price,
+            price=item.product.selling_price,
         )
 
     if payment_method == "cod":
@@ -129,3 +132,46 @@ def order_success(request, order_id):
             "order": order
         }
     )
+
+@login_required
+def my_orders(request):
+    orders = Order.objects.filter(user=request.user).order_by("-created_at")
+
+    return render(request, "orders/order_history.html", {
+        "orders": orders
+    })
+
+
+@login_required
+def order_detail(request, order_id):
+    order = get_object_or_404(
+        Order.objects.select_related("address").prefetch_related("items__product"),
+        id=order_id,
+        user=request.user,
+    )
+
+    return render(request, "orders/order_detail.html", {
+        "order": order,
+    })
+
+@login_required
+@require_POST
+def cancel_order(request, order_id):
+
+    order = get_object_or_404(
+        Order,
+        id=order_id,
+        user=request.user
+    )
+
+    if order.status in ["pending", "confirmed"]:
+        order.status = "cancelled"
+        order.cancelled_at = timezone.now()
+        order.save()
+
+        messages.success(request, "Your order has been cancelled successfully.")
+
+    else:
+        messages.error(request, "This order cannot be cancelled.")
+
+    return redirect("orders:order_detail", order_id=order.id)

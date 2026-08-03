@@ -9,15 +9,13 @@ from product.models import Product
 
 
 @login_required
+@require_POST
 def add_to_cart(request, product_id):
 
-    if request.method != "POST":
-        return JsonResponse({
-            "success": False,
-            "message": "Invalid request."
-        }, status=400)
-
-    product = get_object_or_404(Product, id=product_id)
+    product = get_object_or_404(
+        Product,
+        id=product_id
+    )
 
     cart, created = Cart.objects.get_or_create(
         user=request.user
@@ -28,17 +26,35 @@ def add_to_cart(request, product_id):
         product=product
     )
 
-    if not created:
-        cart_item.quantity += 1
-        cart_item.save()
+    if created:
+
+        cart_item.quantity = 1
+
+    else:
+
+        if cart_item.quantity < product.stock:
+
+            cart_item.quantity += 1
+
+    cart_item.save()
+
+    total_items = sum(
+        item.quantity
+        for item in cart.items.all()
+    )
 
     return JsonResponse({
+
         "success": True,
         "message": "Product added to cart.",
+
         "product_name": product.name,
-        "price": float(product.price),
+        "price": float(product.selling_price),
         "quantity": cart_item.quantity,
-        "image": product.image.url,
+        "image": product.image.url if product.image else "",
+
+        "total_items": total_items,
+
     })
 
 @login_required
@@ -52,7 +68,7 @@ def get_cart_data(request):
 
     for item in cart.items.select_related("product"):
 
-        total = item.product.price * item.quantity
+        total = item.product.selling_price * item.quantity
 
         subtotal += total
         total_items += item.quantity
@@ -60,7 +76,7 @@ def get_cart_data(request):
         items.append({
             "id": item.id,
             "name": item.product.name,
-            "price": float(item.product.price),
+            "price": float(item.product.selling_price),
             "quantity": item.quantity,
             "image": item.product.image.url if item.product.image else "",
         })
@@ -80,8 +96,11 @@ def remove_from_cart(request, item_id):
 
         item.delete()
 
+        total_items = sum(item.quantity for item in cart.items.all())
+
         return JsonResponse({
-            "success": True
+            "success": True,
+            "total_items": total_items,
         })
 
     except Cart.DoesNotExist:
@@ -120,8 +139,11 @@ def update_cart_quantity(request, item_id):
             else:
                 item.delete()
 
+            total_items = sum(item.quantity for item in cart.items.all())
+
         return JsonResponse({
-            "success": True
+            "success": True,
+            "total_items": total_items,
         })
 
     except Cart.DoesNotExist:

@@ -157,6 +157,24 @@ MAIN HEADER
     color:#ff6a00;
 }
 
+/* ===========================
+HEADER ICON LINKS
+=========================== */
+
+.header-icons > a {
+    color: #222;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.header-icons > a:hover {
+    color: #ff6a00;
+}
+
+.header-icons > a i {
+    font-size: 30px;
+}
+
 /* Responsive */
 
 @media(max-width:992px){
@@ -358,3 +376,4 @@ USER PROFILE DROPDOWN
     }
 
 }
+

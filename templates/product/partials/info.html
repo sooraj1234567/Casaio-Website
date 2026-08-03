@@ -1,0 +1,245 @@
+<div class="product-info">
+
+	<!-- Category -->
+	<span class="category-badge">
+		{{ product.category.name }}
+	</span>
+
+	<!-- Product Name -->
+	<h1 class="product-title">
+		{{ product.name }}
+	</h1>
+
+	<!-- Rating -->
+	<div class="rating-row">
+
+		<div class="stars">
+
+			{% for i in "12345" %}
+			{% if forloop.counter <= average_rating|floatformat:0|add:"0" %}
+			<i class="fas fa-star"></i>
+			{% else %}
+			<i class="far fa-star"></i>
+			{% endif %}
+			{% endfor %}
+
+		</div>
+
+		<span class="rating-text">
+			{{ average_rating|floatformat:1 }} ({{ reviews|length }} Reviews)
+		</span>
+
+	</div>
+
+	<!-- Price -->
+
+	<div class="price-box">
+
+		{% if product.offer_price %}
+
+		<span class="price">
+			₹{{ product.offer_price }}
+		</span>
+
+		<span class="old-price">
+			₹{{ product.selling_price }}
+		</span>
+
+		<span class="discount-badge">
+			{{ product.discount_percentage }}% OFF
+		</span>
+
+		{% else %}
+
+		<span class="price">
+			₹{{ product.selling_price }}
+		</span>
+
+		{% endif %}
+
+	</div>
+
+	<!-- Stock -->
+
+	{% if in_stock %}
+
+	<div class="stock success">
+		<i class="fas fa-check-circle"></i>
+		In Stock
+	</div>
+
+	{% elif low_stock %}
+
+	<div class="stock warning">
+		<i class="fas fa-exclamation-circle"></i>
+		Only {{ product.stock }} left
+	</div>
+
+	{% else %}
+
+	<div class="stock danger">
+		<i class="fas fa-times-circle"></i>
+		Out of Stock
+	</div>
+
+	{% endif %}
+
+	<!-- Description -->
+
+	<p class="description">
+		{{ product.description }}
+	</p>
+
+	<!-- Variants -->
+
+	{% if variants %}
+
+	<div class="variant-section">
+
+		<h5>Choose an Option</h5>
+
+		<div class="variant-list">
+
+			{% for variant in variants %}
+
+			<label class="variant-chip">
+
+				<input
+					type="radio"
+					name="variant"
+					value="{{ variant.id }}"
+					   {% if forloop.first %}checked{% endif %}>
+
+					<span>
+
+						{{ variant.variant_value }}
+
+						{% if variant.additional_price %}
+						(+₹{{ variant.additional_price }})
+						{% endif %}
+
+					</span>
+
+				</label>
+
+			{% endfor %}
+
+		</div>
+
+	</div>
+
+	{% endif %}
+
+	<!-- Quantity -->
+
+	<div class="quantity-box">
+
+		<span class="qty-title">Quantity</span>
+
+		<div class="qty-selector">
+
+			<button
+                type="button"
+                onclick="decreaseQty()">
+
+				<i class="fas fa-minus"></i>
+
+			</button>
+
+			<input
+                id="qty"
+                type="number"
+                value="1"
+                min="1"
+                readonly="">
+
+				<button
+					type="button"
+					onclick="increaseQty()">
+
+					<i class="fas fa-plus"></i>
+
+				</button>
+
+			</div>
+
+	</div>
+
+	<!-- Buttons -->
+
+	<div class="action-buttons">
+
+		<button
+			id="addToCartBtn"
+			type="button"
+            class="cart-btn"
+            data-product-id="{{ product.id }}">
+
+			<i class="fas fa-shopping-cart"></i>
+
+			Add to Cart
+
+		</button>
+
+		<button
+			type="button"
+            class="buy-btn"
+            data-product-id="{{ product.id }}">
+
+			<i class="fas fa-bolt"></i>
+
+			Buy Now
+
+		</button>
+
+	</div>
+
+	<!-- Features -->
+
+	<div class="delivery-card">
+
+		<div class="delivery-item">
+
+			<i class="fas fa-truck"></i>
+
+			<div>
+
+				<strong>Free Delivery</strong>
+
+				<small>Delivery within 3–5 business days</small>
+
+			</div>
+
+		</div>
+
+		<div class="delivery-item">
+
+			<i class="fas fa-sync-alt"></i>
+
+			<div>
+
+				<strong>Easy Returns</strong>
+
+				<small>7-day hassle-free replacement</small>
+
+			</div>
+
+		</div>
+
+		<div class="delivery-item">
+
+			<i class="fas fa-shield-alt"></i>
+
+			<div>
+
+				<strong>Secure Payments</strong>
+
+				<small>Protected checkout & trusted payment gateway</small>
+
+			</div>
+
+		</div>
+
+	</div>
+
+</div>

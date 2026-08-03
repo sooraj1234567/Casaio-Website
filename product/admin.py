@@ -19,7 +19,7 @@ class ProductAdmin(admin.ModelAdmin):
         "image_preview",
         "name",
         "category",
-        "price",
+        "selling_price",
         "stock",
         "is_available",
     )

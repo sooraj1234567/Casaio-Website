@@ -1,0 +1,54 @@
+<div class="related-products container mt-5">
+
+    <h2 class="mb-4">Related Products</h2>
+
+    <div class="row">
+
+        {% for item in related_products %}
+
+        <div class="col-lg-3 col-md-6 mb-4">
+
+            <div class="card h-100">
+
+                <a href="{% url 'product_detail' item.slug %}">
+
+                    <img
+                        src="{{ item.image.url }}"
+                        class="card-img-top"
+                        alt="{{ item.name }}">
+
+                </a>
+
+                <div class="card-body">
+
+                    <h5>{{ item.name }}</h5>
+
+                    <p class="fw-bold">
+
+                        ₹{{ item.selling_price }}
+
+                    </p>
+
+                    <a
+                        href="{% url 'product_detail' item.slug %}"
+                        class="btn btn-dark">
+
+                        View Product
+
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        {% empty %}
+
+        <p>No related products found.</p>
+
+        {% endfor %}
+
+    </div>
+
+</div>

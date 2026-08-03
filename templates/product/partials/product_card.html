@@ -1,0 +1,87 @@
+<div class="related-card">
+
+    <a href="{% url 'product:product_detail' product.slug %}">
+
+        <div class="card-image">
+
+            <img
+                src="{{ product.image.url }}"
+                alt="{{ product.name }}">
+
+            {% if product.discount_percentage %}
+
+                <span class="discount-tag">
+
+                    {{ product.discount_percentage }}% OFF
+
+                </span>
+
+            {% endif %}
+
+        </div>
+
+    </a>
+
+    <div class="card-body">
+
+        <h5>
+
+            <a href="{% url 'product:product_detail' product.slug %}">
+
+                {{ product.name }}
+
+            </a>
+
+        </h5>
+
+        <div class="price-area">
+
+            {% if product.offer_price %}
+
+                <span class="offer-price">
+
+                    ₹{{ product.offer_price }}
+
+                </span>
+
+                <span class="old-price">
+
+                    ₹{{ product.selling_price }}
+
+                </span>
+
+            {% else %}
+
+                <span class="offer-price">
+
+                    ₹{{ product.selling_price }}
+
+                </span>
+
+            {% endif %}
+
+        </div>
+
+        <div class="card-actions">
+
+            <button
+                class="wishlist-btn"
+                data-product-id="{{ product.id }}">
+
+                <i class="far fa-heart"></i>
+
+            </button>
+
+            <button
+                class="cart-btn"
+                data-product-id="{{ product.id }}">
+
+                <i class="fas fa-shopping-cart"></i>
+
+            </button>
+
+        </div>
+
+    </div>
+
+</div>

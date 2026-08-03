@@ -1,0 +1,209 @@
+{% extends "dashboard/AdBase.html" %}
+
+{% block title %}
+Dashboard
+{% endblock %}
+
+{% block page_title %}
+Dashboard
+{% endblock %}
+
+{% block content %}
+
+<div class="dashboard-header">
+
+    <div>
+
+        <h1>Good Morning 👋</h1>
+
+        <p>Here's what's happening with your store today.</p>
+
+    </div>
+
+</div>
+
+
+<!-- ===========================
+     STATISTICS CARDS
+=========================== -->
+
+<div class="stats-grid">
+
+    <div class="stat-card">
+
+        <div class="stat-icon revenue">
+            <i class="fas fa-pound-sign"></i>
+        </div>
+
+        <div>
+
+            <h5>Total Revenue</h5>
+
+            <h2>£{{ total_revenue }}</h2>
+
+        </div>
+
+    </div>
+
+    <div class="stat-card">
+
+        <div class="stat-icon orders">
+            <i class="fas fa-cart-shopping"></i>
+        </div>
+
+        <div>
+
+            <h5>Total Orders</h5>
+
+            <h2>{{ total_orders }}</h2>
+
+        </div>
+
+    </div>
+
+    <div class="stat-card">
+
+        <div class="stat-icon users">
+            <i class="fas fa-users"></i>
+        </div>
+
+        <div>
+
+            <h5>Customers</h5>
+
+            <h2>{{ total_customers }}</h2>
+
+        </div>
+
+    </div>
+
+    <div class="stat-card">
+
+        <div class="stat-icon products">
+            <i class="fas fa-box-open"></i>
+        </div>
+
+        <div>
+
+            <h5>Products</h5>
+
+            <h2>{{ total_products }}</h2>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- ===========================
+     RECENT ORDERS
+=========================== -->
+
+<div class="dashboard-section">
+
+    <div class="section-header">
+
+        <h3>Recent Orders</h3>
+
+        <a href="#" class="view-all">
+            View All
+        </a>
+
+    </div>
+
+    <div class="table-wrapper">
+
+        <table class="orders-table">
+
+            <thead>
+
+                <tr>
+
+                    <th>Order ID</th>
+
+                    <th>Customer</th>
+
+                    <th>Date</th>
+
+                    <th>Total</th>
+
+                    <th>Payment</th>
+
+                    <th>Status</th>
+
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+                {% for order in recent_orders %}
+
+                <tr>
+
+                    <td>
+                        {{ order.order_number|default:"-" }}
+                    </td>
+
+                    <td>
+                        {{ order.user.username }}
+                    </td>
+
+                    <td>
+                        {{ order.created_at|date:"d M Y" }}
+                    </td>
+
+                    <td>
+                        £{{ order.total }}
+                    </td>
+
+                    <td>
+
+                        {% if order.payment_method == "cod" %}
+
+                            Cash on Delivery
+
+                        {% else %}
+
+                            Razorpay
+
+                        {% endif %}
+
+                    </td>
+
+                    <td>
+
+                        <span class="status {{ order.status }}">
+
+                            {{ order.get_status_display }}
+
+                        </span>
+
+                    </td>
+
+                </tr>
+
+                {% empty %}
+
+                <tr>
+
+                    <td colspan="6" class="empty-state">
+
+                        No recent orders found.
+
+                    </td>
+
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+{% endblock %}

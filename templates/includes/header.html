@@ -8,13 +8,9 @@
 
             <!-- Logo -->
             <div class="logo">
-
                 <a href="/">
-
                     <img src="{% static 'images/logo.png' %}" alt="Casaio">
-
                 </a>
-
             </div>
 
             <!-- Search -->
@@ -28,32 +24,28 @@
                         placeholder="Search for products...">
 
                     <select name="category">
-
                         <option value="">All Categories</option>
                         <option>Kitchen</option>
                         <option>Furniture</option>
                         <option>Home Decor</option>
                         <option>Lighting</option>
                         <option>Storage</option>
-
                     </select>
 
                     <button type="submit">
-
                         <i class="bi bi-search"></i>
-
                     </button>
 
                 </form>
 
             </div>
 
-            <!-- Icons -->
+            <!-- Header Icons -->
             <div class="header-icons">
 
                 {% if user.is_authenticated %}
 
-                <!-- User Profile Dropdown -->
+                <!-- User Profile -->
                 <div class="user-profile-dropdown">
 
                     <button class="user-profile-toggle" id="userProfileToggle">
@@ -62,31 +54,37 @@
 
                     <div class="user-dropdown-menu" id="userDropdownMenu">
 
-                        <!-- User Info Header -->
+                        <!-- User Header -->
                         <div class="dropdown-user-header">
+
                             <div class="user-avatar">
                                 <i class="bi bi-person-circle"></i>
                             </div>
+
                             <div class="user-info">
-                                <p class="user-name">{{ user.first_name|default:user.username }}</p>
-                                <p class="user-email">{{ user.email }}</p>
+                                <p class="user-name">
+                                    {{ user.first_name|default:user.username }}
+                                </p>
+                                <p class="user-email">
+                                    {{ user.email }}
+                                </p>
                             </div>
+
                         </div>
 
                         <hr class="dropdown-divider">
 
-                        <!-- Menu Items -->
                         <a href="#" class="dropdown-item">
                             <i class="bi bi-person"></i>
                             <span>My Profile</span>
                         </a>
 
-                        <a href="#" class="dropdown-item">
+                        <a href="{% url 'orders:my_orders' %}" class="dropdown-item">
                             <i class="bi bi-bag-check"></i>
                             <span>My Orders</span>
                         </a>
 
-                        <a href="#" class="dropdown-item">
+                        <a href="{% url 'wishlist:wishlist' %}" class="dropdown-item">
                             <i class="bi bi-bookmark-heart"></i>
                             <span>Wishlist</span>
                         </a>
@@ -115,33 +113,39 @@
                 {% else %}
 
                 <a href="{% url 'login' %}" class="icon-box">
-
                     <i class="bi bi-person"></i>
-
                     <span>Sign In</span>
-
                 </a>
 
                 {% endif %}
 
-                <a href="#" class="icon-box">
+                <a href="{% url 'wishlist:wishlist' %}" class="icon-box position-relative">
 
                     <i class="bi bi-heart"></i>
 
-                    <span>Wishlist</span>
+                    <span id="wishlistBadge"
+                          class="badge bg-danger position-absolute top-0 start-100 translate-middle"
+                          {% if wishlist_count == 0 %}style="display:none;"{% endif %}>
+
+                        {{ wishlist_count }}
+
+                    </span>
 
                 </a>
 
-                <a href="#" id="cartToggle" class="position-relative">
+                <!-- Cart -->
+                <a href="#"
+                   id="cartToggle"
+                   class="icon-box position-relative">
 
-                    <i class="bi bi-cart3 fs-4"></i>
+                    <i class="bi bi-cart3"></i>
 
                     <span
                         id="cartBadge"
                         class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
-                        style="display:none;">
+                        {% if cart_count == 0 %}style="display:none;"{% endif %}>
 
-                        0
+                        {{ cart_count }}
 
                     </span>
 

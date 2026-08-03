@@ -1,0 +1,38 @@
+<div class="gallery">
+
+	<div class="thumbnail-column">
+
+		<img
+            src="{{ product.image.url }}"
+            class="thumb active"
+            onclick="changeImage(this)">
+
+			{% for image in product.images.all %}
+
+			<img
+				src="{{ image.image.url }}"
+				class="thumb"
+				onclick="changeImage(this)">
+
+				{% endfor %}
+
+	</div>
+
+	<div class="main-image-card">
+
+		<img
+            id="mainImage"
+            src="{{ product.image.url }}"
+            alt="{{ product.name }}">
+
+			<button
+				class="gallery-wishlist-btn wishlist-btn"
+				data-product-id="{{ product.id }}">
+				
+				<i class="far fa-heart"></i>
+				
+			</button>
+
+	</div>
+
+</div>

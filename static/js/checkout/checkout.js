@@ -1,6 +1,8 @@
-document
-.getElementById("saveAddressBtn")
-.addEventListener("click", function () {
+const saveBtn = document.getElementById("saveAddressBtn");
+
+if (saveBtn) {
+
+    saveBtn.addEventListener("click", function () {
 
     const form = document.getElementById("addressForm");
 
@@ -49,6 +51,8 @@ document
     .catch(error => console.log(error));
 
 });
+
+}
 
 document.addEventListener("click", function (e) {
 
@@ -142,12 +146,24 @@ document.addEventListener("click", function (e) {
 
 });
 
-document.querySelectorAll('input[name="paymentMethod"]').forEach(radio => {
+const paymentMethods = document.querySelectorAll('input[name="paymentMethod"]');
 
-    radio.addEventListener("change", function () {
+if (paymentMethods.length > 0) {
 
-        document.getElementById("selectedPaymentMethod").value = this.value;
+    paymentMethods.forEach(radio => {
+
+        radio.addEventListener("change", function () {
+
+            const input = document.getElementById("selectedPaymentMethod");
+
+            if (input) {
+
+                input.value = this.value;
+
+            }
+
+        });
 
     });
 
-});
+}

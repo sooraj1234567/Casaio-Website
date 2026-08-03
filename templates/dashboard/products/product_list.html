@@ -1,0 +1,241 @@
+{% extends "dashboard/AdBase.html" %}
+
+{% block title %}Products{% endblock %}
+
+{% block page_title %}Products{% endblock %}
+
+{% block content %}
+
+<div class="page-header">
+
+    <div>
+        <h1>Products</h1>
+        <p>Manage your store products.</p>
+    </div>
+
+    <a href="{% url 'dashboard:product_create' %}" class="add-btn">
+        <i class="fas fa-plus"></i>
+        Add Product
+    </a>
+
+</div>
+
+
+<div class="filter-bar">
+
+    <form method="GET" class="search-form">
+
+        <input
+            type="text"
+            name="search"
+            placeholder="Search products..."
+            value="{{ search }}"
+        >
+
+        <button type="submit">
+            <i class="fas fa-search"></i>
+        </button>
+
+    </form>
+
+</div>
+
+
+<div class="table-card">
+
+    <table class="dashboard-table">
+
+        <thead>
+
+        <tr>
+
+            <th>Image</th>
+            <th>Name</th>
+            <th>Category</th>
+            <th>Price</th>
+            <th>Stock</th>
+            <th>Status</th>
+            <th>Actions</th>
+
+        </tr>
+
+        </thead>
+
+        <tbody>
+
+        {% for product in products %}
+
+        <tr>
+
+            <td>
+
+                {% if product.image %}
+                    <img
+                        src="{{ product.image.url }}"
+                        class="product-image"
+                        alt="{{ product.name }}"
+                    >
+                {% else %}
+                    No Image
+                {% endif %}
+
+            </td>
+
+            <td>{{ product.name }}</td>
+
+            <td>{{ product.category.name }}</td>
+
+            <td>
+
+                {% if product.offer_price %}
+                    £{{ product.offer_price }}
+                {% else %}
+                    £{{ product.selling_price }}
+                {% endif %}
+
+            </td>
+
+            <td>{{ product.stock }}</td>
+
+            <td>
+
+                {% if product.stock > 10 %}
+                    <span class="badge success">In Stock</span>
+
+                {% elif product.stock > 0 %}
+                    <span class="badge warning">Low Stock</span>
+
+                {% else %}
+                    <span class="badge danger">Out of Stock</span>
+
+                {% endif %}
+
+            </td>
+
+            <td>
+
+                <a href="{% url 'dashboard:product_update' product.id %}" class="action-btn edit">
+                    <i class="fas fa-edit"></i>
+                </a>
+
+                <a class="action-btn delete" data-bs-toggle="modal"
+                    data-bs-target="#deleteProductModal"
+                    data-product-id="{{ product.id }}"
+                    data-product-name="{{ product.name }}">
+                    <i class="fas fa-trash"></i>
+                </a>
+
+            </td>
+
+        </tr>
+
+        {% empty %}
+
+        <tr>
+
+            <td colspan="7">
+
+                No products found.
+
+            </td>
+
+        </tr>
+
+        {% endfor %}
+
+        </tbody>
+
+    </table>
+
+</div>
+
+<div class="modal fade" id="deleteProductModal" tabindex="-1">
+
+    <div class="modal-dialog modal-dialog-centered">
+
+        <div class="modal-content">
+
+            <div class="modal-header">
+
+                <h5 class="modal-title">
+                    Delete Product
+                </h5>
+
+                <button
+                    type="button"
+                    class="btn-close"
+                    data-bs-dismiss="modal">
+                </button>
+
+            </div>
+
+            <form method="post" id="deleteProductForm">
+
+                {% csrf_token %}
+
+                <div class="modal-body">
+
+                    <p>
+                        Are you sure you want to delete
+                        <strong id="productName"></strong>?
+                    </p>
+
+                    <p class="text-danger mb-0">
+                        This action cannot be undone.
+                    </p>
+
+                </div>
+
+                <div class="modal-footer">
+
+                    <button
+                        type="button"
+                        class="btn btn-secondary"
+                        data-bs-dismiss="modal">
+                        Cancel
+                    </button>
+
+                    <button
+                        type="submit"
+                        class="btn btn-danger">
+                        Delete
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<div class="pagination">
+
+    {% if products.has_previous %}
+
+        <a href="?page={{ products.previous_page_number }}&search={{ search }}">
+            Previous
+        </a>
+
+    {% endif %}
+
+    <span>
+
+        Page {{ products.number }} of {{ products.paginator.num_pages }}
+
+    </span>
+
+    {% if products.has_next %}
+
+        <a href="?page={{ products.next_page_number }}&search={{ search }}">
+            Next
+        </a>
+
+    {% endif %}
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,130 @@
+{% extends "dashboard/AdBase.html" %}
+
+{% block title %}
+Orders
+{% endblock %}
+
+{% block page_title %}
+Orders
+{% endblock %}
+
+{% block content %}
+
+<div class="page-header">
+
+    <div>
+        <h1>Orders</h1>
+        <p>Manage customer orders.</p>
+    </div>
+
+    <form method="GET" class="search-form">
+
+        <input
+            type="text"
+            name="search"
+            placeholder="Search order..."
+            value="{{ search }}"
+        >
+
+        <button type="submit">
+            <i class="fas fa-search"></i>
+        </button>
+
+    </form>
+
+</div>
+
+        <div class="filter-bar">
+
+            <a href="?">All</a>
+
+            <a href="?status=pending">Pending</a>
+
+            <a href="?status=confirmed">Confirmed</a>
+
+            <a href="?status=shipped">Shipped</a>
+
+            <a href="?status=delivered">Delivered</a>
+
+            <a href="?status=cancelled">Cancelled</a>
+
+        </div>
+
+
+<div class="table-card">
+
+    <table class="orders-table">
+
+        <thead>
+
+            <tr>
+
+                <th>Order ID</th>
+                <th>Customer</th>
+                <th>Date</th>
+                <th>Total</th>
+                <th>Payment</th>
+                <th>Status</th>
+                <th>Action</th>
+
+            </tr>
+
+        </thead>
+
+        <tbody>
+
+            {% for order in orders %}
+
+            <tr>
+
+                <td>{{ order.order_number }}</td>
+
+                <td>{{ order.user.username }}</td>
+
+                <td>{{ order.created_at|date:"d M Y" }}</td>
+
+                <td>£{{ order.total }}</td>
+
+                <td>{{ order.get_payment_method_display }}</td>
+
+                <td>
+
+                    <span class="status {{ order.status }}">
+                        {{ order.get_status_display }}
+                    </span>
+
+                </td>
+
+                <td>
+
+                    <a href="{% url 'dashboard:order_detail' order.id %}" class="view-btn">
+
+                        <i class="fas fa-eye"></i>
+
+                    </a>
+
+                </td>
+
+            </tr>
+
+            {% empty %}
+
+            <tr>
+
+                <td colspan="7" class="empty">
+
+                    No orders found.
+
+                </td>
+
+            </tr>
+
+            {% endfor %}
+
+        </tbody>
+
+    </table>
+
+</div>
+
+{% endblock %}

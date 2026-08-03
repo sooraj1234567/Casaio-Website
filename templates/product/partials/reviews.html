@@ -1,0 +1,156 @@
+<section class="reviews-wrapper">
+
+    <div class="reviews-header">
+
+        <h2>Customer Reviews</h2>
+
+        <p>
+            See what our customers are saying about this product.
+        </p>
+
+    </div>
+
+    <div class="review-summary">
+
+        <!-- Left -->
+
+        <div class="rating-overview">
+
+            <h1>{{ average_rating|floatformat:1 }}</h1>
+
+            <div class="stars">
+
+                {% for i in "12345" %}
+
+                    {% if forloop.counter <= average_rating|floatformat:0|add:"0" %}
+                        <i class="fas fa-star"></i>
+                    {% else %}
+                        <i class="far fa-star"></i>
+                    {% endif %}
+
+                {% endfor %}
+
+            </div>
+
+            <span>{{ reviews|length }} Reviews</span>
+
+        </div>
+
+        <!-- Right -->
+
+        <div class="rating-breakdown">
+
+            {% for star,count in rating_counts.items %}
+
+            <div class="rating-row">
+
+                <span>{{ star }} ★</span>
+
+                <progress
+                    value="{{ count }}"
+                    max="{{ reviews|length }}">
+                </progress>
+
+                <span>{{ count }}</span>
+
+            </div>
+
+            {% endfor %}
+
+        </div>
+
+    </div>
+
+    <!-- Review Form -->
+
+    {% if user.is_authenticated %}
+
+    <div class="review-form-card">
+
+        <h3>Write a Review</h3>
+
+        <form
+            method="POST"
+            action="{% url 'reviews:add_review' product.id %}">
+
+            {% csrf_token %}
+
+            {{ review_form.as_p }}
+
+            <button
+                class="review-btn"
+                type="submit">
+
+                Submit Review
+
+            </button>
+
+        </form>
+
+    </div>
+
+    {% endif %}
+
+    <!-- Reviews -->
+
+    <div class="reviews-list">
+
+        {% for review in reviews %}
+
+        <div class="review-card">
+
+            <div class="review-top">
+
+                <div>
+
+                    <h5>
+
+                        {{ review.user.username }}
+
+                    </h5>
+
+                    <small>
+
+                        {{ review.created_at|date:"d M Y" }}
+
+                    </small>
+
+                </div>
+
+                <div class="stars">
+
+                    {% for i in "12345" %}
+
+                        {% if forloop.counter <= review.rating %}
+                            <i class="fas fa-star"></i>
+                        {% else %}
+                            <i class="far fa-star"></i>
+                        {% endif %}
+
+                    {% endfor %}
+
+                </div>
+
+            </div>
+
+            <p>
+
+                {{ review.comment }}
+
+            </p>
+
+        </div>
+
+        {% empty %}
+
+        <div class="empty-review">
+
+            No reviews yet.
+
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+</section>
