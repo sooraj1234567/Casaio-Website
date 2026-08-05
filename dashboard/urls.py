@@ -30,6 +30,36 @@ urlpatterns = [
     ),
 
     path(
+        "orders/<int:pk>/invoice/",
+        views.order_invoice,
+        name="order_invoice"
+    ),
+
+    path(
+        "orders/<int:pk>/invoice/pdf/",
+        views.download_invoice_pdf,
+        name="download_invoice_pdf"
+    ),
+
+    path(
+        "orders/export/",
+        views.export_orders_excel,
+        name="export_orders_excel"
+    ),
+
+    path(
+        "orders/bulk-delete/",
+        views.bulk_delete_orders,
+        name="bulk_delete_orders"
+    ),
+
+    path(
+        "orders/delete/<int:pk>/",
+        views.order_delete,
+        name="order_delete"
+    ),
+
+    path(
         "products/",
         views.product_list,
         name="product_list"
@@ -81,6 +111,12 @@ path(
     "categories/delete/<int:pk>/",
     views.category_delete,
     name="category_delete",
+),
+
+path(
+    "customers/",
+    views.customer_list,
+    name="customer_list"
 ),
 
 ]

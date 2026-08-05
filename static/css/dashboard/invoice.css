@@ -1,0 +1,280 @@
+/* ===============================
+   RESET
+================================== */
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    background:#f3f4f6;
+    font-family:"Poppins",sans-serif;
+    color:#374151;
+    padding:40px;
+}
+
+/* ===============================
+   PAGE
+================================== */
+
+.invoice-page{
+    max-width:900px;
+    margin:auto;
+}
+
+.invoice-container{
+    background:#fff;
+    border-radius:18px;
+    padding:45px;
+    box-shadow:0 10px 30px rgba(0,0,0,.08);
+}
+
+/* ===============================
+   HEADER
+================================== */
+
+.invoice-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-start;
+    margin-bottom:35px;
+}
+
+.logo img{
+    height:55px;
+}
+
+.invoice-header p{
+    margin-top:8px;
+    color:#6b7280;
+    font-size:14px;
+}
+
+.invoice-info{
+    text-align:right;
+}
+
+.invoice-info h2{
+    font-size:34px;
+    color:#111827;
+    margin-bottom:15px;
+}
+
+.invoice-info p{
+    margin-bottom:8px;
+    font-size:15px;
+}
+
+/* ===============================
+   DIVIDER
+================================== */
+
+hr{
+    border:none;
+    border-top:2px solid #e5e7eb;
+    margin:30px 0;
+}
+
+/* ===============================
+   BILL TO & PAYMENT
+================================== */
+
+.invoice-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:60px;
+    margin-bottom:40px;
+}
+
+.invoice-grid h3{
+    margin-bottom:15px;
+    color:#111827;
+}
+
+.invoice-grid p{
+    margin-bottom:8px;
+    line-height:1.6;
+}
+
+/* ===============================
+   TABLE
+================================== */
+
+.invoice-table{
+    width:100%;
+    border-collapse:collapse;
+    margin-top:20px;
+}
+
+.invoice-table thead{
+    background:#f8fafc;
+}
+
+.invoice-table th{
+    padding:16px;
+    text-align:left;
+    font-size:15px;
+    color:#111827;
+}
+
+.invoice-table td{
+    padding:18px 16px;
+    border-bottom:1px solid #ececec;
+}
+
+.invoice-table tbody tr:hover{
+    background:#fafafa;
+}
+
+/* ===============================
+   TOTAL
+================================== */
+
+.invoice-total{
+    margin-top:35px;
+    margin-left:auto;
+    width:320px;
+}
+
+.invoice-total div{
+    display:flex;
+    justify-content:space-between;
+    margin-bottom:15px;
+}
+
+.invoice-total h3{
+    font-size:28px;
+    color:#ff6b00;
+}
+
+/* ===============================
+   BUTTONS
+================================== */
+
+.invoice-actions{
+    display:flex;
+    justify-content:flex-end;
+    gap:15px;
+    margin-top:30px;
+}
+
+.print-btn{
+    background:#111827;
+    color:#fff;
+    border:none;
+    padding:14px 26px;
+    border-radius:10px;
+    cursor:pointer;
+    font-size:15px;
+    font-weight:600;
+    transition:.3s;
+}
+
+.print-btn:hover{
+    background:#1f2937;
+}
+
+.back-btn{
+    background:#f3f4f6;
+    color:#111827;
+    text-decoration:none;
+    padding:14px 26px;
+    border-radius:10px;
+    font-weight:600;
+    transition:.3s;
+}
+
+.back-btn:hover{
+    background:#e5e7eb;
+}
+
+/* ===============================
+   PRINT
+================================== */
+
+@media print{
+
+    body{
+        background:#fff;
+        padding:0;
+    }
+
+    .invoice-actions{
+        display:none;
+    }
+
+    .invoice-container{
+        box-shadow:none;
+        border:none;
+        padding:0;
+    }
+
+    .invoice-page{
+        max-width:100%;
+    }
+}
+
+.pdf-btn{
+
+    background:#dc2626;
+
+    color:#fff;
+
+    padding:14px 26px;
+
+    border-radius:10px;
+
+    text-decoration:none;
+
+    font-weight:600;
+
+    transition:.3s;
+
+}
+
+.pdf-btn:hover{
+
+    background:#b91c1c;
+
+}
+
+/* ===============================
+   MOBILE
+================================== */
+
+@media(max-width:768px){
+
+    body{
+        padding:20px;
+    }
+
+    .invoice-header{
+        flex-direction:column;
+        gap:25px;
+    }
+
+    .invoice-info{
+        text-align:left;
+    }
+
+    .invoice-grid{
+        grid-template-columns:1fr;
+        gap:30px;
+    }
+
+    .invoice-total{
+        width:100%;
+    }
+
+    .invoice-actions{
+        flex-direction:column;
+    }
+
+    .print-btn,
+    .back-btn{
+        width:100%;
+        text-align:center;
+    }
+}

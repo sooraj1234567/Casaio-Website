@@ -14,17 +14,37 @@ Order Details
 
     <div>
 
-        <h1>{{ order.order_number }}</h1>
+        <a href="{% url 'dashboard:order_list' %}" class="back-link">
+
+            <i class="fas fa-arrow-left"></i>
+
+            Back to Orders
+
+        </a>
+
+        <h1>
+
+            Order #{{ order.order_number }}
+
+        </h1>
 
         <p>
-            Placed on {{ order.created_at|date:"d M Y • h:i A" }}
+
+            {{ order.created_at|date:"d F Y • h:i A" }}
+
         </p>
 
     </div>
 
-    <span class="status {{ order.status }}">
-        {{ order.get_status_display }}
-    </span>
+    <div>
+
+        <span class="status {{ order.status }}">
+
+            {{ order.get_status_display }}
+
+        </span>
+
+    </div>
 
 </div>
 
@@ -35,21 +55,36 @@ Order Details
 
     <div class="detail-card">
 
-        <h3>Customer Information</h3>
+        <h3>
+
+            <i class="fas fa-user"></i>
+
+            Customer Information
+
+        </h3>
 
         <div class="info-row">
-            <strong>Name</strong>
-            <span>{{ order.user.username }}</span>
+
+            <span>Name</span>
+
+            <strong>{{ order.user.username }}</strong>
+
         </div>
 
         <div class="info-row">
-            <strong>Email</strong>
-            <span>{{ order.user.email }}</span>
+
+            <span>Email</span>
+
+            <strong>{{ order.user.email }}</strong>
+
         </div>
 
         <div class="info-row">
-            <strong>Phone</strong>
-            <span>{{ order.address.phone_number }}</span>
+
+            <span>Phone</span>
+
+            <strong>{{ order.address.phone_number }}</strong>
+
         </div>
 
     </div>
@@ -59,14 +94,45 @@ Order Details
 
     <div class="detail-card">
 
-        <h3>Shipping Address</h3>
+        <h3>
 
-        <p>{{ order.address.full_name }}</p>
-        <p>{{ order.address.house_name }}</p>
-        <p>{{ order.address.area }}</p>
-        <p>{{ order.address.city }}</p>
-        <p>{{ order.address.state }}</p>
-        <p>{{ order.address.pincode }}</p>
+            <i class="fas fa-location-dot"></i>
+
+            Shipping Address
+
+        </h3>
+
+        <p>
+
+            {{ order.address.full_name }}
+
+        </p>
+
+        <p>
+
+            {{ order.address.house_name }}
+
+        </p>
+
+        <p>
+
+            {{ order.address.area }}
+
+        </p>
+
+        <p>
+
+            {{ order.address.city }},
+
+            {{ order.address.state }}
+
+        </p>
+
+        <p>
+
+            {{ order.address.pincode }}
+
+        </p>
 
     </div>
 
@@ -75,17 +141,24 @@ Order Details
 
 <div class="detail-card">
 
-    <h3>Ordered Products</h3>
+    <h3>
 
-    <table class="orders-table">
+        <i class="fas fa-box-open"></i>
+
+        Ordered Products
+
+    </h3>
+
+    <table class="product-table">
 
         <thead>
 
             <tr>
 
+                <th>Image</th>
                 <th>Product</th>
                 <th>Qty</th>
-                <th>Price</th>
+                <th>Unit Price</th>
                 <th>Total</th>
 
             </tr>
@@ -98,13 +171,63 @@ Order Details
 
             <tr>
 
-                <td>{{ item.product.name }}</td>
+                <td>
+
+                {% if item.product.image %}
+
+                    <img
+                        src="{{ item.product.image.url }}"
+                        class="product-image"
+                        alt="{{ item.product.name }}"
+                    >
+
+                {% else %}
+
+                    <div class="product-image no-image">
+                        No Image
+                    </div>
+
+                {% endif %}
+
+                </td>
+
+                <td>
+
+                    <div class="product-info">
+
+                        <strong>{{ item.product.name }}</strong>
+
+                        <small>{{ item.product.category.name }}</small>
+
+                    </div>
+
+                </td>
 
                 <td>{{ item.quantity }}</td>
 
-                <td>£{{ item.price }}</td>
+                <td>₹{{ item.price }}</td>
 
-                <td>£{{ item.total_price }}</td>
+                <td>
+
+                    <strong>
+
+                        ₹{{ item.total_price }}
+
+                    </strong>
+
+                </td>
+
+            </tr>
+
+            {% empty %}
+
+            <tr>
+
+                <td colspan="5">
+
+                    No products found.
+
+                </td>
 
             </tr>
 
@@ -119,49 +242,169 @@ Order Details
 
 <div class="detail-card">
 
-    <h3>Payment Summary</h3>
+    <h3>
 
-    <div class="info-row">
+        <i class="fas fa-credit-card"></i>
 
-        <strong>Payment Method</strong>
+        Payment Summary
 
-        <span>{{ order.get_payment_method_display }}</span>
+    </h3>
+
+    <div class="payment-row">
+
+        <span>Payment Method</span>
+
+        <strong>{{ order.get_payment_method_display }}</strong>
 
     </div>
 
-    <div class="info-row">
+    <div class="payment-row">
 
-        <strong>Payment Status</strong>
+        <span>Payment Status</span>
 
-        <span>
+        {% if order.payment_status %}
 
-            {% if order.payment_status %}
+            <span class="payment-badge paid">
+
+                <i class="fas fa-check-circle"></i>
 
                 Paid
 
-            {% else %}
+            </span>
+
+        {% else %}
+
+            <span class="payment-badge pending">
+
+                <i class="fas fa-clock"></i>
 
                 Pending
 
-            {% endif %}
+            </span>
 
-        </span>
-
-    </div>
-
-    <div class="info-row">
-
-        <strong>Subtotal</strong>
-
-        <span>£{{ order.subtotal }}</span>
+        {% endif %}
 
     </div>
 
-    <div class="info-row">
+    <hr>
 
-        <strong>Total</strong>
+    <div class="payment-row">
 
-        <span>£{{ order.total }}</span>
+        <span>Subtotal</span>
+
+        <strong>₹{{ order.subtotal }}</strong>
+
+    </div>
+
+    <div class="payment-row">
+
+        <span>Shipping</span>
+
+        <strong>₹0.00</strong>
+
+    </div>
+
+    <div class="payment-row">
+
+        <span>Discount</span>
+
+        <strong>₹0.00</strong>
+
+    </div>
+
+    <div class="payment-total">
+
+        <span>Total</span>
+
+        <strong>₹{{ order.total }}</strong>
+
+    </div>
+
+</div>
+
+<div class="detail-card">
+
+    <h3>
+
+        <i class="fas fa-route"></i>
+
+        Order Timeline
+
+    </h3>
+
+    <div class="timeline">
+
+        <div class="timeline-item {% if order.status == 'pending' or order.status == 'confirmed' or order.status == 'shipped' or order.status == 'delivered' %}completed{% endif %}">
+
+            <div class="timeline-dot"></div>
+
+            <div class="timeline-content">
+
+                <h4>Order Placed</h4>
+
+                <small>{{ order.created_at|date:"d M Y • h:i A" }}</small>
+
+            </div>
+
+        </div>
+
+        <div class="timeline-item {% if order.status == 'confirmed' or order.status == 'shipped' or order.status == 'delivered' %}completed{% endif %}">
+
+            <div class="timeline-dot"></div>
+
+            <div class="timeline-content">
+
+                <h4>Order Confirmed</h4>
+
+            </div>
+
+        </div>
+
+        <div class="timeline-item {% if order.status == 'shipped' or order.status == 'delivered' %}completed{% endif %}">
+
+            <div class="timeline-dot"></div>
+
+            <div class="timeline-content">
+
+                <h4>Shipped</h4>
+
+            </div>
+
+        </div>
+
+        <div class="timeline-item {% if order.status == 'delivered' %}completed{% endif %}">
+
+            <div class="timeline-dot"></div>
+
+            <div class="timeline-content">
+
+                <h4>Delivered</h4>
+
+            </div>
+
+        </div>
+
+        {% if order.status == "cancelled" %}
+
+        <div class="timeline-item cancelled">
+
+            <div class="timeline-dot"></div>
+
+            <div class="timeline-content">
+
+                <h4>Cancelled</h4>
+
+                <small>
+
+                    {{ order.cancelled_at|date:"d M Y • h:i A" }}
+
+                </small>
+
+            </div>
+
+        </div>
+
+        {% endif %}
 
     </div>
 
@@ -200,6 +443,21 @@ Order Details
         </div>
 
     </form>
+
+</div>
+
+<div class="action-buttons">
+
+    <a
+        href="{% url 'dashboard:order_invoice' order.id %}"
+        class="invoice-btn"
+    >
+
+        <i class="fas fa-file-invoice"></i>
+
+        View Invoice
+
+    </a>
 
 </div>
 

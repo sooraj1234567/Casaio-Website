@@ -1,0 +1,211 @@
+{% load static %}
+
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+
+        Invoice {{ order.order_number }}
+
+    </title>
+
+    <link
+        rel="stylesheet"
+        href="{% static 'css/dashboard/invoice.css' %}"
+    >
+
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+    >
+
+</head>
+
+<body>
+
+<div class="invoice-page">
+    
+    <div class="invoice-container">
+
+        <div class="invoice-header">
+
+            <div>
+
+                <div class="logo">
+                    <a href="/">
+                        <img src="{% static 'images/logo.png' %}" alt="Casaio">
+                    </a>
+                </div>
+                <p>Premium Home & Living Store</p>
+
+            </div>
+
+            <div class="invoice-info">
+
+                <h2>Invoice</h2>
+
+                <p><strong>Invoice No:</strong> {{ order.order_number }}</p>
+
+                <p><strong>Date:</strong> {{ order.created_at|date:"d M Y" }}</p>
+
+            </div>
+
+        </div>
+
+        <hr>
+
+        <div class="invoice-grid">
+
+            <div>
+
+                <h3>Bill To</h3>
+
+                <p><strong>{{ order.address.full_name }}</strong></p>
+                <p>{{ order.address.house_name }}</p>
+                <p>{{ order.address.area }}</p>
+                <p>{{ order.address.city }}, {{ order.address.state }}</p>
+                <p>{{ order.address.pincode }}</p>
+                <p>{{ order.address.phone_number }}</p>
+
+            </div>
+
+            <div>
+
+                <h3>Payment</h3>
+
+                <p>
+                    <strong>Method:</strong>
+                    {{ order.get_payment_method_display }}
+                </p>
+
+                <p>
+                    <strong>Status:</strong>
+
+                    {% if order.payment_status %}
+
+                        Paid
+
+                    {% else %}
+
+                        Pending
+
+                    {% endif %}
+
+                </p>
+
+                <p>
+                    <strong>Order Status:</strong>
+
+                    {{ order.get_status_display }}
+
+                </p>
+
+            </div>
+
+        </div>
+
+        <table class="invoice-table">
+
+            <thead>
+
+                <tr>
+
+                    <th>Product</th>
+                    <th>Qty</th>
+                    <th>Price</th>
+                    <th>Total</th>
+
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+                {% for item in order.items.all %}
+
+                <tr>
+
+                    <td>{{ item.product.name }}</td>
+
+                    <td>{{ item.quantity }}</td>
+
+                    <td>₹{{ item.price }}</td>
+
+                    <td>₹{{ item.total_price }}</td>
+
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+        <div class="invoice-total">
+
+            <div>
+
+                <p>Subtotal</p>
+
+                <p>Total</p>
+
+            </div>
+
+            <div>
+
+                <p>₹{{ order.subtotal }}</p>
+
+                <h3>₹{{ order.total }}</h3>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="invoice-actions">
+
+        <button onclick="window.print()" class="print-btn">
+
+            <i class="fas fa-print"></i>
+
+            Print Invoice
+
+        </button>
+
+        <a
+            href="{% url 'dashboard:download_invoice_pdf' order.id %}"
+            class="pdf-btn"
+        >
+
+            <i class="fas fa-file-pdf"></i>
+
+            Download PDF
+
+        </a>
+
+        <a href="{% url 'dashboard:order_detail' order.id %}" class="back-btn">
+
+            <i class="fas fa-arrow-left"></i>
+
+            Back
+
+        </a>
+
+    </div>
+
+</div>
+
+</body>
+
+</html>

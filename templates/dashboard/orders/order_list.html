@@ -34,22 +34,197 @@ Orders
 
 </div>
 
-        <div class="filter-bar">
+<div class="stats-grid">
 
-            <a href="?">All</a>
+    <div class="stat-card">
 
-            <a href="?status=pending">Pending</a>
+        <i class="fas fa-shopping-cart"></i>
 
-            <a href="?status=confirmed">Confirmed</a>
+        <h3>{{ total_orders }}</h3>
 
-            <a href="?status=shipped">Shipped</a>
+        <p>Total Orders</p>
 
-            <a href="?status=delivered">Delivered</a>
+    </div>
 
-            <a href="?status=cancelled">Cancelled</a>
+    <div class="stat-card">
 
-        </div>
+        <i class="fas fa-hourglass-half"></i>
 
+        <h3>{{ pending_orders }}</h3>
+
+        <p>Pending</p>
+
+    </div>
+
+    <div class="stat-card">
+
+        <i class="fas fa-check-circle"></i>
+
+        <h3>{{ delivered_orders }}</h3>
+
+        <p>Delivered</p>
+
+    </div>
+
+    <div class="stat-card">
+
+        <i class="fas fa-indian-rupee-sign"></i>
+
+        <h3>₹{{ total_revenue }}</h3>
+
+        <p>Revenue</p>
+
+    </div>
+
+</div>
+
+<form method="GET" class="filter-bar">
+
+    <input
+        type="text"
+        name="search"
+        placeholder="Search orders..."
+        value="{{ search }}"
+    >
+
+    <select name="status">
+
+        <option value="">All Status</option>
+
+        {% for value,label in orders.paginator.object_list.model.STATUS_CHOICES %}
+
+            <option
+                value="{{ value }}"
+                {% if status == value %}selected{% endif %}
+            >
+
+                {{ label }}
+
+            </option>
+
+        {% endfor %}
+
+    </select>
+
+    <select name="payment">
+
+        <option value="">All Payments</option>
+
+        <option value="cod"
+            {% if payment == "cod" %}selected{% endif %}>
+            Cash on Delivery
+        </option>
+
+        <option value="razorpay"
+            {% if payment == "razorpay" %}selected{% endif %}>
+            Razorpay
+        </option>
+
+    </select>
+
+    <select name="date">
+
+        <option value="">All Dates</option>
+
+        <option value="today"
+            {% if date_filter == "today" %}selected{% endif %}>
+            Today
+        </option>
+
+        <option value="week"
+            {% if date_filter == "week" %}selected{% endif %}>
+            This Week
+        </option>
+
+        <option value="month"
+            {% if date_filter == "month" %}selected{% endif %}>
+            This Month
+        </option>
+
+        <option value="year"
+            {% if date_filter == "year" %}selected{% endif %}>
+            This Year
+        </option>
+
+    </select>
+
+    <button type="submit" class="filter-btn">
+
+        <i class="fas fa-filter"></i>
+
+        Apply
+
+    </button>
+
+    <a
+        href="{% url 'dashboard:order_list' %}"
+        class="reset-btn"
+    >
+
+        Reset
+
+    </a>
+
+    <a
+        href="{% url 'dashboard:export_orders_excel' %}?search={{ search }}&status={{ status }}&payment={{ payment }}&date={{ date_filter }}"
+        class="export-btn"
+    >
+
+        <i class="fas fa-file-excel"></i>
+
+        Export Excel
+
+    </a>
+
+</form>
+
+<div id="bulk-action-bar" class="bulk-action-bar">
+
+    <div class="bulk-left">
+
+        <span id="selected-count">
+
+            0 Orders Selected
+
+        </span>
+
+    </div>
+
+    <div class="bulk-right">
+
+        <button
+            type="button"
+            id="delete-selected-btn"
+            class="delete-selected-btn"
+        >
+
+            <i class="fas fa-trash"></i>
+
+            Delete Selected
+
+        </button>
+
+        <button
+            type="button"
+            id="clear-selection"
+            class="clear-selection-btn"
+        >
+
+            Clear Selection
+
+        </button>
+
+    </div>
+
+</div>
+
+<form
+    method="POST"
+    action="{% url 'dashboard:bulk_delete_orders' %}"
+    id="bulk-delete-form"
+>
+
+    {% csrf_token %}
 
 <div class="table-card">
 
@@ -57,17 +232,27 @@ Orders
 
         <thead>
 
-            <tr>
+        <tr>
+            
+            <th width="50">
 
-                <th>Order ID</th>
-                <th>Customer</th>
-                <th>Date</th>
-                <th>Total</th>
-                <th>Payment</th>
-                <th>Status</th>
-                <th>Action</th>
+                <input
+                    type="checkbox"
+                    id="select-all"
+                >
 
-            </tr>
+            </th>
+            <th>Order No</th>
+            <th>Customer</th>
+            <th>Items</th>
+            <th>Date</th>
+            <th>Total</th>
+            <th>Payment Method</th>
+            <th>Payment Status</th>
+            <th>Status</th>
+            <th>Action</th>
+
+        </tr>
 
         </thead>
 
@@ -77,33 +262,86 @@ Orders
 
             <tr>
 
-                <td>{{ order.order_number }}</td>
+            <td>
 
-                <td>{{ order.user.username }}</td>
+                <input
+                    type="checkbox"
+                    class="order-checkbox"
+                    name="selected_orders"
+                    value="{{ order.id }}"
+                >
 
-                <td>{{ order.created_at|date:"d M Y" }}</td>
+            </td>
 
-                <td>£{{ order.total }}</td>
+            <td>{{ order.order_number }}</td>
 
-                <td>{{ order.get_payment_method_display }}</td>
+            <td>{{ order.user.username }}</td>
 
-                <td>
+            <td>{{ order.items.count }}</td>
 
-                    <span class="status {{ order.status }}">
-                        {{ order.get_status_display }}
+            <td>{{ order.created_at|date:"d M Y" }}</td>
+
+            <td>₹{{ order.total }}</td>
+
+            <td>{{ order.get_payment_method_display }}</td>
+
+            <td>
+
+                {% if order.payment_status %}
+
+                    <span class="badge paid">
+
+                        Paid
+
                     </span>
 
-                </td>
+                {% else %}
 
-                <td>
+                    <span class="badge pending">
 
-                    <a href="{% url 'dashboard:order_detail' order.id %}" class="view-btn">
+                        Pending
 
+                    </span>
+
+                {% endif %}
+
+            </td>
+
+            <td>
+
+                <span class="status {{ order.status }}">
+
+                    {{ order.get_status_display }}
+
+                </span>
+
+            </td>
+
+           <td>
+
+                <div class="action-buttons">
+
+                    <a
+                        href="{% url 'dashboard:order_detail' order.id %}"
+                        class="view-btn"
+                    >
                         <i class="fas fa-eye"></i>
-
                     </a>
 
-                </td>
+                    <button
+                        type="button"
+                        class="delete-btn"
+                        data-id="{{ order.id }}"
+                        data-order="{{ order.order_number }}"
+                    >
+
+                        <i class="fas fa-trash"></i>
+
+                    </button>
+
+                </div>
+
+            </td>
 
             </tr>
 
@@ -126,5 +364,223 @@ Orders
     </table>
 
 </div>
+
+</form>
+
+<form
+    method="POST"
+    action="{% url 'dashboard:order_delete' 0 %}"
+    id="single-delete-form"
+>
+
+    {% csrf_token %}
+
+</form>
+
+<div class="pagination">
+
+    {% if orders.has_previous %}
+        <a href="?page={{ orders.previous_page_number }}&search={{ search }}&status={{ status }}&payment={{ payment }}&date={{ date_filter }}">
+            &laquo; Previous
+        </a>
+    {% endif %}
+    <span>Page {{ orders.number }} of {{ orders.paginator.num_pages }}</span>
+    {% if orders.has_next %}
+        <a href="?page={{ orders.next_page_number }}&search={{ search }}&status={{ status }}&payment={{ payment }}&date={{ date_filter }}">
+            Next &raquo;
+        </a>
+    {% endif %}
+
+</div>
+
+<!-- Delete Modal -->
+
+<div id="delete-modal" class="modal-overlay">
+
+    <div class="delete-modal">
+
+        <div class="modal-header">
+
+            <i class="fas fa-triangle-exclamation"></i>
+
+            <h2>Delete Orders</h2>
+
+        </div>
+
+        <p class="modal-text" id="model-message" >
+
+            Are you sure you want to permanently delete the selected order(s)?
+
+        </p>
+
+        <p class="warning-text">
+
+            This action cannot be undone.
+
+        </p>
+
+        <div class="modal-actions">
+
+            <button
+                id="cancel-delete"
+                class="cancel-btn"
+            >
+
+                Cancel
+
+            </button>
+
+            <button
+                id="confirm-delete"
+                class="confirm-delete-btn"
+            >
+
+                Delete Permanently
+
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+
+const selectAll = document.getElementById("select-all");
+
+const checkboxes = document.querySelectorAll(".order-checkbox");
+
+const bulkBar = document.getElementById("bulk-action-bar");
+
+const selectedCount = document.getElementById("selected-count");
+
+const clearSelection = document.getElementById("clear-selection");
+
+const deleteModal = document.getElementById("delete-modal");
+
+const deleteBtn = document.getElementById("delete-selected-btn");
+
+const cancelDelete = document.getElementById("cancel-delete");
+
+const confirmDelete = document.getElementById("confirm-delete");
+
+const deleteButtons = document.querySelectorAll(".delete-btn");
+
+const modelMessage = document.getElementById("model-message");
+
+function updateBulkBar(){
+
+    const checked = document.querySelectorAll(".order-checkbox:checked");
+
+    if(checked.length > 0){
+
+        bulkBar.style.display = "flex";
+
+        selectedCount.innerText = checked.length + " Order(s) Selected";
+
+    }
+
+    else{
+
+        bulkBar.style.display = "none";
+
+    }
+
+    selectAll.checked = checked.length === checkboxes.length;
+
+}
+
+selectAll.addEventListener("change", function(){
+
+    checkboxes.forEach(function(box){
+
+        box.checked = selectAll.checked;
+
+    });
+
+    updateBulkBar();
+
+});
+
+checkboxes.forEach(function(box){
+
+    box.addEventListener("change", updateBulkBar);
+
+});
+
+clearSelection.addEventListener("click", function(){
+
+    checkboxes.forEach(function(box){
+
+        box.checked = false;
+
+    });
+
+    selectAll.checked = false;
+
+    updateBulkBar();
+
+});
+
+deleteBtn.addEventListener("click", function(){
+
+    const checked = document.querySelectorAll(".order-checkbox:checked");
+
+    if(checked.length === 0){
+
+        alert("Please select at least one order.");
+
+        return;
+
+    }
+
+    deleteMode = "bulk";
+
+    modelMessage.innerText = "Are you sure you want to permanently delete the selected order(s)?";
+
+    deleteModal.style.display = "flex";
+});
+
+cancelDelete.addEventListener("click", function(){
+    deleteModal.style.display = "none";
+});
+
+window.addEventListener("click", function(event){
+    if(event.target === deleteModal){
+        deleteModal.style.display = "none";
+    }
+});
+
+confirmDelete.addEventListener("click", function(){
+    
+    if(deleteMode === "bulk"){
+
+        document.getElementById("bulk-delete-form")
+        .submit();
+    }
+    else{
+        const form = document.getElementById("single-delete-form");
+        form.action = `/dashboard/orders/delete/${deleteOrderId}/`;
+        form.submit();
+    }
+
+});
+
+let deleteMode = "bulk";  // "bulk" or "single"
+
+let deleteOrderId = null;
+
+deleteButtons.forEach(function(btn){
+    btn.addEventListener("click", function(){
+        deleteMode = "single";
+        deleteOrderId = this.dataset.id;
+        const orderNumber = this.dataset.order;
+        modelMessage.innerText = "Are you sure you want to permanently delete order " + orderNumber + "?";
+        deleteModal.style.display = "flex";
+    });
+});
+
+</script>
 
 {% endblock %}
