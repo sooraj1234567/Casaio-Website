@@ -114,6 +114,7 @@
 .customer-table{
     width:100%;
     border-collapse:collapse;
+    font-size: 14px;
 }
 
 .customer-table thead{
@@ -122,17 +123,18 @@
 
 .customer-table th{
     text-align:left;
-    padding:18px;
-    font-size:14px;
+    padding:16px 14px;
+    font-size:13px;
     font-weight:600;
     color:#374151;
     border-bottom:1px solid #ececec;
 }
 
 .customer-table td{
-    padding:18px;
+    padding:16px 14px;
     border-bottom:1px solid #f3f4f6;
     vertical-align:middle;
+    font-size:13px;
 }
 
 .customer-table tbody tr{
@@ -146,6 +148,51 @@
 .customer-table tbody tr:last-child td{
     border-bottom:none;
 }
+
+/* Customer name */
+.customer-table td:nth-child(2) {
+    font-size: 13px;
+}
+
+/* Email */
+.customer-table td:nth-child(3) {
+    max-width: 220px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: 12.5px;
+}
+
+/* Phone */
+.customer-table td:nth-child(4) {
+    font-size: 13px;
+}
+
+/* Orders */
+.customer-table td:nth-child(5) {
+    font-size: 13px;
+}
+
+/* Total spent */
+.customer-table td:nth-child(6) {
+    font-size: 13px;
+}
+
+/* Joined */
+.customer-table td:nth-child(7) {
+    font-size: 12.5px;
+}
+
+/* Last login */
+.customer-table td:nth-child(8) {
+    font-size: 12.5px;
+}
+
+/* Status */
+.customer-table td:nth-child(9) {
+    font-size: 12px;
+}
+
 
 /* ==========================================
    CUSTOMER AVATAR
@@ -284,6 +331,34 @@
 }
 
 /* ==========================================
+   ORDER COUNT
+========================================== */
+
+.order-count{
+
+    display:inline-flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    min-width:34px;
+
+    height:34px;
+
+    padding:0 12px;
+
+    border-radius:18px;
+
+    background:#eef2ff;
+
+    color:#4f46e5;
+
+    font-weight:600;
+
+}
+
+/* ==========================================
    RESPONSIVE
 ========================================== */
 
@@ -325,4 +400,602 @@
         grid-template-columns:1fr;
     }
 
+}
+
+/* ==========================================
+   CUSTOMER ACTIONS
+========================================== */
+
+.customer-actions{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:8px;
+
+}
+
+
+.customer-action-btn{
+
+    width:42px;
+
+    height:42px;
+
+    display:inline-flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    border:none;
+
+    border-radius:10px;
+
+    cursor:pointer;
+
+    transition:all .25s ease;
+
+}
+
+
+/* ==========================================
+   BLOCK
+========================================== */
+
+.customer-action-btn.block{
+
+    background:#fff1f2;
+
+    color:#dc2626;
+
+}
+
+
+.customer-action-btn.block:hover{
+
+    background:#dc2626;
+
+    color:#fff;
+
+    transform:translateY(-2px);
+
+}
+
+
+/* ==========================================
+   UNBLOCK
+========================================== */
+
+.customer-action-btn.unblock{
+
+    background:#ecfdf5;
+
+    color:#059669;
+
+}
+
+
+.customer-action-btn.unblock:hover{
+
+    background:#059669;
+
+    color:#fff;
+
+    transform:translateY(-2px);
+
+}
+
+
+/* ==========================================
+   STATUS MODAL
+========================================== */
+
+.customer-status-modal{
+
+    position:fixed;
+
+    inset:0;
+
+    width:100%;
+
+    height:100%;
+
+    background:rgba(15,23,42,.55);
+
+    backdrop-filter:blur(4px);
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    padding:20px;
+
+    z-index:9999;
+
+    opacity:0;
+
+    visibility:hidden;
+
+    transition:
+        opacity .2s ease,
+        visibility .2s ease;
+
+}
+
+
+.customer-status-modal.show{
+
+    opacity:1;
+
+    visibility:visible;
+
+}
+
+
+/* ==========================================
+   MODAL CONTENT
+========================================== */
+
+.customer-status-modal-content{
+
+    width:100%;
+
+    max-width:430px;
+
+    background:#fff;
+
+    border-radius:20px;
+
+    padding:32px;
+
+    text-align:center;
+
+    box-shadow:
+        0 25px 60px rgba(0,0,0,.20);
+
+    transform:translateY(15px) scale(.97);
+
+    transition:transform .2s ease;
+
+}
+
+
+.customer-status-modal.show
+.customer-status-modal-content{
+
+    transform:translateY(0) scale(1);
+
+}
+
+
+/* ==========================================
+   MODAL ICON
+========================================== */
+
+.customer-status-modal-icon{
+
+    width:64px;
+
+    height:64px;
+
+    margin:0 auto 20px;
+
+    border-radius:50%;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    background:#fff1f2;
+
+    color:#dc2626;
+
+    font-size:24px;
+
+}
+
+
+.customer-status-modal-icon.unblock{
+
+    background:#ecfdf5;
+
+    color:#059669;
+
+}
+
+
+/* ==========================================
+   MODAL TEXT
+========================================== */
+
+.customer-status-modal-content h3{
+
+    margin:0 0 12px;
+
+    color:#111827;
+
+    font-size:22px;
+
+}
+
+
+.customer-status-modal-content p{
+
+    margin:0;
+
+    color:#64748b;
+
+    line-height:1.6;
+
+}
+
+
+.customer-status-modal-content p strong{
+
+    color:#111827;
+
+}
+
+
+/* ==========================================
+   MODAL BUTTONS
+========================================== */
+
+.customer-status-modal-actions{
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    gap:12px;
+
+    margin-top:28px;
+
+}
+
+
+.customer-status-modal-actions form{
+
+    margin:0;
+
+}
+
+
+.modal-cancel-btn,
+.modal-block-btn,
+.modal-unblock-btn{
+
+    border:none;
+
+    padding:11px 20px;
+
+    border-radius:10px;
+
+    font-size:14px;
+
+    font-weight:600;
+
+    cursor:pointer;
+
+    transition:.25s ease;
+
+}
+
+
+/* Cancel */
+
+.modal-cancel-btn{
+
+    background:#f3f4f6;
+
+    color:#374151;
+
+}
+
+
+.modal-cancel-btn:hover{
+
+    background:#e5e7eb;
+
+}
+
+
+/* Block */
+
+.modal-block-btn{
+
+    background:#dc2626;
+
+    color:#fff;
+
+}
+
+
+.modal-block-btn:hover{
+
+    background:#b91c1c;
+
+}
+
+
+/* Unblock */
+
+.modal-unblock-btn{
+
+    background:#059669;
+
+    color:#fff;
+
+}
+
+
+.modal-unblock-btn:hover{
+
+    background:#047857;
+
+}
+
+
+/* ==========================================
+   MOBILE
+========================================== */
+
+@media(max-width:600px){
+
+    .customer-status-modal-content{
+
+        padding:25px 20px;
+
+    }
+
+    .customer-status-modal-actions{
+
+        flex-direction:column;
+
+    }
+
+    .modal-cancel-btn,
+    .modal-block-btn,
+    .modal-unblock-btn{
+
+        width:100%;
+
+    }
+
+}
+
+/* ==========================================
+   CUSTOMER FILTER BAR
+========================================== */
+
+.customer-filter-bar {
+
+    display: flex;
+
+    align-items: flex-end;
+
+    gap: 14px;
+
+    margin: 20px 0;
+
+    padding: 16px 18px;
+
+    background: #ffffff;
+
+    border-radius: 14px;
+
+    box-shadow:
+        0 5px 20px rgba(15, 23, 42, 0.04);
+
+}
+
+
+.filter-group {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 6px;
+
+}
+
+
+.filter-group label {
+
+    color: #64748b;
+
+    font-size: 11px;
+
+    font-weight: 600;
+
+}
+
+
+.filter-group select {
+
+    min-width: 150px;
+
+    height: 38px;
+
+    padding: 0 34px 0 12px;
+
+    border: 1px solid #e2e8f0;
+
+    border-radius: 8px;
+
+    background: #ffffff;
+
+    color: #334155;
+
+    font-size: 13px;
+
+    outline: none;
+
+    cursor: pointer;
+
+    transition: .2s ease;
+
+}
+
+
+.filter-group select:hover {
+
+    border-color: #cbd5e1;
+
+}
+
+
+.filter-group select:focus {
+
+    border-color: #ff6b00;
+
+    box-shadow:
+        0 0 0 3px rgba(255, 107, 0, 0.08);
+
+}
+
+
+/* ==========================================
+   CLEAR FILTERS
+========================================== */
+
+.clear-filters-btn {
+
+    height: 38px;
+
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 7px;
+
+    padding: 0 14px;
+
+    border-radius: 8px;
+
+    background: #fff1f2;
+
+    color: #dc2626;
+
+    text-decoration: none;
+
+    font-size: 12px;
+
+    font-weight: 600;
+
+    transition: .2s ease;
+
+}
+
+
+.clear-filters-btn:hover {
+
+    background: #fee2e2;
+
+    color: #b91c1c;
+
+}
+
+
+/* ==========================================
+   MOBILE
+========================================== */
+
+@media (max-width: 700px) {
+
+    .customer-filter-bar {
+
+        flex-direction: column;
+
+        align-items: stretch;
+
+    }
+
+
+    .filter-group select {
+
+        width: 100%;
+
+    }
+
+
+    .clear-filters-btn {
+
+        justify-content: center;
+
+    }
+
+}
+
+/* ==========================================
+   CUSTOMER PAGINATION
+========================================== */
+
+.pagination {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 6px;
+
+    margin: 22px 0 10px;
+}
+
+
+.page-btn {
+    min-width: 36px;
+    height: 36px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 0 10px;
+
+    border: 1px solid #e2e8f0;
+
+    border-radius: 8px;
+
+    background: #ffffff;
+
+    color: #475569;
+
+    text-decoration: none;
+
+    font-size: 13px;
+    font-weight: 600;
+
+    transition: .2s ease;
+}
+
+
+.page-btn:hover {
+    border-color: #ff6b00;
+
+    color: #ff6b00;
+
+    background: #fff7ed;
+}
+
+
+.page-btn.active {
+    border-color: #ff6b00;
+
+    background: #ff6b00;
+
+    color: #ffffff;
+}
+
+
+.page-btn i {
+    font-size: 11px;
 }

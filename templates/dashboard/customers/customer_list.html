@@ -83,6 +83,131 @@ Customers
 
 </div>
 
+<!-- Customer Filters -->
+
+<form
+    method="GET"
+    action="{% url 'dashboard:customer_list' %}"
+    class="customer-filter-bar"
+>
+
+    <!-- Preserve Search -->
+    {% if search %}
+        <input
+            type="hidden"
+            name="search"
+            value="{{ search }}"
+        >
+    {% endif %}
+
+
+    <div class="filter-group">
+
+        <label for="status-filter">
+            Status
+        </label>
+
+        <select
+            id="status-filter"
+            name="status"
+            onchange="this.form.submit()"
+        >
+
+            <option
+                value=""
+                {% if not status %}selected{% endif %}
+            >
+                All Customers
+            </option>
+
+            <option
+                value="active"
+                {% if status == "active" %}selected{% endif %}
+            >
+                Active
+            </option>
+
+            <option
+                value="blocked"
+                {% if status == "blocked" %}selected{% endif %}
+            >
+                Blocked
+            </option>
+
+        </select>
+
+    </div>
+
+
+    <div class="filter-group">
+
+        <label for="date-filter">
+            Joined
+        </label>
+
+        <select
+            id="date-filter"
+            name="date"
+            onchange="this.form.submit()"
+        >
+
+            <option
+                value=""
+                {% if not date_filter %}selected{% endif %}
+            >
+                All Time
+            </option>
+
+            <option
+                value="today"
+                {% if date_filter == "today" %}selected{% endif %}
+            >
+                Today
+            </option>
+
+            <option
+                value="week"
+                {% if date_filter == "week" %}selected{% endif %}
+            >
+                This Week
+            </option>
+
+            <option
+                value="month"
+                {% if date_filter == "month" %}selected{% endif %}
+            >
+                This Month
+            </option>
+
+            <option
+                value="year"
+                {% if date_filter == "year" %}selected{% endif %}
+            >
+                This Year
+            </option>
+
+        </select>
+
+    </div>
+
+
+    {% if search or status or date_filter %}
+
+        <a
+            href="{% url 'dashboard:customer_list' %}"
+            class="clear-filters-btn"
+        >
+
+            <i class="fas fa-xmark"></i>
+
+            Clear Filters
+
+        </a>
+
+    {% endif %}
+
+</form>
+
 <div class="table-card">
 
     <table class="customer-table">
@@ -95,7 +220,10 @@ Customers
                 <th>Name</th>
                 <th>Email</th>
                 <th>Phone</th>
+                <th>Orders</th>
+                <th>Total Spent</th>
                 <th>Joined</th>
+                <th>Last Login</th>
                 <th>Status</th>
                 <th>Action</th>
 
@@ -135,9 +263,21 @@ Customers
 
                 <td>{{ customer.email }}</td>
 
-                <td>{{ customer.phone_number }}</td>
+                <td>{{ customer.phone_number|default:"-" }}</td>
+
+                <td>{{ customer.total_orders }}</td>
+
+                <td>${{ customer.total_spent|default:"0.00" }}</td>
 
                 <td>{{ customer.date_joined|date:"d M Y" }}</td>
+
+                <td>
+                {% if customer.last_login %}  
+                {{ customer.last_login|date:"d M Y, h:i A" }}
+                {% else %}
+                    Never
+                {% endif %}
+                </td>
 
                 <td>
 
@@ -163,11 +303,60 @@ Customers
 
                 <td>
 
-                    <a href="#" class="view-btn">
+                    <div class="customer-actions">
 
-                        <i class="fas fa-eye"></i>
+                        <!-- View Customer -->
 
-                    </a>
+                        <a
+                            href="{% url 'dashboard:customer_detail' customer.id %}"
+                            class="view-btn"
+                            title="View Customer"
+                        >
+
+                            <i class="fas fa-eye"></i>
+
+                        </a>
+
+
+                        <!-- Block / Unblock -->
+
+                        {% if customer.is_active %}
+
+                            <button
+                                type="button"
+                                class="customer-action-btn block"
+                                title="Block Customer"
+                                onclick="openCustomerStatusModal(
+                                    '{{ customer.id }}',
+                                    '{{ customer.username|escapejs }}',
+                                    'block'
+                                )"
+                            >
+
+                                <i class="fas fa-user-slash"></i>
+
+                            </button>
+
+                        {% else %}
+
+                            <button
+                                type="button"
+                                class="customer-action-btn unblock"
+                                title="Unblock Customer"
+                                onclick="openCustomerStatusModal(
+                                    '{{ customer.id }}',
+                                    '{{ customer.username|escapejs }}',
+                                    'unblock'
+                                )"
+                            >
+
+                                <i class="fas fa-user-check"></i>
+
+                            </button>
+
+                        {% endif %}
+
+                    </div>
 
                 </td>
 
@@ -177,7 +366,7 @@ Customers
 
             <tr>
 
-                <td colspan="7" class="empty">
+                <td colspan="10" class="empty">
 
                     No customers found.
 
@@ -192,5 +381,275 @@ Customers
     </table>
 
 </div>
+
+{% if customers.paginator.num_pages > 1 %}
+
+<div class="pagination">
+
+    {% if customers.has_previous %}
+
+        <a
+            href="?page={{ customers.previous_page_number }}{% if search %}&search={{ search|urlencode }}{% endif %}{% if status %}&status={{ status }}{% endif %}{% if date_filter %}&date={{ date_filter }}{% endif %}"
+            class="page-btn"
+        >
+            <i class="fas fa-chevron-left"></i>
+        </a>
+
+    {% endif %}
+
+
+    {% for num in customers.paginator.page_range %}
+
+        {% if customers.number == num %}
+
+            <span class="page-btn active">
+                {{ num }}
+            </span>
+
+        {% elif num > customers.number|add:"-2" and num < customers.number|add:"2" %}
+
+            <a
+                href="?page={{ num }}{% if search %}&search={{ search|urlencode }}{% endif %}{% if status %}&status={{ status }}{% endif %}{% if date_filter %}&date={{ date_filter }}{% endif %}"
+                class="page-btn"
+            >
+                {{ num }}
+            </a>
+
+        {% endif %}
+
+    {% endfor %}
+
+
+    {% if customers.has_next %}
+
+        <a
+            href="?page={{ customers.next_page_number }}{% if search %}&search={{ search|urlencode }}{% endif %}{% if status %}&status={{ status }}{% endif %}{% if date_filter %}&date={{ date_filter }}{% endif %}"
+            class="page-btn"
+        >
+            <i class="fas fa-chevron-right"></i>
+        </a>
+
+    {% endif %}
+
+</div>
+
+{% endif %}
+
+<!-- Customer Status Modal -->
+
+<div
+    id="customer-status-modal"
+    class="customer-status-modal"
+>
+
+    <div class="customer-status-modal-content">
+
+        <div
+            id="customer-status-icon"
+            class="customer-status-modal-icon"
+        >
+
+            <i class="fas fa-user-slash"></i>
+
+        </div>
+
+
+        <h3 id="customer-status-title">
+
+            Block Customer?
+
+        </h3>
+
+
+        <p id="customer-status-message">
+
+            Are you sure you want to block this customer?
+
+        </p>
+
+
+        <div class="customer-status-modal-actions">
+
+            <button
+                type="button"
+                class="modal-cancel-btn"
+                onclick="closeCustomerStatusModal()"
+            >
+
+                Cancel
+
+            </button>
+
+
+            <form
+                method="POST"
+                id="customer-status-form"
+            >
+
+                {% csrf_token %}
+
+                <button
+                    type="submit"
+                    id="customer-status-confirm"
+                    class="modal-block-btn"
+                >
+
+                    Block Customer
+
+                </button>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+
+function openCustomerStatusModal(
+    customerId,
+    customerName,
+    action
+){
+
+    const modal =
+        document.getElementById(
+            "customer-status-modal"
+        );
+
+    const icon =
+        document.getElementById(
+            "customer-status-icon"
+        );
+
+    const title =
+        document.getElementById(
+            "customer-status-title"
+        );
+
+    const message =
+        document.getElementById(
+            "customer-status-message"
+        );
+
+    const confirm =
+        document.getElementById(
+            "customer-status-confirm"
+        );
+
+    const form =
+        document.getElementById(
+            "customer-status-form"
+        );
+
+
+    /*
+        Build the Django URL
+    */
+
+    form.action =
+        `/dashboard/customers/${customerId}/toggle-status/`;
+
+
+    if(action === "block"){
+
+        icon.className =
+            "customer-status-modal-icon";
+
+        icon.innerHTML =
+            '<i class="fas fa-user-slash"></i>';
+
+        title.innerText =
+            "Block Customer?";
+
+        message.innerHTML =
+            `Are you sure you want to block
+            <strong>${customerName}</strong>?
+            They will no longer be able to log in.`;
+
+        confirm.innerText =
+            "Block Customer";
+
+        confirm.className =
+            "modal-block-btn";
+
+    }
+
+    else{
+
+        icon.className =
+            "customer-status-modal-icon unblock";
+
+        icon.innerHTML =
+            '<i class="fas fa-user-check"></i>';
+
+        title.innerText =
+            "Unblock Customer?";
+
+        message.innerHTML =
+            `Are you sure you want to unblock
+            <strong>${customerName}</strong>?
+            They will be able to log in again.`;
+
+        confirm.innerText =
+            "Unblock Customer";
+
+        confirm.className =
+            "modal-unblock-btn";
+
+    }
+
+
+    modal.classList.add("show");
+
+}
+
+
+function closeCustomerStatusModal(){
+
+    document
+        .getElementById("customer-status-modal")
+        .classList.remove("show");
+
+}
+
+
+/*
+    Close when clicking outside
+*/
+
+window.addEventListener("click", function(event){
+
+    const modal =
+        document.getElementById(
+            "customer-status-modal"
+        );
+
+    if(event.target === modal){
+
+        closeCustomerStatusModal();
+
+    }
+
+});
+
+
+/*
+    Close with Escape
+*/
+
+document.addEventListener("keydown", function(event){
+
+    if(event.key === "Escape"){
+
+        closeCustomerStatusModal();
+
+    }
+
+});
+
+</script>
 
 {% endblock %}

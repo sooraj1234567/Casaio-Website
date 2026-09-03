@@ -1,0 +1,775 @@
+{% extends "dashboard/AdBase.html" %}
+
+{% block title %}
+Customer Details
+{% endblock %}
+
+{% block page_title %}
+Customer Details
+{% endblock %}
+
+{% block content %}
+
+<div class="customer-page">
+
+
+    <!-- ==========================================
+         BACK
+    =========================================== -->
+
+    <a
+        href="{% url 'dashboard:customer_list' %}"
+        class="back-link"
+    >
+
+        <i class="fas fa-arrow-left"></i>
+
+        Back to Customers
+
+    </a>
+
+
+    <!-- ==========================================
+         CUSTOMER PROFILE HEADER
+    =========================================== -->
+
+    <div class="customer-profile-header">
+
+        <div class="customer-profile-main">
+
+            {% if customer.profile_image %}
+
+                <img
+                    src="{{ customer.profile_image.url }}"
+                    class="customer-detail-avatar"
+                    alt="{{ customer.username }}"
+                >
+
+            {% else %}
+
+                <div class="customer-detail-avatar avatar-placeholder">
+
+                    {{ customer.username|first|upper }}
+
+                </div>
+
+            {% endif %}
+
+
+            <div class="customer-profile-info">
+
+                <div class="customer-name-row">
+
+                    <h1>
+                        {{ customer.username }}
+                    </h1>
+
+                    {% if customer.is_active %}
+
+                        <span class="status active">
+                            <i class="fas fa-circle"></i>
+                            Active
+                        </span>
+
+                    {% else %}
+
+                        <span class="status blocked">
+                            <i class="fas fa-circle"></i>
+                            Blocked
+                        </span>
+
+                    {% endif %}
+
+                </div>
+
+
+                <p class="customer-email">
+
+                    <i class="fas fa-envelope"></i>
+
+                    {{ customer.email }}
+
+                </p>
+
+
+                <p class="customer-since">
+
+                    Customer since
+                    <strong>
+                        {{ customer.date_joined|date:"d M Y" }}
+                    </strong>
+
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <!-- Quick Action -->
+
+        <div class="customer-header-action">
+
+            <a
+                href="mailto:{{ customer.email }}"
+                class="email-customer-btn"
+            >
+
+                <i class="fas fa-envelope"></i>
+
+                Email Customer
+
+            </a>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- ==========================================
+         CUSTOMER STATISTICS
+    =========================================== -->
+
+    <div class="customer-stats">
+
+
+        <div class="customer-stat">
+
+            <div class="customer-stat-icon">
+
+                <i class="fas fa-shopping-bag"></i>
+
+            </div>
+
+            <div>
+
+                <span>Total Orders</span>
+
+                <strong>
+                    {{ total_orders }}
+                </strong>
+
+            </div>
+
+        </div>
+
+
+        <div class="customer-stat">
+
+            <div class="customer-stat-icon">
+
+                <i class="fas fa-indian-rupee-sign"></i>
+
+            </div>
+
+            <div>
+
+                <span>Total Spent</span>
+
+                <strong>
+                    ₹{{ total_spent }}
+                </strong>
+
+            </div>
+
+        </div>
+
+
+        <div class="customer-stat">
+
+            <div class="customer-stat-icon">
+
+                <i class="fas fa-chart-line"></i>
+
+            </div>
+
+            <div>
+
+                <span>Average Order</span>
+
+                <strong>
+                    ₹{{ average_order|floatformat:2 }}
+                </strong>
+
+            </div>
+
+        </div>
+
+
+        <div class="customer-stat">
+
+            <div class="customer-stat-icon">
+
+                <i class="fas fa-clock"></i>
+
+            </div>
+
+            <div>
+
+                <span>Last Order</span>
+
+                <strong>
+
+                    {% if last_order %}
+
+                        {{ last_order.created_at|date:"d M Y" }}
+
+                    {% else %}
+
+                        Never
+
+                    {% endif %}
+
+                </strong>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- ==========================================
+         CUSTOMER INFORMATION
+    =========================================== -->
+
+    <div class="customer-information">
+
+
+        <!-- Personal Information -->
+
+        <div class="information-section">
+
+            <div class="section-heading">
+
+                <div class="section-icon">
+
+                    <i class="fas fa-user"></i>
+
+                </div>
+
+                <div>
+
+                    <h3>
+                        Customer Information
+                    </h3>
+
+                    <p>
+                        Personal and account information
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="information-list">
+
+
+                <div class="information-row">
+
+                    <span>
+                        Username
+                    </span>
+
+                    <strong>
+                        {{ customer.username }}
+                    </strong>
+
+                </div>
+
+
+                <div class="information-row">
+
+                    <span>
+                        Email
+                    </span>
+
+                    <strong>
+                        {{ customer.email }}
+                    </strong>
+
+                </div>
+
+
+                <div class="information-row">
+
+                    <span>
+                        Phone
+                    </span>
+
+                    <strong>
+                        {{ customer.phone_number|default:"—" }}
+                    </strong>
+
+                </div>
+
+
+                <div class="information-row">
+
+                    <span>
+                        Joined
+                    </span>
+
+                    <strong>
+                        {{ customer.date_joined|date:"d M Y, h:i A" }}
+                    </strong>
+
+                </div>
+
+
+                <div class="information-row">
+
+                    <span>
+                        Last Login
+                    </span>
+
+                    <strong>
+
+                        {% if customer.last_login %}
+
+                            {{ customer.last_login|date:"d M Y, h:i A" }}
+
+                        {% else %}
+
+                            Never
+
+                        {% endif %}
+
+                    </strong>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- Account Status -->
+
+        <div class="information-section account-section">
+
+            <div class="section-heading">
+
+                <div class="section-icon">
+
+                    <i class="fas fa-shield-halved"></i>
+
+                </div>
+
+                <div>
+
+                    <h3>
+                        Account Status
+                    </h3>
+
+                    <p>
+                        Manage customer access
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            {% if customer.is_active %}
+
+                <div class="account-status-content">
+
+                    <span class="status active">
+
+                        <i class="fas fa-check-circle"></i>
+
+                        Active
+
+                    </span>
+
+                    <p>
+                        This customer can log in and place orders.
+                    </p>
+
+
+                    <button
+                        type="button"
+                        class="customer-status-btn block"
+                        onclick="openStatusModal()"
+                    >
+
+                        <i class="fas fa-user-slash"></i>
+
+                        Block Customer
+
+                    </button>
+
+                </div>
+
+            {% else %}
+
+                <div class="account-status-content">
+
+                    <span class="status blocked">
+
+                        <i class="fas fa-ban"></i>
+
+                        Blocked
+
+                    </span>
+
+                    <p>
+                        This customer cannot access their account.
+                    </p>
+
+
+                    <button
+                        type="button"
+                        class="customer-status-btn unblock"
+                        onclick="openStatusModal()"
+                    >
+
+                        <i class="fas fa-user-check"></i>
+
+                        Unblock Customer
+
+                    </button>
+
+                </div>
+
+            {% endif %}
+
+        </div>
+
+    </div>
+
+
+
+    <!-- ==========================================
+         ORDER HISTORY
+    =========================================== -->
+
+    <div class="order-history-section">
+
+        <div class="section-heading">
+
+            <div class="section-icon">
+
+                <i class="fas fa-box-open"></i>
+
+            </div>
+
+            <div>
+
+                <h3>
+                    Order History
+                </h3>
+
+                <p>
+                    Orders placed by this customer
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="customer-orders-wrapper">
+
+            <table class="customer-orders-table">
+
+                <thead>
+
+                    <tr>
+
+                        <th>Order</th>
+
+                        <th>Date</th>
+
+                        <th>Items</th>
+
+                        <th>Total</th>
+
+                        <th>Payment</th>
+
+                        <th>Status</th>
+
+                        <th>Action</th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+                    {% for order in orders %}
+
+                    <tr>
+
+                        <td>
+
+                            <strong>
+                                {{ order.order_number }}
+                            </strong>
+
+                        </td>
+
+
+                        <td>
+
+                            {{ order.created_at|date:"d M Y" }}
+
+                        </td>
+
+
+                        <td>
+
+                            {{ order.items.count }}
+
+                        </td>
+
+
+                        <td>
+
+                            <strong>
+                                ₹{{ order.total }}
+                            </strong>
+
+                        </td>
+
+
+                        <td>
+
+                            {{ order.get_payment_method_display }}
+
+                        </td>
+
+
+                        <td>
+
+                            <span class="status {{ order.status }}">
+
+                                {{ order.get_status_display }}
+
+                            </span>
+
+                        </td>
+
+
+                        <td>
+
+                            <a
+                                href="{% url 'dashboard:order_detail' order.id %}"
+                                class="view-btn"
+                                title="View Order"
+                            >
+
+                                <i class="fas fa-eye"></i>
+
+                            </a>
+
+                        </td>
+
+                    </tr>
+
+
+                    {% empty %}
+
+                    <tr>
+
+                        <td
+                            colspan="7"
+                            class="empty"
+                        >
+
+                            <div class="empty-orders">
+
+                                <i class="fas fa-box-open"></i>
+
+                                <strong>
+                                    No orders yet
+                                </strong>
+
+                                <span>
+                                    This customer has not placed any orders.
+                                </span>
+
+                            </div>
+
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
+<!-- ==========================================
+     STATUS MODAL
+=========================================== -->
+
+<div
+    id="status-modal"
+    class="status-modal"
+>
+
+    <div class="status-modal-content">
+
+
+        <div class="status-modal-icon">
+
+            {% if customer.is_active %}
+
+                <i class="fas fa-user-slash"></i>
+
+            {% else %}
+
+                <i class="fas fa-user-check"></i>
+
+            {% endif %}
+
+        </div>
+
+
+        <h3>
+
+            {% if customer.is_active %}
+
+                Block Customer?
+
+            {% else %}
+
+                Unblock Customer?
+
+            {% endif %}
+
+        </h3>
+
+
+        <p>
+
+            {% if customer.is_active %}
+
+                Are you sure you want to block
+                <strong>{{ customer.username }}</strong>?
+
+                They will no longer be able to log in.
+
+            {% else %}
+
+                Are you sure you want to unblock
+                <strong>{{ customer.username }}</strong>?
+
+                They will be able to log in again.
+
+            {% endif %}
+
+        </p>
+
+
+        <div class="status-modal-actions">
+
+
+            <button
+                type="button"
+                class="modal-cancel-btn"
+                onclick="closeStatusModal()"
+            >
+
+                Cancel
+
+            </button>
+
+
+            <form
+                method="POST"
+                action="{% url 'dashboard:customer_toggle_status' customer.id %}"
+            >
+
+                {% csrf_token %}
+
+                <button
+                    type="submit"
+                    class="{% if customer.is_active %}modal-block-btn{% else %}modal-unblock-btn{% endif %}"
+                >
+
+                    {% if customer.is_active %}
+
+                        Block Customer
+
+                    {% else %}
+
+                        Unblock Customer
+
+                    {% endif %}
+
+                </button>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
+<script>
+
+function openStatusModal(){
+
+    document
+        .getElementById("status-modal")
+        .classList.add("show");
+
+}
+
+
+function closeStatusModal(){
+
+    document
+        .getElementById("status-modal")
+        .classList.remove("show");
+
+}
+
+
+window.addEventListener("click", function(event){
+
+    const modal =
+        document.getElementById("status-modal");
+
+    if(event.target === modal){
+
+        closeStatusModal();
+
+    }
+
+});
+
+
+document.addEventListener("keydown", function(event){
+
+    if(event.key === "Escape"){
+
+        closeStatusModal();
+
+    }
+
+});
+
+</script>
+
+{% endblock %}

@@ -83,11 +83,6 @@ class Order(models.Model):
 
     created_at = models.DateTimeField(auto_now_add=True)
 
-    cancelled_at = models.DateTimeField(
-        null=True,
-        blank=True
-    )
-
     def save(self, *args, **kwargs):
 
         if not self.order_number:
@@ -133,3 +128,64 @@ class OrderItem(models.Model):
 
     def __str__(self):
         return self.product.name
+
+class Coupon(models.Model):
+
+    DISCOUNT_CHOICES = (
+        ("percentage", "Percentage"),
+        ("fixed", "Fixed Amount"),
+    )
+
+    code = models.CharField(
+        max_length=50,
+        unique=True
+    )
+
+    discount_type = models.CharField(
+        max_length=20,
+        choices=DISCOUNT_CHOICES,
+        default="percentage"
+    )
+
+    discount_value = models.DecimalField(
+        max_digits=10,
+        decimal_places=2
+    )
+
+    minimum_order_amount = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        default=0
+    )
+
+    maximum_discount_amount = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        null=True,
+        blank=True
+    )
+
+    usage_limit = models.PositiveIntegerField(
+        null=True,
+        blank=True
+    )
+
+    used_count = models.PositiveIntegerField(
+        default=0
+    )
+
+    valid_from = models.DateTimeField()
+
+    valid_until = models.DateTimeField()
+
+    is_active = models.BooleanField(
+        default=True
+    )
+
+    created_at = models.DateTimeField(
+        auto_now_add=True
+    )
+
+    def __str__(self):
+
+        return self.code

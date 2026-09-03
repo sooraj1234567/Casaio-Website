@@ -1,0 +1,485 @@
+{% extends "dashboard/AdBase.html" %}
+
+{% block title %}
+Reports
+{% endblock %}
+
+{% block page_title %}
+Reports
+{% endblock %}
+
+{% block content %}
+
+<div class="page-header">
+
+    <div>
+        <h1>Reports</h1>
+        <p>Analyze your store performance and sales.</p>
+    </div>
+
+    <div class="report-actions">
+
+        <div class="report-export-buttons">
+
+            <a
+                href="{% url 'dashboard:download_sales_report_pdf' %}?date={{ date_filter }}"
+                class="report-export-btn pdf-btn"
+            >
+                <i class="fas fa-file-pdf"></i>
+                Download PDF
+            </a>
+
+            <a
+                href="{% url 'dashboard:download_sales_report_excel' %}?date={{ date_filter }}"
+                class="report-export-btn excel-btn"
+            >
+                <i class="fas fa-file-excel"></i>
+                Download Excel
+            </a>
+
+        </div>
+
+        <form method="GET" class="report-filter">
+            <select name="date" onchange="this.form.submit()">
+
+                <option
+                    value="all"
+                    {% if date_filter == "all" %}selected{% endif %}
+                >
+                    All Time
+                </option>
+
+                <option
+                    value="today"
+                    {% if date_filter == "today" %}selected{% endif %}
+                >
+                    Today
+                </option>
+
+                <option
+                    value="week"
+                    {% if date_filter == "week" %}selected{% endif %}
+                >
+                    Last 7 Days
+                </option>
+
+                <option
+                    value="month"
+                    {% if date_filter == "month" %}selected{% endif %}
+                >
+                    This Month
+                </option>
+
+                <option
+                    value="year"
+                    {% if date_filter == "year" %}selected{% endif %}
+                >
+                    This Year
+                </option>
+
+            </select>
+        </form>
+
+    </div>
+
+</div>
+
+
+<!-- Statistics -->
+
+<div class="stats-grid">
+
+    <div class="stat-card">
+
+        <i class="fas fa-indian-rupee-sign"></i>
+
+            <h3>₹{{ total_revenue }}</h3>
+            <p>Total Revenue</p>
+
+    </div>
+
+
+    <div class="stat-card">
+
+        <i class="fas fa-shopping-bag"></i>
+
+            <h3>{{ total_orders }}</h3>
+            <p>Total Orders</p>
+
+    </div>
+
+
+    <div class="stat-card">
+
+        <i class="fas fa-chart-line"></i>
+
+            <h3>₹{{ average_order_value|floatformat:2 }}</h3>
+            <p>Average Order</p>
+
+    </div>
+
+
+    <div class="stat-card">
+
+        <i class="fas fa-users"></i>
+
+            <h3>{{ total_customers }}</h3>
+            <p>Customers</p>
+
+    </div>
+
+</div>
+
+<div class="sales-chart-card">
+    <div class="sales-chart-header">
+        <div>
+            <h3>
+                <i class="fas fa-chart-line"></i>
+                Sales Overview
+            </h3>
+            <p>Revenue and delivered orders over the selected period.</p>
+        </div>
+    </div>
+
+    <div class="sales-chart-container">
+
+        {% if chart_labels != "[]" %}
+
+            <canvas id="salesChart"></canvas>
+
+        {% else %}
+
+            <div class="no-chart-data">
+                <i class="fas fa-chart-line"></i>
+                <h4>No sales data available</h4>
+                <p>
+                    There are no delivered and paid orders for this period.
+                </p>
+            </div>
+
+        {% endif %}
+
+    </div>
+</div>
+
+<div class="best-selling-card">
+
+    <div class="best-selling-header">
+        <div>
+            <h3>
+                <i class="fas fa-trophy"></i>
+                Best-Selling Products
+            </h3>
+            <p>Top products based on units sold.</p>
+        </div>
+    </div>
+
+    {% if best_selling_products %}
+
+    <div class="best-selling-table-wrapper">
+
+        <table class="best-selling-table">
+
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Product</th>
+                    <th>Units Sold</th>
+                </tr>
+            </thead>
+
+            <tbody>
+
+                {% for product in best_selling_products %}
+
+                <tr>
+
+                    <td>
+                        <span class="product-rank">
+                            {{ forloop.counter }}
+                        </span>
+                    </td>
+
+                    <td>
+                        <div class="best-product-name">
+                            {{ product.product__name }}
+                        </div>
+                    </td>
+
+                    <td>
+                        <strong class="units-sold">
+                            {{ product.units_sold }}
+                        </strong>
+                    </td>
+
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+    {% else %}
+
+    <div class="no-sales-data">
+        <i class="fas fa-box-open"></i>
+        <h4>No sales data available</h4>
+        <p>There are no delivered and paid orders for this period.</p>
+    </div>
+
+    {% endif %}
+
+</div>
+
+<!-- Order Status -->
+
+<div class="report-grid">
+
+    <div class="report-card">
+
+        <h3>
+            <i class="fas fa-chart-pie"></i>
+            Order Status
+        </h3>
+
+        <div class="report-row">
+            <span>Pending</span>
+            <strong>{{ pending_orders }}</strong>
+        </div>
+
+        <div class="report-row">
+            <span>Confirmed</span>
+            <strong>{{ confirmed_orders }}</strong>
+        </div>
+
+        <div class="report-row">
+            <span>Shipped</span>
+            <strong>{{ shipped_orders }}</strong>
+        </div>
+
+        <div class="report-row">
+            <span>Delivered</span>
+            <strong>{{ delivered_orders }}</strong>
+        </div>
+
+        <div class="report-row">
+            <span>Cancelled</span>
+            <strong>{{ cancelled_orders }}</strong>
+        </div>
+
+    </div>
+
+
+    <!-- Payment -->
+
+    <div class="report-card">
+
+        <h3>
+            <i class="fas fa-credit-card"></i>
+            Payment Methods
+        </h3>
+
+        <div class="report-row">
+
+            <span>
+                <i class="fas fa-money-bill"></i>
+                Cash on Delivery
+            </span>
+
+            <strong>{{ cod_orders }}</strong>
+
+        </div>
+
+        <div class="report-row">
+
+            <span>
+                <i class="fas fa-credit-card"></i>
+                Razorpay
+            </span>
+
+            <strong>{{ razorpay_orders }}</strong>
+
+        </div>
+
+    </div>
+
+
+    <!-- Store Overview -->
+
+    <div class="report-card">
+
+        <h3>
+            <i class="fas fa-store"></i>
+            Store Overview
+        </h3>
+
+        <div class="report-row">
+
+            <span>Customers</span>
+
+            <strong>{{ total_customers }}</strong>
+
+        </div>
+
+        <div class="report-row">
+
+            <span>Products</span>
+
+            <strong>{{ total_products }}</strong>
+
+        </div>
+
+        <div class="report-row">
+
+            <span>Orders</span>
+
+            <strong>{{ total_orders }}</strong>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+    const chartLabels = {{ chart_labels|safe }};
+    const chartRevenue = {{ chart_revenue|safe }};
+    const chartOrders = {{ chart_orders|safe }};
+
+    const ctx = document.getElementById("salesChart");
+
+    new Chart(ctx, {
+        type: "line",
+
+        data: {
+            labels: chartLabels,
+
+            datasets: [
+                {
+                    label: "Revenue",
+                    data: chartRevenue,
+
+                    borderWidth: 2,
+                    tension: 0.4,
+
+                    pointRadius: 3,
+                    pointHoverRadius: 5,
+
+                    yAxisID: "revenue"
+                },
+                {
+                    label: "Orders",
+                    data: chartOrders,
+
+                    borderWidth: 2,
+                    tension: 0.4,
+
+                    pointRadius: 3,
+                    pointHoverRadius: 5,
+
+                    yAxisID: "orders"
+                }
+            ]
+        },
+
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+
+            interaction: {
+                mode: "index",
+                intersect: false
+            },
+
+            plugins: {
+                legend: {
+                    position: "top",
+
+                    labels: {
+                        usePointStyle: true,
+                        boxWidth: 8,
+                        padding: 20,
+                        font: {
+                            size: 11
+                        }
+                    }
+                },
+
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+
+                            if (context.dataset.label === "Revenue") {
+                                return " Revenue: ₹" +
+                                    Number(context.raw).toLocaleString("en-IN");
+                            }
+
+                            return " Orders: " + context.raw;
+                        }
+                    }
+                }
+            },
+
+            scales: {
+                revenue: {
+                    type: "linear",
+                    position: "left",
+
+                    beginAtZero: true,
+
+                    ticks: {
+                        font: {
+                            size: 10
+                        },
+
+                        callback: function(value) {
+                            return "₹" +
+                                Number(value).toLocaleString("en-IN");
+                        }
+                    },
+
+                    grid: {
+                        drawOnChartArea: true
+                    }
+                },
+
+                orders: {
+                    type: "linear",
+                    position: "right",
+
+                    beginAtZero: true,
+
+                    ticks: {
+                        precision: 0,
+                        font: {
+                            size: 10
+                        }
+                    },
+
+                    grid: {
+                        drawOnChartArea: false
+                    }
+                },
+
+                x: {
+                    ticks: {
+                        font: {
+                            size: 10
+                        }
+                    },
+
+                    grid: {
+                        display: false
+                    }
+                }
+            }
+        }
+    });
+</script>
+
+{% endblock %}

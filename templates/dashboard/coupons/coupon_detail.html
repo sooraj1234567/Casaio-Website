@@ -1,0 +1,435 @@
+{% extends "dashboard/AdBase.html" %}
+
+{% block title %}
+Coupon Details
+{% endblock %}
+
+{% block page_title %}
+Coupon Details
+{% endblock %}
+
+{% block content %}
+
+<div class="coupon-detail-header">
+
+    <div>
+
+        <a
+            href="{% url 'dashboard:coupon_list' %}"
+            class="back-link"
+        >
+            <i class="fas fa-arrow-left"></i>
+            Back to Coupons
+        </a>
+
+        <div class="coupon-title">
+
+            <div class="coupon-large-icon">
+
+                <i class="fas fa-ticket"></i>
+
+            </div>
+
+            <div>
+
+                <h1>{{ coupon.code }}</h1>
+
+                <p>
+                    Coupon created
+                    {{ coupon.created_at|date:"d M Y" }}
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="coupon-header-actions">
+
+        <a
+            href="{% url 'dashboard:edit_coupon' coupon.id %}"
+            class="coupon-edit-btn"
+        >
+
+            <i class="fas fa-pen"></i>
+
+            Edit Coupon
+
+        </a>
+
+    </div>
+
+</div>
+
+
+<!-- ==========================================
+     SUMMARY
+========================================== -->
+
+<div class="coupon-detail-summary">
+
+    <div class="coupon-summary-card">
+
+        <span>Discount</span>
+
+        <strong>
+
+            {% if coupon.discount_type == "percentage" %}
+
+                {{ coupon.discount_value|floatformat:0 }}%
+
+            {% else %}
+
+                ₹{{ coupon.discount_value }}
+
+            {% endif %}
+
+        </strong>
+
+        <small>
+
+            {{ coupon.get_discount_type_display }}
+
+        </small>
+
+    </div>
+
+
+    <div class="coupon-summary-card">
+
+        <span>Minimum Order</span>
+
+        <strong>
+
+            ₹{{ coupon.minimum_order_amount }}
+
+        </strong>
+
+        <small>
+            Minimum cart value
+        </small>
+
+    </div>
+
+
+    <div class="coupon-summary-card">
+
+        <span>Usage</span>
+
+        <strong>
+
+            {{ coupon.used_count }}
+
+            {% if coupon.usage_limit %}
+
+                / {{ coupon.usage_limit }}
+
+            {% else %}
+
+                / ∞
+
+            {% endif %}
+
+        </strong>
+
+        <small>
+            Times used
+        </small>
+
+    </div>
+
+
+    <div class="coupon-summary-card">
+
+        <span>Status</span>
+
+        <strong class="coupon-detail-status {{ coupon_status }}">
+
+            {{ coupon_status_display }}
+
+        </strong>
+
+        <small>
+            Current status
+        </small>
+
+    </div>
+
+</div>
+
+
+<!-- ==========================================
+     DETAILS
+========================================== -->
+
+<div class="coupon-detail-grid">
+
+
+    <!-- Discount Details -->
+
+    <div class="coupon-detail-card">
+
+        <div class="detail-card-heading">
+
+            <i class="fas fa-percent"></i>
+
+            <div>
+
+                <h3>Discount Details</h3>
+
+                <p>
+                    Information about this coupon's discount.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="coupon-info-list">
+
+            <div class="coupon-info-row">
+
+                <span>Coupon Code</span>
+
+                <strong>
+                    {{ coupon.code }}
+                </strong>
+
+            </div>
+
+
+            <div class="coupon-info-row">
+
+                <span>Discount Type</span>
+
+                <strong>
+                    {{ coupon.get_discount_type_display }}
+                </strong>
+
+            </div>
+
+
+            <div class="coupon-info-row">
+
+                <span>Discount Value</span>
+
+                <strong>
+
+                    {% if coupon.discount_type == "percentage" %}
+
+                        {{ coupon.discount_value|floatformat:0 }}%
+
+                    {% else %}
+
+                        ₹{{ coupon.discount_value }}
+
+                    {% endif %}
+
+                </strong>
+
+            </div>
+
+
+            <div class="coupon-info-row">
+
+                <span>Minimum Order</span>
+
+                <strong>
+                    ₹{{ coupon.minimum_order_amount }}
+                </strong>
+
+            </div>
+
+
+            <div class="coupon-info-row">
+
+                <span>Maximum Discount</span>
+
+                <strong>
+
+                    {% if coupon.maximum_discount_amount %}
+
+                        ₹{{ coupon.maximum_discount_amount }}
+
+                    {% else %}
+
+                        No Limit
+
+                    {% endif %}
+
+                </strong>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- Usage & Validity -->
+
+    <div class="coupon-detail-card">
+
+        <div class="detail-card-heading">
+
+            <i class="fas fa-chart-simple"></i>
+
+            <div>
+
+                <h3>Usage & Validity</h3>
+
+                <p>
+                    Usage limits and availability period.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="coupon-info-list">
+
+            <div class="coupon-info-row">
+
+                <span>Times Used</span>
+
+                <strong>
+                    {{ coupon.used_count }}
+                </strong>
+
+            </div>
+
+
+            <div class="coupon-info-row">
+
+                <span>Usage Limit</span>
+
+                <strong>
+
+                    {% if coupon.usage_limit %}
+
+                        {{ coupon.usage_limit }}
+
+                    {% else %}
+
+                        Unlimited
+
+                    {% endif %}
+
+                </strong>
+
+            </div>
+
+
+            <div class="coupon-info-row">
+
+                <span>Valid From</span>
+
+                <strong>
+                    {{ coupon.valid_from|date:"d M Y, h:i A" }}
+                </strong>
+
+            </div>
+
+
+            <div class="coupon-info-row">
+
+                <span>Valid Until</span>
+
+                <strong>
+                    {{ coupon.valid_until|date:"d M Y, h:i A" }}
+                </strong>
+
+            </div>
+
+
+            <div class="coupon-info-row">
+
+                <span>Created</span>
+
+                <strong>
+                    {{ coupon.created_at|date:"d M Y, h:i A" }}
+                </strong>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- ==========================================
+     STATUS INFORMATION
+========================================== -->
+
+<div class="coupon-status-card">
+
+    <div class="coupon-status-icon {{ coupon_status }}">
+
+        {% if coupon_status == "active" %}
+
+            <i class="fas fa-circle-check"></i>
+
+        {% elif coupon_status == "expired" %}
+
+            <i class="fas fa-clock"></i>
+
+        {% elif coupon_status == "upcoming" %}
+
+            <i class="fas fa-calendar"></i>
+
+        {% else %}
+
+            <i class="fas fa-ban"></i>
+
+        {% endif %}
+
+    </div>
+
+
+    <div>
+
+        <h3>
+            {{ coupon_status_display }}
+        </h3>
+
+        {% if coupon_status == "active" %}
+
+            <p>
+                This coupon is currently available for customers
+                within its validity period.
+            </p>
+
+        {% elif coupon_status == "expired" %}
+
+            <p>
+                This coupon has passed its expiry date and
+                can no longer be used.
+            </p>
+
+        {% elif coupon_status == "upcoming" %}
+
+            <p>
+                This coupon is active but its validity period
+                has not started yet.
+            </p>
+
+        {% else %}
+
+            <p>
+                This coupon has been disabled and cannot
+                currently be used.
+            </p>
+
+        {% endif %}
+
+    </div>
+
+</div>
+
+{% endblock %}

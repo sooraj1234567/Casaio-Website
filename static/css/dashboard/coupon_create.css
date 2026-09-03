@@ -1,0 +1,509 @@
+/* =========================================================
+   COUPON CREATE / EDIT PAGE
+========================================================= */
+
+.coupon-form-header {
+    margin-bottom: 28px;
+}
+
+.coupon-form-header h1 {
+    margin: 14px 0 6px;
+    font-size: 34px;
+    font-weight: 700;
+    color: #17233d;
+}
+
+.coupon-form-header p {
+    margin: 0;
+    color: #64748b;
+    font-size: 14px;
+}
+
+
+/* =========================================================
+   BACK LINK
+========================================================= */
+
+.coupon-form-header .back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+
+    color: #64748b;
+    text-decoration: none;
+
+    font-size: 13px;
+    font-weight: 600;
+
+    transition: 0.2s ease;
+}
+
+.coupon-form-header .back-link:hover {
+    color: #ff6b00;
+}
+
+
+/* =========================================================
+   FORM
+========================================================= */
+
+.coupon-form {
+    max-width: 1100px;
+}
+
+
+/* =========================================================
+   FORM CARD
+========================================================= */
+
+.coupon-form-card {
+    background: #ffffff;
+
+    border-radius: 16px;
+
+    padding: 25px 28px;
+
+    margin-bottom: 20px;
+
+    box-shadow:
+        0 5px 20px rgba(15, 23, 42, 0.05);
+}
+
+
+/* =========================================================
+   CARD TITLE
+========================================================= */
+
+.form-card-title {
+    display: flex;
+    align-items: flex-start;
+
+    gap: 14px;
+
+    padding-bottom: 20px;
+
+    margin-bottom: 22px;
+
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.form-card-title > i {
+    width: 40px;
+    height: 40px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 10px;
+
+    background: #fff7ed;
+
+    color: #ff6b00;
+
+    font-size: 17px;
+}
+
+.form-card-title h3 {
+    margin: 0 0 4px;
+
+    color: #17233d;
+
+    font-size: 17px;
+    font-weight: 700;
+}
+
+.form-card-title p {
+    margin: 0;
+
+    color: #94a3b8;
+
+    font-size: 12px;
+}
+
+
+/* =========================================================
+   FORM GRID
+========================================================= */
+
+.form-grid {
+    display: grid;
+
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+
+    gap: 22px 30px;
+}
+
+
+/* =========================================================
+   FORM FIELD
+========================================================= */
+
+.form-field {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 7px;
+}
+
+.form-field label {
+    color: #334155;
+
+    font-size: 12px;
+
+    font-weight: 600;
+}
+
+.form-field input,
+.form-field select {
+
+    width: 100%;
+
+    height: 43px;
+
+    box-sizing: border-box;
+
+    padding: 0 13px;
+
+    border: 1px solid #dbe2ea;
+
+    border-radius: 9px;
+
+    background: #ffffff;
+
+    color: #17233d;
+
+    font-family: inherit;
+
+    font-size: 13px;
+
+    outline: none;
+
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.form-field input:focus,
+.form-field select:focus {
+
+    border-color: #ff6b00;
+
+    box-shadow:
+        0 0 0 3px rgba(255, 107, 0, 0.08);
+}
+
+.form-field input::placeholder {
+
+    color: #a0aec0;
+}
+
+
+/* =========================================================
+   HELP TEXT
+========================================================= */
+
+.form-field small {
+
+    color: #94a3b8;
+
+    font-size: 11px;
+
+    line-height: 1.4;
+}
+
+
+/* =========================================================
+   COUPON CODE
+========================================================= */
+
+.form-field input[name="code"] {
+
+    text-transform: uppercase;
+
+    font-weight: 600;
+
+    letter-spacing: 0.4px;
+}
+
+
+/* =========================================================
+   NUMBER INPUT
+========================================================= */
+
+.form-field input[type="number"] {
+
+    appearance: textfield;
+}
+
+
+/* =========================================================
+   DATETIME
+========================================================= */
+
+.form-field input[type="datetime-local"] {
+
+    color: #334155;
+
+    cursor: pointer;
+}
+
+
+/* =========================================================
+   STATUS SWITCH
+========================================================= */
+
+.switch-field {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 13px;
+
+    cursor: pointer;
+}
+
+.switch-field input {
+
+    position: absolute;
+
+    opacity: 0;
+
+    pointer-events: none;
+}
+
+.switch {
+
+    position: relative;
+
+    width: 44px;
+
+    height: 24px;
+
+    flex-shrink: 0;
+
+    border-radius: 20px;
+
+    background: #cbd5e1;
+
+    transition: 0.25s ease;
+}
+
+.switch::after {
+
+    content: "";
+
+    position: absolute;
+
+    top: 3px;
+    left: 3px;
+
+    width: 18px;
+    height: 18px;
+
+    border-radius: 50%;
+
+    background: #ffffff;
+
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+
+    transition: 0.25s ease;
+}
+
+.switch-field input:checked + .switch {
+
+    background: #ff6b00;
+}
+
+.switch-field input:checked + .switch::after {
+
+    transform: translateX(20px);
+}
+
+.switch-field > span:last-child {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 3px;
+}
+
+.switch-field strong {
+
+    color: #334155;
+
+    font-size: 13px;
+}
+
+.switch-field small {
+
+    color: #94a3b8;
+
+    font-size: 11px;
+}
+
+
+/* =========================================================
+   FORM ACTIONS
+========================================================= */
+
+.form-actions {
+
+    display: flex;
+
+    justify-content: flex-end;
+
+    align-items: center;
+
+    gap: 10px;
+
+    padding: 4px 0 20px;
+}
+
+
+/* =========================================================
+   CANCEL
+========================================================= */
+
+.cancel-btn2 {
+
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+
+    height: 42px;
+
+    padding: 0 18px;
+
+    border: 1px solid #dbe2ea;
+
+    border-radius: 9px;
+
+    background: #ffffff;
+
+    color: #475569;
+
+    text-decoration: none;
+
+    font-size: 13px;
+
+    font-weight: 600;
+
+    transition: 0.2s ease;
+}
+
+.cancel-btn:hover {
+
+    border-color: #cbd5e1;
+
+    background: #f8fafc;
+}
+
+
+/* =========================================================
+   SAVE BUTTON
+========================================================= */
+
+.save-coupon-btn {
+
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+
+    gap: 8px;
+
+    height: 42px;
+
+    padding: 0 20px;
+
+    border: none;
+
+    border-radius: 9px;
+
+    background: #ff6b00;
+
+    color: #ffffff;
+
+    font-family: inherit;
+
+    font-size: 13px;
+
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition: 0.2s ease;
+}
+
+.save-coupon-btn:hover {
+
+    background: #e85f00;
+
+    transform: translateY(-1px);
+
+    box-shadow:
+        0 5px 12px rgba(255, 107, 0, 0.18);
+}
+
+
+/* =========================================================
+   ERROR / SUCCESS MESSAGES
+========================================================= */
+
+.coupon-form + .messages {
+    margin-bottom: 20px;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 850px) {
+
+    .form-grid {
+
+        grid-template-columns: 1fr;
+
+        gap: 18px;
+    }
+
+    .coupon-form {
+
+        max-width: 100%;
+    }
+
+}
+
+
+@media (max-width: 600px) {
+
+    .coupon-form-header h1 {
+
+        font-size: 28px;
+    }
+
+    .coupon-form-card {
+
+        padding: 20px;
+    }
+
+    .form-actions {
+
+        flex-direction: column-reverse;
+
+        align-items: stretch;
+    }
+
+    .cancel-btn,
+    .save-coupon-btn {
+
+        width: 100%;
+    }
+
+}

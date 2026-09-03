@@ -84,12 +84,6 @@ urlpatterns = [
     ),
 
     path(
-        "products/<int:pk>/delete/",
-        views.product_delete,
-        name="product_delete",
-    ),
-
-    path(
         "categories/",
         views.category_list,
         name="category_list"
@@ -119,4 +113,63 @@ path(
     name="customer_list"
 ),
 
+path(
+    "customers/<int:pk>/",
+    views.customer_detail,
+    name="customer_detail",
+),
+
+path(
+    "customers/<int:pk>/toggle-status/",
+    views.customer_toggle_status,
+    name="customer_toggle_status",
+),
+
+path(
+    "coupons/",
+    views.coupon_list,
+    name="coupon_list"
+),
+
+path(
+    "coupons/create/",
+    views.create_coupon,
+    name="create_coupon"
+),
+
+path(
+    "coupons/<int:coupon_id>/edit/",
+    views.edit_coupon,
+    name="edit_coupon"
+),
+
+path(
+    "coupons/<int:coupon_id>/",
+    views.coupon_detail,
+    name="coupon_detail"
+),
+
+path(
+    "coupons/<int:coupon_id>/delete/",
+    views.delete_coupon,
+    name="delete_coupon"
+),
+
+path(
+    "reports/",
+    views.report,
+    name="report"
+),
+
+path(
+    "reports/pdf/",
+    views.download_sales_report_pdf,
+    name="download_sales_report_pdf"
+),
+
+path(
+    "reports/excel/",
+    views.download_sales_report_excel,
+    name="download_sales_report_excel"
+),
 ]

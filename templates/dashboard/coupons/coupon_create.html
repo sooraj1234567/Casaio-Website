@@ -1,0 +1,348 @@
+{% extends "dashboard/AdBase.html" %}
+
+{% block title %}
+Create Coupon
+{% endblock %}
+
+{% block page_title %}
+Create Coupon
+{% endblock %}
+
+{% block content %}
+
+<div class="coupon-form-header">
+
+    <div>
+
+        <a
+            href="{% url 'dashboard:coupon_list' %}"
+            class="back-link"
+        >
+            <i class="fas fa-arrow-left"></i>
+            Back to Coupons
+        </a>
+
+        <h1>
+            {% if edit_mode %}
+                Edit Coupon
+            {% else %}
+                Create Coupon
+            {% endif %}
+        </h1>
+
+        <p>
+            Create a new discount coupon for your customers.
+        </p>
+
+    </div>
+
+</div>
+
+
+<form
+    method="POST"
+    class="coupon-form"
+>
+
+    {% csrf_token %}
+
+
+    <!-- Coupon Details -->
+
+    <div class="coupon-form-card">
+
+        <div class="form-card-title">
+
+            <i class="fas fa-ticket"></i>
+
+            <div>
+
+                <h3>Coupon Details</h3>
+
+                <p>
+                    Set the basic coupon information.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="form-grid">
+
+            <div class="form-field">
+
+                <label>
+                    Coupon Code
+                </label>
+
+                <input
+                    type="text"
+                    name="code"
+                    placeholder="e.g. WELCOME10"
+                    maxlength="50"
+                    value="{% if coupon %}{{ coupon.code }}{% endif %}"
+                    required
+                >
+
+                <small>
+                    Customers will enter this code at checkout.
+                </small>
+
+            </div>
+
+
+            <div class="form-field">
+
+                <label>
+                    Discount Type
+                </label>
+
+                <select
+                    name="discount_type"
+                    id="discount-type"
+                >
+
+                    <option
+                        value="percentage"
+                        {% if coupon and coupon.discount_type == "percentage" %}
+                            selected
+                        {% endif %}
+                    >
+                        Percentage
+                    </option>
+
+                    <option
+                        value="fixed"
+                        {% if coupon and coupon.discount_type == "fixed" %}
+                            selected
+                        {% endif %}
+                    >
+                        Fixed Amount
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <div class="form-field">
+
+                <label>
+                    Discount Value
+                </label>
+
+                <input
+                    type="number"
+                    name="discount_value"
+                    min="0.01"
+                    step="0.01"
+                    value="{% if coupon %}{{ coupon.discount_value }}{% endif %}"
+                    required
+                >
+
+            </div>
+
+
+            <div class="form-field">
+
+                <label>
+                    Minimum Order Amount
+                </label>
+
+                <input
+                    type="number"
+                    name="minimum_order_amount"
+                    min="0"
+                    step="0.01"
+                    value="{% if coupon %}{{ coupon.minimum_order_amount }}{% else %}0{% endif %}"
+                >
+
+            </div>
+
+
+            <div class="form-field">
+
+                <label>
+                    Maximum Discount
+                </label>
+
+                <input
+                    type="number"
+                    name="maximum_discount_amount"
+                    min="0"
+                    step="0.01"
+                    value="{% if coupon and coupon.maximum_discount_amount %}{{ coupon.maximum_discount_amount }}{% endif %}"
+                    placeholder="Optional"
+                >
+
+                <small>
+                    Useful for percentage coupons.
+                </small>
+
+            </div>
+
+
+            <div class="form-field">
+
+                <label>
+                    Usage Limit
+                </label>
+
+                <input
+                    type="number"
+                    name="usage_limit"
+                    min="1"
+                    value="{% if coupon and coupon.usage_limit %}{{ coupon.usage_limit }}{% endif %}"
+                    placeholder="Unlimited"
+                >
+
+                <small>
+                    Leave empty for unlimited usage.
+                </small>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- Validity -->
+
+    <div class="coupon-form-card">
+
+        <div class="form-card-title">
+
+            <i class="fas fa-calendar"></i>
+
+            <div>
+
+                <h3>Coupon Validity</h3>
+
+                <p>
+                    Choose when the coupon can be used.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="form-grid">
+
+            <div class="form-field">
+
+                <label>
+                    Valid From
+                </label>
+
+                <input
+                    type="datetime-local"
+                    name="valid_from"
+                    value="{% if coupon %}{{ coupon.valid_from|date:'Y-m-d\TH:i' }}{% endif %}"
+                    required
+                >
+
+            </div>
+
+
+            <div class="form-field">
+
+                <label>
+                    Valid Until
+                </label>
+
+                <input
+                    type="datetime-local"
+                    name="valid_until"
+                    value="{% if coupon %}{{ coupon.valid_until|date:'Y-m-d\TH:i' }}{% endif %}"
+                    required
+                >
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- Status -->
+
+    <div class="coupon-form-card">
+
+        <div class="form-card-title">
+
+            <i class="fas fa-toggle-on"></i>
+
+            <div>
+
+                <h3>Coupon Status</h3>
+
+                <p>
+                    Choose whether this coupon is available immediately.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <label class="switch-field">
+
+            <input
+                type="checkbox"
+                name="is_active"
+                {% if not coupon or coupon.is_active %}
+                    checked
+                {% endif %}
+            >
+
+            <span class="switch"></span>
+
+            <span>
+
+                <strong>Active Coupon</strong>
+
+                <small>
+                    Customers can use this coupon when it is within its validity period.
+                </small>
+
+            </span>
+
+        </label>
+
+    </div>
+
+
+    <!-- Actions -->
+
+    <div class="form-actions">
+
+        <a
+            href="{% url 'dashboard:coupon_list' %}"
+            class="cancel-btn2"
+        >
+            Cancel
+        </a>
+
+        <button
+            type="submit"
+            class="save-coupon-btn"
+        >
+
+            <i class="fas fa-check"></i>
+
+            {% if edit_mode %}
+                Save Changes
+            {% else %}
+                Create Coupon
+            {% endif %}
+
+        </button>
+
+    </div>
+
+</form>
+
+{% endblock %}
