@@ -1,12 +1,17 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, redirect, get_object_or_404
 from django.core.paginator import Paginator
+from django.contrib.auth.decorators import login_required
+from django.views.decorators.http import require_POST
+from django.contrib import messages
+from django.db.models import Avg, Sum
+from django.db.models.functions import TruncMonth
 
 from .models import Product
 from category.models import Category
 from wishlist.models import Wishlist
 from reviews.models import Review
 from reviews.forms import ReviewForm
-from django.db.models import Avg
+from orders.models import OrderItem
 
 
 def product_list(request):
@@ -136,3 +141,138 @@ def product_detail(request, slug):
             "out_of_stock": out_of_stock,
         }
     )
+
+
+@login_required
+def seller_dashboard(request):
+    if request.user.is_superuser:
+        products = Product.objects.all().order_by("-created_at")
+        order_items = OrderItem.objects.all().select_related("order", "product", "order__user").order_by("-order__created_at")
+    else:
+        products = Product.objects.filter(seller=request.user).order_by("-created_at")
+        order_items = OrderItem.objects.filter(product__seller=request.user).select_related("order", "product", "order__user").order_by("-order__created_at")
+
+    total_products = products.count()
+    total_orders = order_items.values("order").distinct().count()
+
+    monthly_sales = (
+        order_items.filter(status="delivered")
+        .annotate(month=TruncMonth("order__created_at"))
+        .values("month")
+        .annotate(total=Sum("selling_price"))
+        .order_by("month")
+    )
+
+    chart_labels = [entry["month"].strftime("%b %Y") for entry in monthly_sales if entry["month"]]
+    chart_data = [float(entry["total"]) for entry in monthly_sales if entry["month"]]
+
+    context = {
+        "products": products,
+        "order_items": order_items,
+        "total_products": total_products,
+        "total_orders": total_orders,
+        "chart_labels": chart_labels,
+        "chart_data": chart_data,
+    }
+
+    return render(request, "seller/dashboard.html", context)
+
+
+@login_required
+def seller_products(request):
+    if request.user.is_superuser:
+        products = Product.objects.all().order_by("-created_at")
+    else:
+        products = Product.objects.filter(seller=request.user).order_by("-created_at")
+
+    return render(
+        request,
+        "seller/seller_products.html",
+        {"products": products}
+    )
+
+
+@login_required
+def seller_inventory(request):
+    if request.user.is_superuser:
+        products = Product.objects.all().order_by("stock")
+    else:
+        products = Product.objects.filter(seller=request.user).order_by("stock")
+
+    return render(
+        request,
+        "seller/inventory.html",
+        {"products": products}
+    )
+
+
+@login_required
+@require_POST
+def update_stock(request, product_id):
+    product = get_object_or_404(Product, id=product_id)
+
+    if not request.user.is_superuser and product.seller != request.user:
+        messages.error(request, "You do not have permission to update this stock.")
+        return redirect("seller_inventory")
+
+    try:
+        new_stock = int(request.POST.get("stock", 0))
+        if new_stock >= 0:
+            product.stock = new_stock
+            product.save()
+            messages.success(request, f"Stock updated successfully for {product.name}.")
+        else:
+            messages.error(request, "Stock cannot be negative.")
+    except ValueError:
+        messages.error(request, "Invalid stock value.")
+
+    return redirect("seller_inventory")
+
+
+@login_required
+def edit_product(request, product_id):
+    product = get_object_or_404(Product, id=product_id)
+
+    if not request.user.is_superuser and product.seller != request.user:
+        messages.error(request, "You do not have permission to edit this product.")
+        return redirect("seller_products")
+
+    if request.method == "POST":
+        product.name = request.POST.get("name", product.name)
+        product.description = request.POST.get("description", product.description)
+        product.selling_price = request.POST.get("selling_price", product.selling_price)
+        product.stock = request.POST.get("stock", product.stock)
+        
+        if "image" in request.FILES:
+            product.image = request.FILES["image"]
+
+        product.save()
+        messages.success(request, f"Product '{product.name}' updated successfully.")
+        return redirect("seller_products")
+
+    return render(request, "seller/edit_product.html", {"product": product})
+
+
+@login_required
+@require_POST
+def delete_product(request, product_id):
+    product = get_object_or_404(Product, id=product_id)
+
+    if not request.user.is_superuser and product.seller != request.user:
+        messages.error(request, "You do not have permission to delete this product.")
+        return redirect("seller_products")
+
+    product_name = product.name
+    product.delete()
+    messages.success(request, f"Product '{product_name}' has been deleted.")
+    return redirect("seller_products")
+
+
+@login_required
+def seller_reviews(request):
+    if request.user.is_superuser:
+        reviews = Review.objects.all().select_related("product", "user").order_by("-created_at")
+    else:
+        reviews = Review.objects.filter(product__seller=request.user).select_related("product", "user").order_by("-created_at")
+
+    return render(request, "seller/seller_reviews.html", {"reviews": reviews})

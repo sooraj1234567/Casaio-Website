@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Inventory Control Panel{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="fw-bold">Inventory Control</h2>
+        <a href="{% url 'add_product' %}" class="btn btn-dark">
+            + Add New Product
+        </a>
+    </div>
+
+    {% if products %}
+        <div class="card shadow-sm border-0 rounded-4">
+            <div class="card-body table-responsive">
+                <table class="table align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Product</th>
+                            <th>Category</th>
+                            <th>Price</th>
+                            <th>Current Stock</th>
+                            <th>Status</th>
+                            <th>Update Stock</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for product in products %}
+                        <tr>
+                            <td>
+                                <div class="d-flex align-items-center gap-2">
+                                    {% if product.image %}
+                                        <img src="{{ product.image.url }}" alt="" width="40" height="40" class="rounded object-fit-cover">
+                                    {% endif %}
+                                    <span class="fw-bold">{{ product.name }}</span>
+                                </div>
+                            </td>
+                            <td>{{ product.category.name|default:"N/A" }}</td>
+                            <td>₹{{ product.selling_price }}</td>
+                            <td>
+                                <span class="fw-bold {% if product.stock <= 5 %}text-danger{% else %}text-success{% endif %}">
+                                    {{ product.stock }} units
+                                </span>
+                            </td>
+                            <td>
+                                {% if product.stock <= 5 %}
+                                    <span class="badge bg-danger">Low Stock</span>
+                                {% else %}
+                                    <span class="badge bg-success">In Stock</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <form action="{% url 'update_stock' product.id %}" method="POST" class="d-flex gap-2">
+                                    {% csrf_token %}
+                                    <input type="number" name="stock" value="{{ product.stock }}" min="0" class="form-control form-control-sm w-auto" style="width: 80px;">
+                                    <button type="submit" class="btn btn-outline-dark btn-sm">Save</button>
+                                </form>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    {% else %}
+        <div class="text-center py-5">
+            <h4>No Products Found</h4>
+            <p class="text-muted">Start adding products to manage your store inventory.</p>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Coupon Management{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="fw-bold">Manage Coupons</h2>
+        <a href="{% url 'orders:add_coupon' %}" class="btn btn-dark">+ Create Coupon</a>
+    </div>
+
+    {% if coupons %}
+        <div class="card shadow-sm border-0 rounded-4">
+            <div class="card-body table-responsive">
+                <table class="table align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Code</th>
+                            <th>Discount</th>
+                            <th>Min Order</th>
+                            <th>Valid Until</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for coupon in coupons %}
+                        <tr>
+                            <td class="fw-bold">{{ coupon.code }}</td>
+                            <td>
+                                {% if coupon.discount_type == 'percentage' %}
+                                    {{ coupon.discount_value }}%
+                                {% else %}
+                                    ₹{{ coupon.discount_value }}
+                                {% endif %}
+                            </td>
+                            <td>₹{{ coupon.minimum_order_amount }}</td>
+                            <td>{{ coupon.valid_until|date:"d M Y" }}</td>
+                            <td>
+                                {% if coupon.is_active %}
+                                    <span class="badge bg-success">Active</span>
+                                {% else %}
+                                    <span class="badge bg-secondary">Inactive</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <form action="{% url 'orders:toggle_coupon' coupon.id %}" method="POST">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-outline-dark btn-sm">
+                                        {% if coupon.is_active %}Deactivate{% else %}Activate{% endif %}
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    {% else %}
+        <div class="text-center py-5">
+            <h4>No Coupons Available</h4>
+            <p class="text-muted">Create your first promotional coupon to boost sales.</p>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

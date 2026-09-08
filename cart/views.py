@@ -1,4 +1,6 @@
+from django.conf import settings
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views.decorators.http import require_POST
@@ -70,7 +72,7 @@ def buy_now(request, product_id):
             cart_item.quantity = product.stock
     cart_item.save()
 
-    return redirect("checkout:checkout_page")
+    return redirect("checkout:checkout")
 
 
 @login_required

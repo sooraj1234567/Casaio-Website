@@ -93,6 +93,35 @@ class Order(models.Model):
 
         super().save(*args, **kwargs)
 
+    def update_status_from_items(self):
+        """Automatically synchronizes the parent order status and payment status based on its item statuses."""
+        if self.status == "cancelled":
+            return
+
+        items = self.items.all()
+        if not items.exists():
+            return
+
+        # Normalize item statuses to lowercase to prevent case mismatch issues
+        statuses = [str(item.status).lower().strip() for item in items]
+
+        if all(s == "delivered" for s in statuses):
+            self.status = "delivered"
+            if self.payment_method == "cod":
+                self.payment_status = True  # Mark paid upon delivery for COD
+        elif any(s == "shipped" for s in statuses):
+            self.status = "shipped"
+        elif any(s == "confirmed" for s in statuses):
+            self.status = "confirmed"
+        elif all(s == "cancelled" for s in statuses):
+            self.status = "cancelled"
+            if self.payment_method == "cod":
+                self.payment_status = False
+        else:
+            self.status = "pending"
+        
+        self.save(update_fields=["status", "payment_status"])
+
     def __str__(self):
         return self.order_number or f"Order #{self.id}"
 
@@ -134,6 +163,12 @@ class OrderItem(models.Model):
     @property
     def total_price(self):
         return self.selling_price * self.quantity
+
+    def save(self, *args, **kwargs):
+        """Automatically update parent order status whenever an order item is saved."""
+        super().save(*args, **kwargs)
+        if self.order:
+            self.order.update_status_from_items()
 
     def __str__(self):
         return f"{self.product.name} - {self.status}"
