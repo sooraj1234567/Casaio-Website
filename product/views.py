@@ -193,6 +193,35 @@ def seller_products(request):
 
 
 @login_required
+def add_product(request):
+    if request.method == "POST":
+        name = request.POST.get("name")
+        description = request.POST.get("description")
+        selling_price = request.POST.get("selling_price")
+        stock = request.POST.get("stock", 0)
+        category_id = request.POST.get("category")
+        image = request.FILES.get("image")
+
+        category = get_object_or_404(Category, id=category_id) if category_id else None
+
+        product = Product.objects.create(
+            seller=request.user,
+            name=name,
+            description=description,
+            selling_price=selling_price,
+            stock=stock,
+            category=category,
+            image=image,
+            is_available=True
+        )
+        messages.success(request, f"Product '{product.name}' added successfully.")
+        return redirect("seller_products")
+
+    categories = Category.objects.filter(is_active=True)
+    return render(request, "seller/add_product.html", {"categories": categories})
+
+
+@login_required
 def seller_inventory(request):
     if request.user.is_superuser:
         products = Product.objects.all().order_by("stock")

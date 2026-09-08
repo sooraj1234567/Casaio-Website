@@ -18,6 +18,16 @@ urlpatterns = [
         name="seller_dashboard"
     ),
     path(
+        "seller/products/",
+        views.seller_products,
+        name="seller_products"
+    ),
+    path(
+        "seller/product/add/",
+        views.add_product,
+        name="add_product"
+    ),
+    path(
         "seller/inventory/",
         views.seller_inventory,
         name="seller_inventory"

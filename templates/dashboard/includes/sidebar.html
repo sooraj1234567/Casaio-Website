@@ -31,9 +31,16 @@
         {% endif %}
 
         <li>
-            <a href="{% if request.user.role == 'seller' %}{% url 'seller_dashboard' %}{% else %}{% url 'dashboard:order_list' %}{% endif %}">
+            <a href="{% if request.user.role == 'seller' %}{% url 'orders:seller_orders' %}{% else %}{% url 'dashboard:order_list' %}{% endif %}">
                 <i class="fas fa-shopping-cart"></i>
                 Orders
+            </a>
+        </li>
+
+        <li class="{% if 'review' in request.resolver_match.url_name %}active{% endif %}">
+            <a href="{% url 'seller_reviews' %}">
+                <i class="fas fa-star"></i>
+                Reviews
             </a>
         </li>
 
