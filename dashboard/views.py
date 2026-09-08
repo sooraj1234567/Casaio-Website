@@ -19,6 +19,7 @@ from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, 
 from orders.models import Order, OrderItem, Coupon
 from product.models import Product, ProductImage
 from product.form import ProductForm
+from reviews.models import Review
 from category.models import Category
 from category.forms import CategoryForm
 from category.utils import get_category_tree
@@ -3059,3 +3060,116 @@ def download_sales_report_excel(request):
     workbook.save(response)
 
     return response
+
+# =========================
+# SELLER MANAGEMENT
+# =========================
+
+def seller_list(request):
+
+    sellers = User.objects.filter(
+        role="seller"
+    ).order_by("-date_joined")
+
+    return render(
+        request,
+        "dashboard/sellers/seller_list.html",
+        {
+            "sellers": sellers,
+        }
+    )
+
+def seller_detail(request, pk):
+
+    seller = get_object_or_404(
+        User,
+        pk=pk,
+        role="seller"
+    )
+
+    return render(
+        request,
+        "dashboard/sellers/seller_detail.html",
+        {
+            "seller": seller,
+        }
+    )
+
+
+def seller_toggle_status(request, pk):
+
+    seller = get_object_or_404(
+        User,
+        pk=pk,
+        role="seller"
+    )
+
+    if request.method == "POST":
+
+        seller.is_active = not seller.is_active
+        seller.save(update_fields=["is_active"])
+
+        if seller.is_active:
+            messages.success(
+                request,
+                f"{seller.username} has been activated successfully."
+            )
+        else:
+            messages.success(
+                request,
+                f"{seller.username} has been deactivated successfully."
+            )
+
+    return redirect("dashboard:seller_detail", pk=seller.pk)
+
+# =========================
+# REVIEWS & RATINGS
+# =========================
+
+def review_list(request):
+
+    reviews = Review.objects.select_related(
+        "user",
+        "product"
+    ).order_by("-created_at")
+
+    # Search
+    search = request.GET.get("search", "").strip()
+
+    if search:
+        reviews = reviews.filter(
+            Q(user__username__icontains=search)
+            | Q(user__email__icontains=search)
+            | Q(product__name__icontains=search)
+            | Q(comment__icontains=search)
+        )
+
+    # Rating filter
+    rating = request.GET.get("rating", "").strip()
+
+    if rating:
+        reviews = reviews.filter(rating=rating)
+
+    # Pagination
+    paginator = Paginator(reviews, 10)
+
+    page_number = request.GET.get("page")
+
+    page_obj = paginator.get_page(page_number)
+
+    return render(
+        request,
+        "dashboard/reviews/review_list.html",
+        {
+            "reviews": page_obj,
+            "page_obj": page_obj,
+            "search": search,
+            "rating": rating,
+
+            "rating_5_selected": rating == "5",
+            "rating_4_selected": rating == "4",
+            "rating_3_selected": rating == "3",
+            "rating_2_selected": rating == "2",
+            "rating_1_selected": rating == "1",
+        }
+    )

@@ -2,49 +2,59 @@
 
     <div class="logo">
         <h2>Casaio</h2>
-        <span>{% if request.user.role == 'seller' %}Seller Panel{% else %}Admin Panel{% endif %}</span>
+        <span>
+            {% if request.user.role == 'seller' %}
+            Seller Panel
+            {% else %}
+            Admin Panel
+            {% endif %}
+        </span>
     </div>
 
     <ul class="menu">
 
-        <li class="{% if request.resolver_match.url_name == 'seller_dashboard' %}active{% endif %}">
-            <a href="{% if request.user.role == 'seller' %}{% url 'seller_dashboard' %}{% else %}#{% endif %}">
+        <!-- Dashboard -->
+        <li
+            class="{% if request.resolver_match.url_name == 'dashboard' or request.resolver_match.url_name == 'seller_dashboard' %}active{% endif %}">
+            <a
+                href="{% if request.user.role == 'seller' %}{% url 'seller_dashboard' %}{% else %}{% url 'dashboard:dashboard' %}{% endif %}">
                 <i class="fas fa-chart-line"></i>
                 Dashboard
             </a>
         </li>
 
+
+        <!-- Products -->
         <li class="{% if 'product' in request.resolver_match.url_name %}active{% endif %}">
-            <a href="{% if request.user.role == 'seller' %}{% url 'seller_products' %}{% else %}{% url 'dashboard:product_list' %}{% endif %}">
+            <a
+                href="{% if request.user.role == 'seller' %}{% url 'seller_products' %}{% else %}{% url 'dashboard:product_list' %}{% endif %}">
                 <i class="fas fa-box"></i>
                 Products
             </a>
         </li>
 
+
         {% if request.user.role != 'seller' %}
+
+        <!-- Categories -->
         <li>
             <a href="{% url 'dashboard:category_list' %}">
                 <i class="fas fa-list"></i>
                 Categories
             </a>
         </li>
-        {% endif %}
 
-        <li>
-            <a href="{% if request.user.role == 'seller' %}{% url 'orders:seller_orders' %}{% else %}{% url 'dashboard:order_list' %}{% endif %}">
+
+        <!-- Orders -->
+        <li class="{% if 'order' in request.resolver_match.url_name %}active{% endif %}">
+            <a href="{% url 'dashboard:order_list' %}">
                 <i class="fas fa-shopping-cart"></i>
                 Orders
             </a>
         </li>
 
-        <li class="{% if 'review' in request.resolver_match.url_name %}active{% endif %}">
-            <a href="{% url 'seller_reviews' %}">
-                <i class="fas fa-star"></i>
-                Reviews
-            </a>
-        </li>
 
-        {% if request.user.role != 'seller' %}
+        <!-- Customers -->
         <li>
             <a href="{% url 'dashboard:customer_list' %}">
                 <i class="fas fa-users"></i>
@@ -52,6 +62,17 @@
             </a>
         </li>
 
+
+        <!-- Sellers -->
+        <li class="{% if 'seller' in request.resolver_match.url_name %}active{% endif %}">
+            <a href="{% url 'dashboard:seller_list' %}">
+                <i class="fas fa-user-tie"></i>
+                Sellers
+            </a>
+        </li>
+
+
+        <!-- Coupons -->
         <li>
             <a href="{% url 'dashboard:coupon_list' %}">
                 <i class="fas fa-tags"></i>
@@ -59,14 +80,39 @@
             </a>
         </li>
 
-        <li>
+
+        <!-- Reports -->
+        <li class="{% if request.resolver_match.url_name == 'report' %}active{% endif %}">
             <a href="{% url 'dashboard:report' %}">
                 <i class="fas fa-chart-bar"></i>
                 Reports
             </a>
         </li>
+
+
+        <!-- Reviews -->
+        <li class="{% if request.resolver_match.url_name == 'review_list' %}active{% endif %}">
+            <a href="{% url 'dashboard:review_list' %}">
+                <i class="fas fa-star"></i>
+                Reviews
+            </a>
+        </li>
+
         {% endif %}
 
+
+        <!-- Seller Orders -->
+        {% if request.user.role == 'seller' %}
+        <li class="{% if 'order' in request.resolver_match.url_name %}active{% endif %}">
+            <a href="{% url 'seller_dashboard' %}">
+                <i class="fas fa-shopping-cart"></i>
+                Orders
+            </a>
+        </li>
+        {% endif %}
+
+
+        <!-- Logout -->
         <li>
             <a href="{% url 'logout' %}">
                 <i class="fas fa-right-from-bracket"></i>

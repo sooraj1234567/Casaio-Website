@@ -1,0 +1,199 @@
+{% extends "dashboard/AdBase.html" %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'dashboard/seller_detail.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<div class="page-header">
+
+    <div>
+        <h1>Seller Details</h1>
+        <p>View and manage this seller account.</p>
+    </div>
+
+    <a href="{% url 'dashboard:seller_list' %}" class="back-btn">
+        <i class="fas fa-arrow-left"></i>
+        Back to Sellers
+    </a>
+
+</div>
+
+
+<div class="seller-detail-grid">
+
+    <!-- PROFILE CARD -->
+
+    <div class="seller-profile-card">
+
+        <div class="seller-profile-top">
+
+            <div class="seller-large-avatar">
+                {{ seller.username|first|upper }}
+            </div>
+
+            <div>
+                <h2>
+                    {{ seller.get_full_name|default:seller.username }}
+                </h2>
+
+                <p>
+                    @{{ seller.username }}
+                </p>
+            </div>
+
+        </div>
+
+
+        <div class="seller-status-box">
+
+            {% if seller.is_active %}
+
+            <span class="seller-status active">
+                <i class="fas fa-circle"></i>
+                Active
+            </span>
+
+            {% else %}
+
+            <span class="seller-status inactive">
+                <i class="fas fa-circle"></i>
+                Inactive
+            </span>
+
+            {% endif %}
+
+        </div>
+
+    </div>
+
+
+    <!-- INFORMATION CARD -->
+
+    <div class="seller-info-card">
+
+        <div class="seller-section-title">
+            <h3>
+                <i class="fas fa-user"></i>
+                Account Information
+            </h3>
+        </div>
+
+
+        <div class="seller-info-list">
+
+            <div class="seller-info-row">
+                <span>
+                    <i class="fas fa-user"></i>
+                    Username
+                </span>
+
+                <strong>
+                    {{ seller.username }}
+                </strong>
+            </div>
+
+
+            <div class="seller-info-row">
+                <span>
+                    <i class="fas fa-envelope"></i>
+                    Email
+                </span>
+
+                <strong>
+                    {{ seller.email|default:"—" }}
+                </strong>
+            </div>
+
+
+            <div class="seller-info-row">
+                <span>
+                    <i class="fas fa-phone"></i>
+                    Phone
+                </span>
+
+                <strong>
+                    {{ seller.phone_number|default:"—" }}
+                </strong>
+            </div>
+
+
+            <div class="seller-info-row">
+                <span>
+                    <i class="fas fa-calendar"></i>
+                    Joined
+                </span>
+
+                <strong>
+                    {{ seller.date_joined|date:"d M Y, h:i A" }}
+                </strong>
+            </div>
+
+
+            <div class="seller-info-row">
+                <span>
+                    <i class="fas fa-clock"></i>
+                    Last Login
+                </span>
+
+                <strong>
+                    {% if seller.last_login %}
+                    {{ seller.last_login|date:"d M Y, h:i A" }}
+                    {% else %}
+                    Never
+                    {% endif %}
+                </strong>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- ACCOUNT ACTION -->
+
+<div class="seller-action-card">
+
+    <div>
+
+        <h3>
+            <i class="fas fa-shield-alt"></i>
+            Account Status
+        </h3>
+
+        <p>
+            Control whether this seller can access the platform.
+        </p>
+
+    </div>
+
+
+    <form method="POST" action="{% url 'dashboard:seller_toggle_status' seller.pk %}">
+
+        {% csrf_token %}
+
+        {% if seller.is_active %}
+
+        <button type="submit" class="seller-action-btn deactivate">
+            <i class="fas fa-user-slash"></i>
+            Deactivate Seller
+        </button>
+
+        {% else %}
+
+        <button type="submit" class="seller-action-btn activate">
+            <i class="fas fa-user-check"></i>
+            Activate Seller
+        </button>
+
+        {% endif %}
+
+    </form>
+
+</div>
+
+{% endblock %}

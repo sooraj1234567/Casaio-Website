@@ -1,0 +1,186 @@
+{% extends "dashboard/AdBase.html" %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'dashboard/seller_list.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<div class="page-header">
+    <div>
+        <h1>Seller Management</h1>
+        <p>Manage and monitor sellers registered on your platform.</p>
+    </div>
+</div>
+
+
+<div class="seller-summary">
+
+    <div class="seller-stat-card">
+        <div class="seller-stat-icon">
+            <i class="fas fa-store"></i>
+        </div>
+
+        <div>
+            <span>Total Sellers</span>
+            <strong>{{ sellers|length }}</strong>
+        </div>
+    </div>
+
+    <div class="seller-stat-card">
+        <div class="seller-stat-icon">
+            <i class="fas fa-user-check"></i>
+        </div>
+
+        <div>
+            <span>Active Sellers</span>
+            <strong>
+                {{ sellers|length }}
+            </strong>
+        </div>
+    </div>
+
+</div>
+
+
+<div class="seller-card">
+
+    <div class="seller-card-header">
+
+        <div>
+            <h3>
+                <i class="fas fa-store"></i>
+                All Sellers
+            </h3>
+
+            <p>
+                View and manage seller accounts.
+            </p>
+        </div>
+
+    </div>
+
+
+    <div class="seller-table-wrapper">
+
+        {% if sellers %}
+
+        <table class="seller-table">
+
+            <thead>
+                <tr>
+                    <th>SELLER</th>
+                    <th>EMAIL</th>
+                    <th>PHONE</th>
+                    <th>JOINED</th>
+                    <th>STATUS</th>
+                    <th>ACTION</th>
+                </tr>
+            </thead>
+
+            <tbody>
+
+                {% for seller in sellers %}
+
+                <tr>
+
+                    <td>
+                        <div class="seller-info">
+
+                            <div class="seller-avatar">
+                                {{ seller.username|first|upper }}
+                            </div>
+
+                            <div>
+                                <strong>
+                                    {{ seller.get_full_name|default:seller.username }}
+                                </strong>
+
+                                <span>
+                                    @{{ seller.username }}
+                                </span>
+                            </div>
+
+                        </div>
+                    </td>
+
+
+                    <td>
+                        <span class="seller-email">
+                            {{ seller.email|default:"—" }}
+                        </span>
+                    </td>
+
+
+                    <td>
+                        {{ seller.phone_number|default:"—" }}
+                    </td>
+
+
+                    <td>
+                        {{ seller.date_joined|date:"d M Y" }}
+                    </td>
+
+
+                    <td>
+
+                        {% if seller.is_active %}
+
+                        <span class="seller-status active">
+                            <i class="fas fa-circle"></i>
+                            Active
+                        </span>
+
+                        {% else %}
+
+                        <span class="seller-status inactive">
+                            <i class="fas fa-circle"></i>
+                            Inactive
+                        </span>
+
+                        {% endif %}
+
+                    </td>
+
+
+                    <td>
+
+                        <a href="{% url 'dashboard:seller_detail' seller.pk %}" class="seller-view-btn">
+                            <i class="fas fa-eye"></i>
+                            View
+                        </a>
+
+                    </td>
+
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+        {% else %}
+
+        <div class="empty-sellers">
+
+            <div class="empty-icon">
+                <i class="fas fa-store"></i>
+            </div>
+
+            <h3>No sellers found</h3>
+
+            <p>
+                There are currently no seller accounts registered.
+            </p>
+
+        </div>
+
+        {% endif %}
+
+    </div>
+
+</div>
+
+{% endblock %}

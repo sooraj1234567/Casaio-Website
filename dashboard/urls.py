@@ -119,6 +119,20 @@ path(
     name="customer_detail",
 ),
 
+path("sellers/", views.seller_list, name="seller_list"),
+
+path(
+    "sellers/<int:pk>/",
+    views.seller_detail,
+    name="seller_detail"
+),
+
+path(
+    "sellers/<int:pk>/toggle-status/",
+    views.seller_toggle_status,
+    name="seller_toggle_status",
+),
+
 path(
     "customers/<int:pk>/toggle-status/",
     views.customer_toggle_status,
@@ -172,4 +186,6 @@ path(
     views.download_sales_report_excel,
     name="download_sales_report_excel"
 ),
+
+path("reviews/", views.review_list, name="review_list"),
 ]

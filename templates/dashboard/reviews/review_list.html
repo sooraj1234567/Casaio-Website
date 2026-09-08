@@ -1,0 +1,303 @@
+{% extends "dashboard/AdBase.html" %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'dashboard/review_list.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<div class="page-header">
+    <div>
+        <h1>Reviews & Ratings</h1>
+        <p>Manage customer reviews and product ratings.</p>
+    </div>
+</div>
+
+
+<!-- FILTERS -->
+
+<div class="review-filter-card">
+
+    <form method="GET" class="review-filter-form">
+
+        <div class="review-search">
+            <i class="fas fa-search"></i>
+
+            <input type="text" name="search" value="{{ search }}" placeholder="Search customer, product or review...">
+        </div>
+
+
+        <div class="review-rating-filter">
+
+            <select name="rating">
+
+                <option value="">All Ratings</option>
+
+                <option value="5" {% if rating_5_selected %}selected{% endif %}>
+                    ⭐ 5 Stars
+                </option>
+
+                <option value="4" {% if rating_4_selected %}selected{% endif %}>
+                    ⭐ 4 Stars
+                </option>
+
+                <option value="3" {% if rating_3_selected %}selected{% endif %}>
+                    ⭐ 3 Stars
+                </option>
+
+                <option value="2" {% if rating_2_selected %}selected{% endif %}>
+                    ⭐ 2 Stars
+                </option>
+
+                <option value="1" {% if rating_1_selected %}selected{% endif %}>
+                    ⭐ 1 Star
+                </option>
+
+            </select>
+
+        </div>
+
+
+        <button type="submit" class="review-filter-btn">
+            <i class="fas fa-filter"></i>
+            Filter
+        </button>
+
+
+        {% if search or rating %}
+
+        <a href="{% url 'dashboard:review_list' %}" class="review-clear-btn">
+            Clear
+        </a>
+
+        {% endif %}
+
+    </form>
+
+</div>
+
+
+<!-- REVIEWS CARD -->
+
+<div class="review-card">
+
+    <div class="review-card-header">
+
+        <div>
+            <h3>
+                <i class="fas fa-star"></i>
+                Customer Reviews
+            </h3>
+
+            <p>
+                View customer feedback and ratings.
+            </p>
+        </div>
+
+        <span class="review-count">
+            {{ page_obj.paginator.count }} Reviews
+        </span>
+
+    </div>
+
+
+    <div class="review-table-wrapper">
+
+        {% if reviews %}
+
+        <table class="review-table">
+
+            <thead>
+
+                <tr>
+                    <th>CUSTOMER</th>
+                    <th>PRODUCT</th>
+                    <th>RATING</th>
+                    <th>REVIEW</th>
+                    <th>DATE</th>
+                    <th>ACTION</th>
+                </tr>
+
+            </thead>
+
+
+            <tbody>
+
+                {% for review in reviews %}
+
+                <tr>
+
+                    <!-- CUSTOMER -->
+
+                    <td>
+
+                        <div class="review-user">
+
+                            <div class="review-avatar">
+                                {{ review.user.username|first|upper }}
+                            </div>
+
+                            <div>
+
+                                <strong>
+                                    {{ review.user.get_full_name|default:review.user.username }}
+                                </strong>
+
+                                <span>
+                                    {{ review.user.email }}
+                                </span>
+
+                            </div>
+
+                        </div>
+
+                    </td>
+
+
+                    <!-- PRODUCT -->
+
+                    <td>
+
+                        <div class="review-product">
+
+                            <strong>
+                                {{ review.product.name }}
+                            </strong>
+
+                        </div>
+
+                    </td>
+
+
+                    <!-- RATING -->
+
+                    <td>
+
+                        <div class="review-rating">
+
+                            {% for star in "12345" %}
+
+                            {% if forloop.counter <= review.rating %} <i class="fas fa-star"></i>
+
+                                {% else %}
+
+                                <i class="far fa-star"></i>
+
+                                {% endif %}
+
+                                {% endfor %}
+
+                                <span>
+                                    {{ review.rating }}/5
+                                </span>
+
+                        </div>
+
+                    </td>
+
+
+                    <!-- COMMENT -->
+
+                    <td>
+
+                        <div class="review-comment">
+
+                            {{ review.comment|truncatechars:100 }}
+
+                        </div>
+
+                    </td>
+
+
+                    <!-- DATE -->
+
+                    <td>
+
+                        <span class="review-date">
+                            {{ review.created_at|date:"d M Y" }}
+                        </span>
+
+                    </td>
+
+
+                    <!-- ACTION -->
+
+                    <td>
+
+                        <a href="#" class="review-view-btn" title="View Review">
+                            <i class="fas fa-eye"></i>
+                            View
+                        </a>
+
+                    </td>
+
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+
+        <!-- PAGINATION -->
+
+        {% if page_obj.has_other_pages %}
+
+        <div class="review-pagination">
+
+            {% if page_obj.has_previous %}
+
+            <a href="?page={{ page_obj.previous_page_number }}{% if search %}&search={{ search|urlencode }}{% endif %}{% if rating %}&rating={{ rating }}{% endif %}"
+                class="pagination-btn">
+                <i class="fas fa-chevron-left"></i>
+            </a>
+
+            {% endif %}
+
+
+            <span class="pagination-current">
+                Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+            </span>
+
+
+            {% if page_obj.has_next %}
+
+            <a href="?page={{ page_obj.next_page_number }}{% if search %}&search={{ search|urlencode }}{% endif %}{% if rating %}&rating={{ rating }}{% endif %}"
+                class="pagination-btn">
+                <i class="fas fa-chevron-right"></i>
+            </a>
+
+            {% endif %}
+
+        </div>
+
+        {% endif %}
+
+
+        {% else %}
+
+        <!-- EMPTY STATE -->
+
+        <div class="empty-reviews">
+
+            <div class="empty-icon">
+                <i class="fas fa-star"></i>
+            </div>
+
+            <h3>No reviews found</h3>
+
+            <p>
+                There are currently no customer reviews matching your search.
+            </p>
+
+        </div>
+
+        {% endif %}
+
+    </div>
+
+</div>
+
+{% endblock %}
