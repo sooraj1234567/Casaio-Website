@@ -10,6 +10,7 @@ class CustomUserAdmin(UserAdmin):
     list_display = (
         "username",
         "email",
+        "role",
         "phone_number",
         "email_verified",
         "phone_verified",
@@ -18,6 +19,7 @@ class CustomUserAdmin(UserAdmin):
     )
 
     list_filter = (
+        "role",
         "email_verified",
         "phone_verified",
         "is_staff",
@@ -31,3 +33,31 @@ class CustomUserAdmin(UserAdmin):
     )
 
     ordering = ("-date_joined",)
+
+    # Extend UserAdmin fieldsets to display custom fields
+    fieldsets = UserAdmin.fieldsets + (
+        (
+            "Additional Info",
+            {
+                "fields": (
+                    "role",
+                    "phone_number",
+                    "email_verified",
+                    "phone_verified",
+                )
+            },
+        ),
+    )
+
+    # Extend add_fieldsets for creating users from admin
+    add_fieldsets = UserAdmin.add_fieldsets + (
+        (
+            "Additional Info",
+            {
+                "fields": (
+                    "role",
+                    "phone_number",
+                )
+            },
+        ),
+    )

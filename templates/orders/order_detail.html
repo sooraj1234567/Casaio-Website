@@ -3,7 +3,6 @@
 {% block title %}Order Details{% endblock %}
 
 {% block content %}
-
 <div class="container py-5">
 
     <a href="{% url 'orders:my_orders' %}" class="btn btn-outline-dark mb-4">
@@ -92,9 +91,10 @@
                 <thead class="table-light">
                     <tr>
                         <th>Product</th>
-                        <th width="120">Quantity</th>
-                        <th width="150">Price</th>
-                        <th width="150">Total</th>
+                        <th width="100">Quantity</th>
+                        <th width="130">Price</th>
+                        <th width="130">Total</th>
+                        <th width="140">Status</th>
                     </tr>
                 </thead>
 
@@ -108,9 +108,20 @@
 
                         <td>{{ item.quantity }}</td>
 
-                        <td>₹{{ item.price }}</td>
+                        <td>₹{{ item.selling_price }}</td>
 
                         <td>₹{{ item.total_price }}</td>
+
+                        <td>
+                            <span class="badge 
+                                {% if item.status == 'delivered' %}bg-success
+                                {% elif item.status == 'shipped' %}bg-info
+                                {% elif item.status == 'confirmed' %}bg-primary
+                                {% elif item.status == 'cancelled' %}bg-danger
+                                {% else %}bg-warning text-dark{% endif %}">
+                                {{ item.get_status_display }}
+                            </span>
+                        </td>
 
                     </tr>
 
@@ -196,5 +207,4 @@
     </div>
 
 </div>
-
 {% endblock %}

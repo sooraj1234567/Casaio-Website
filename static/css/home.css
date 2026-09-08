@@ -4,7 +4,7 @@ body{
 }
 
 .hero-section{
-    padding:80px 0;
+    padding:40px 0;
 }
 
 .hero-section h1{
@@ -65,7 +65,7 @@ body{
 @media(max-width:992px){
 
 .hero-section{
-padding:50px 0;
+padding:30px 0;
 }
 
 .hero-section h1{
@@ -99,7 +99,7 @@ text-align:center;
 }
 }
 /* ==========================
-   Features Section
+   Features / Trust Badges Section
 ========================== */
 
 .features-section{
@@ -150,7 +150,7 @@ text-align:center;
 }
 
 /*====================================
-        SHOP BY CATEGORY
+        SHOP BY CATEGORY (Circular Layout)
 =====================================*/
 
 .category-section{
@@ -185,13 +185,13 @@ text-align:center;
 
 .category-card{
     background:#fff;
-    border-radius:18px;
+    border-radius:50%;
     overflow:hidden;
     text-align:center;
     box-shadow:0 8px 30px rgba(0,0,0,.06);
     transition:.35s;
     cursor:pointer;
-    height:100%;
+    margin:0 auto;
 }
 
 .category-card:hover{
@@ -201,7 +201,7 @@ text-align:center;
 
 .category-card img{
     width:100%;
-    height:190px;
+    height:100%;
     object-fit:cover;
     transition:.4s;
 }
@@ -210,23 +210,12 @@ text-align:center;
     transform:scale(1.08);
 }
 
-.category-card h6{
-    padding:18px;
-    margin:0;
-    font-weight:600;
-    color:#222;
-}
-
 /* Responsive */
 
 @media(max-width:992px){
 
 .section-title{
     font-size:28px;
-}
-
-.category-card img{
-    height:170px;
 }
 
 }
@@ -248,14 +237,6 @@ text-align:center;
 
 .section-title{
     font-size:24px;
-}
-
-.category-card img{
-    height:140px;
-}
-
-.category-card h6{
-    font-size:15px;
 }
 
 }
@@ -585,7 +566,7 @@ text-align:center;
 
 }
 /*============================
-      NEW ARRIVALS
+     NEW ARRIVALS
 =============================*/
 
 .new-arrivals{

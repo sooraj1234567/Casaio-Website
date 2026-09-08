@@ -6,27 +6,28 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>{% block title %}Casaio{% endblock %}</title>
+    <title>{% block title %}Casaio | Premium Marketplace{% endblock %}</title>
 
-    <!-- Bootstrap -->
+    <!-- Bootstrap 5.3 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
 
     <!-- Bootstrap Icons -->
     <link rel="stylesheet"
         href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
 
-    <!-- Google Font -->
+    <!-- Google Font: Poppins -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
         rel="stylesheet">
 
-    <!-- Swiper -->
+    <!-- Swiper CSS -->
     <link rel="stylesheet"
         href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"/>
 
+    <!-- Font Awesome -->
     <link rel="stylesheet"
         href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 
-    <!-- CSS -->
+    <!-- Application CSS Stylesheets -->
     <link rel="stylesheet" href="{% static 'css/header.css' %}">
     <link rel="stylesheet" href="{% static 'css/navbar.css' %}">
     <link rel="stylesheet" href="{% static 'css/footer.css' %}">
@@ -54,10 +55,12 @@
             background:#f8f9fa;
             color:#333;
             overflow-x:hidden;
+            -webkit-font-smoothing: antialiased;
         }
 
         a{
             text-decoration:none;
+            transition: color 0.2s ease;
         }
 
         img{
@@ -66,6 +69,7 @@
 
         :root{
             --primary:#ff6a00;
+            --primary-dark: #e05d00;
             --dark:#222;
             --light:#fff;
             --gray:#666;
@@ -73,166 +77,115 @@
         }
 
         /* =====================================
-        CART DRAWER
-===================================== */
-
-.cart-drawer{
-
-    position:fixed;
-    top:0;
-    right:-420px;
-
-    width:400px;
-    max-width:100%;
-    height:100vh;
-
-    background:#fff;
-
-    z-index:9999;
-
-    box-shadow:-10px 0 40px rgba(0,0,0,.15);
-
-    transition:.35s ease;
-
-    display:flex;
-    flex-direction:column;
-
-}
-
-.cart-drawer.active{
-
-    right:0;
-
-}
-
-/* Overlay */
-
-#cartOverlay{
-
-    position:fixed;
-    inset:0;
-
-    background:rgba(0,0,0,.45);
-
-    opacity:0;
-    visibility:hidden;
-
-    transition:.35s;
-
-    z-index:9998;
-
-}
-
-#cartOverlay.active{
-
-    opacity:1;
-    visibility:visible;
-
-}
-
-/* Header */
-
-.cart-header{
-
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-
-    padding:22px;
-
-    border-bottom:1px solid #eee;
-
-}
-
-.cart-header h5{
-
-    margin:0;
-    font-weight:600;
-
-}
-
-.cart-close{
-
-    border:none;
-    background:none;
-
-    font-size:30px;
-
-    cursor:pointer;
-
-}
-
-/* Product */
-
-.cart-product{
-
-    display:flex;
-    gap:18px;
-
-    padding:22px;
-
-}
-
-.cart-product img{
-
-    width:90px;
-    height:90px;
-
-    object-fit:cover;
-
-    border-radius:10px;
-
-}
-
-.cart-product-info h6{
-
-    margin-bottom:10px;
-
-    font-size:17px;
-
-}
-
-.cart-product-info p{
-
-    color:#ff6a00;
-    font-weight:600;
-
-    margin-bottom:5px;
-
-}
-
-/* Subtotal */
-
-.cart-subtotal{
-
-    display:flex;
-    justify-content:space-between;
-
-    padding:20px 22px;
-
-    font-size:18px;
-
-    font-weight:600;
-
-}
-
-/* Buttons */
-
-.cart-actions{
-
-    margin-top:auto;
-
-    padding:22px;
-
-}
-
-.cart-actions .btn{
-
-    border-radius:10px;
-    padding:12px;
-
-}
-
+        PROFESSIONAL CART DRAWER
+        ===================================== */
+        .cart-drawer{
+            position:fixed;
+            top:0;
+            right:-420px;
+            width:400px;
+            max-width:100%;
+            height:100vh;
+            background:#fff;
+            z-index:9999;
+            box-shadow:-10px 0 40px rgba(0,0,0,.15);
+            transition:right 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            display:flex;
+            flex-direction:column;
+        }
+
+        .cart-drawer.active{
+            right:0;
+        }
+
+        #cartOverlay{
+            position:fixed;
+            inset:0;
+            background:rgba(0,0,0,.45);
+            opacity:0;
+            visibility:hidden;
+            transition:all 0.35s ease;
+            z-index:9998;
+        }
+
+        #cartOverlay.active{
+            opacity:1;
+            visibility:visible;
+        }
+
+        .cart-header{
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            padding:22px;
+            border-bottom:1px solid #eee;
+        }
+
+        .cart-header h5{
+            margin:0;
+            font-weight:600;
+        }
+
+        .cart-close{
+            border:none;
+            background:none;
+            font-size:26px;
+            cursor:pointer;
+            color: var(--gray);
+            transition: color 0.2s;
+        }
+
+        .cart-close:hover {
+            color: var(--dark);
+        }
+
+        .cart-product{
+            display:flex;
+            gap:18px;
+            padding:22px;
+            border-bottom: 1px solid #f9f9f9;
+        }
+
+        .cart-product img{
+            width:90px;
+            height:90px;
+            object-fit:cover;
+            border-radius:10px;
+        }
+
+        .cart-product-info h6{
+            margin-bottom:8px;
+            font-size:16px;
+            font-weight: 500;
+        }
+
+        .cart-product-info p{
+            color:#ff6a00;
+            font-weight:600;
+            margin-bottom:0;
+        }
+
+        .cart-subtotal{
+            display:flex;
+            justify-content:space-between;
+            padding:20px 22px;
+            font-size:18px;
+            font-weight:600;
+            background: #fafafa;
+            border-top: 1px solid #eee;
+        }
+
+        .cart-actions{
+            margin-top:auto;
+            padding:22px;
+            background: #fff;
+        }
+
+        .cart-actions .btn{
+            border-radius:10px;
+            padding:12px;
+            font-weight: 500;
+        }
     </style>
 
     {% block css %}
@@ -246,18 +199,58 @@
 TOP BAR + HEADER + NAVBAR
 ========================= -->
 
-{% if request.resolver_match.url_name != "login" and request.resolver_match.url_name != "register" and request.resolver_match.url_name != "forgot_password" and request.resolver_match.url_name != "verify_otp" and request.resolver_match.url_name != "login_otp" and request.resolver_match.url_name != "forgot_password_otp" and request.resolver_match.url_name != "reset_password" %}
+{% if request.resolver_match.url_name not in "login,register,seller_register,forgot_password,verify_otp,login_otp,forgot_password_otp,reset_password" %}
 
     {% include "includes/topbar.html" %}
     {% include "includes/header.html" %}
-    {% include "includes/navbar.html" %}
+    
+    <!-- Direct Navbar Implementation (Bypassing external include caching) -->
+    <nav class="main-navbar bg-white border-bottom shadow-sm">
+        <div class="container d-flex align-items-center justify-content-between py-2">
+
+            <!-- Left: Categories Dropdown Toggle -->
+            <div class="dropdown category-dropdown-wrapper">
+                <button class="btn text-white px-4 py-2 d-flex align-items-center gap-2 rounded-2 fw-semibold" type="button" id="allCategoriesDropdown" data-bs-toggle="dropdown" aria-expanded="false" style="background-color: #ff6a00;">
+                    <i class="bi bi-list fs-5"></i> All Categories
+                </button>
+                <ul class="dropdown-menu shadow-sm border-0 py-2 w-100" aria-labelledby="allCategoriesDropdown" style="border-radius: 8px;">
+                    {% for cat in categories %}
+                        <li><a class="dropdown-item py-2 px-3" href="{% url 'category_products' cat.id %}">{{ cat.name }}</a></li>
+                    {% empty %}
+                        <li><a class="dropdown-item py-2 px-3 text-muted" href="#">No categories found</a></li>
+                    {% endfor %}
+                </ul>
+            </div>
+
+            <!-- Center: Navigation Links -->
+            <ul class="nav align-items-center d-none d-lg-flex gap-4 mb-0" style="list-style: none;">
+                <li><a href="{% url 'home' %}" class="text-dark fw-medium text-decoration-none px-2 py-1">Home</a></li>
+                <li><a href="#" class="text-dark fw-medium text-decoration-none px-2 py-1">Shop All</a></li>
+                <li><a href="#" class="text-dark fw-medium text-decoration-none px-2 py-1">New Arrivals</a></li>
+                <li><a href="#" class="text-dark fw-medium text-decoration-none px-2 py-1">Best Sellers</a></li>
+                <li><a href="#" class="text-dark fw-medium text-decoration-none px-2 py-1">Deals <span class="badge text-white ms-1" style="background-color: #ff3b30; font-size: 10px;">Sale</span></a></li>
+                <li><a href="#" class="text-dark fw-medium text-decoration-none px-2 py-1">Contact</a></li>
+            </ul>
+
+            <!-- Right: Dedicated Seller Onboarding Button -->
+            <div class="d-flex align-items-center">
+                <a href="{% url 'seller_register' %}" class="btn px-3 py-2 fw-semibold d-flex align-items-center gap-2 rounded-2 text-white shadow-sm" style="background-color: #ff6a00; font-size: 14px; transition: all 0.2s;">
+                    <i class="bi bi-shop"></i> Sell on Casaio
+                </a>
+            </div>
+
+        </div>
+    </nav>
 
 {% else %}
 
-<header class="bg-white shadow-sm py-3">
-    <div class="container text-center">
-        <a href="/">
-            <img src="{% static 'images/logo.png' %}" width="180" alt="Casaio">
+<header class="bg-white border-bottom shadow-sm py-2">
+    <div class="container d-flex align-items-center justify-content-between">
+        <a href="{% url 'home' %}">
+            <img src="{% static 'images/logo.png' %}" width="120" alt="Casaio" class="img-fluid">
+        </a>
+        <a href="{% url 'home' %}" class="text-muted text-decoration-none fw-medium" style="font-size: 13px;">
+            <i class="bi bi-arrow-left me-1"></i> Back to Store
         </a>
     </div>
 </header>
@@ -266,35 +259,23 @@ TOP BAR + HEADER + NAVBAR
 
 
 <!-- =========================
-MESSAGES
+MESSAGES NOTIFICATIONS
 ========================= -->
 
 <div class="container mt-3">
-
     {% if messages %}
-
         {% for message in messages %}
-
-            <div class="alert alert-{{ message.tags }} alert-dismissible fade show">
-
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show shadow-sm border-0" role="alert">
                 {{ message }}
-
-                <button type="button"
-                        class="btn-close"
-                        data-bs-dismiss="alert">
-                </button>
-
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
-
         {% endfor %}
-
     {% endif %}
-
 </div>
 
 
 <!-- =========================
-PAGE CONTENT
+DYNAMIC PAGE CONTENT
 ========================= -->
 
 {% block content %}
@@ -302,62 +283,51 @@ PAGE CONTENT
 
 
 <!-- =========================
-FOOTER
+GLOBAL FOOTER
 ========================= -->
 
-{% if request.resolver_match.url_name != "login" and request.resolver_match.url_name != "register" and request.resolver_match.url_name != "forgot_password" and request.resolver_match.url_name != "verify_otp" and request.resolver_match.url_name != "login_otp" and request.resolver_match.url_name != "forgot_password_otp" and request.resolver_match.url_name != "reset_password" %}
+{% if request.resolver_match.url_name not in "login,register,seller_register,forgot_password,verify_otp,login_otp,forgot_password_otp,reset_password" %}
 
     {% include "includes/footer.html" %}
 
 {% endif %}
 
+<!-- Slide-out Cart Drawer Component -->
 {% include "includes/cart_drawer.html" %}
 
-<!-- Bootstrap -->
 
+<!-- =========================
+SCRIPTS & DEPENDENCIES
+========================= -->
+
+<!-- Bootstrap 5 JS Bundle -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
 
-<!-- Swiper -->
-
+<!-- Swiper JS Bundle -->
 <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 
 <script>
-
 const swiper = new Swiper(".arrivalSwiper",{
-
     loop:true,
-
     spaceBetween:25,
-
     navigation:{
         nextEl:".swiper-button-next",
         prevEl:".swiper-button-prev",
     },
-
     breakpoints:{
-        0:{
-            slidesPerView:1
-        },
-        576:{
-            slidesPerView:2
-        },
-        768:{
-            slidesPerView:2
-        },
-        992:{
-            slidesPerView:3
-        },
-        1200:{
-            slidesPerView:4
-        }
+        0:{ slidesPerView:1 },
+        576:{ slidesPerView:2 },
+        768:{ slidesPerView:2 },
+        992:{ slidesPerView:3 },
+        1200:{ slidesPerView:4 }
     }
-
 });
-
 </script>
 
 {% block js %}
 {% endblock %}
+
+<!-- Core Application Scripts -->
 <script src="{% static 'js/header.js' %}"></script>
 <script src="{% static 'js/auth.js' %}"></script>
 <script src="{% static 'js/cart/cart_api.js' %}"></script>

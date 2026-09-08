@@ -1,0 +1,12 @@
+/* Custom Seller Dashboard Enhancements */
+body {
+    background-color: #f8f9fa;
+}
+
+.card {
+    transition: all 0.2s ease-in-out;
+}
+
+.table tr {
+    vertical-align: middle;
+}

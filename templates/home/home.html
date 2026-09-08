@@ -2,84 +2,78 @@
 {% load static %}
 
 {% block title %}
-Home
+Home | Casaio Marketplace
 {% endblock %}
 
 {% block content %}
 
-<section class="hero-section">
+<!-- =========================
+     Hero Section (Full-Width Style)
+========================= -->
+<section class="hero-section py-4">
     <div class="container">
-        <div class="row align-items-center">
-
-            <div class="col-lg-6 text-center text-lg-start">
-                <h1>
-                    Refresh Your
-                    <span>Space</span><br>
-                    Elevate Your
-                    <span>Life</span>
-                </h1>
-
-                <p>
-                    Premium home décor and kitchen accessories
-                    sourced for style, quality and value.
-                </p>
-
-                <div class="hero-buttons">
-                    <a href="#" class="btn-shop">Shop Now</a>
-                    <a href="#" class="btn-outline-custom">Explore Collections</a>
+        <div class="p-5 rounded-4 position-relative overflow-hidden shadow-sm" style="background: linear-gradient(rgba(0,0,0,0.1), rgba(0,0,0,0.2)), url('{% static "images/banner/promo-banner.jpg" %}') center/cover no-repeat; min-height: 420px; display: flex; align-items: center;">
+            <div class="row align-items-center w-100 m-0">
+                <div class="col-lg-7 text-center text-lg-start text-white">
+                    <span class="badge mb-3 px-3 py-2 rounded-pill fw-semibold text-uppercase" style="background-color: #ff6a00; color: #fff; font-size: 11px; letter-spacing: 1px;">
+                        Curated Home Decor
+                    </span>
+                    <h1 class="display-5 fw-bold mb-3 text-white" style="line-height: 1.2;">
+                        Refresh Your Space,<br> Elevate Your Life
+                    </h1>
+                    <p class="lead mb-4" style="font-size: 16px; opacity: 0.9;">
+                        Discover unique styles, functional kitchen accessories, and reliable worldwide dropshipping from independent artisans.
+                    </p>
+                    <div class="d-flex gap-3 justify-content-center justify-content-lg-start">
+                        <a href="#" class="btn btn-lg px-4 py-3 fw-semibold text-white shadow-sm" style="background-color: #ff6a00; border-radius: 10px; font-size: 15px;">
+                            Explore Collections
+                        </a>
+                        <a href="{% url 'seller_register' %}" class="btn btn-lg px-4 py-3 fw-semibold bg-white shadow-sm" style="color: #222; border-radius: 10px; font-size: 15px;">
+                            Become a Seller
+                        </a>
+                    </div>
                 </div>
             </div>
-
-            <div class="col-lg-6 mt-5 mt-lg-0">
-                <img src="{% static 'images/banner/promo-banner.jpg' %}" class="img-fluid hero-image" alt="Hero Image">
-            </div>
-
         </div>
     </div>
 </section>
 
-<!-- Features Section -->
-<section class="features-section py-5">
+<!-- =========================
+     Trust Badges / Features Row
+========================= -->
+<section class="features-section py-4">
     <div class="container">
-        <div class="row g-4">
+        <div class="row g-3 bg-white p-4 rounded-4 shadow-sm border" style="border-color: #eaeaea !important;">
 
-            <div class="col-6 col-md-4 col-lg">
-                <div class="feature-box">
-                    <div class="feature-icon">🌍</div>
-                    <h6>Dropship Worldwide</h6>
-                    <p>We ship to your customers</p>
+            <div class="col-6 col-md-3 border-end d-flex align-items-center gap-3">
+                <div class="fs-2" style="color: #ff6a00;"><i class="bi bi-truck"></i></div>
+                <div>
+                    <h6 class="mb-1 fw-bold" style="font-size: 14px;">Free Shipping</h6>
+                    <p class="mb-0 text-muted" style="font-size: 12px;">On orders over ₹999</p>
                 </div>
             </div>
 
-            <div class="col-6 col-md-4 col-lg">
-                <div class="feature-box">
-                    <div class="feature-icon">📦</div>
-                    <h6>No Minimum Order</h6>
-                    <p>Order what you sell</p>
+            <div class="col-6 col-md-3 border-end d-flex align-items-center gap-3">
+                <div class="fs-2" style="color: #ff6a00;"><i class="bi bi-arrow-counterclockwise"></i></div>
+                <div>
+                    <h6 class="mb-1 fw-bold" style="font-size: 14px;">Easy Returns</h6>
+                    <p class="mb-0 text-muted" style="font-size: 12px;">30-day return policy</p>
                 </div>
             </div>
 
-            <div class="col-6 col-md-4 col-lg">
-                <div class="feature-box">
-                    <div class="feature-icon">🚚</div>
-                    <h6>Fast Shipping</h6>
-                    <p>Reliable & on-time delivery</p>
+            <div class="col-6 col-md-3 border-end d-flex align-items-center gap-3">
+                <div class="fs-2" style="color: #ff6a00;"><i class="bi bi-shield-check"></i></div>
+                <div>
+                    <h6 class="mb-1 fw-bold" style="font-size: 14px;">Secure Payment</h6>
+                    <p class="mb-0 text-muted" style="font-size: 12px;">100% secure checkout</p>
                 </div>
             </div>
 
-            <div class="col-6 col-md-6 col-lg">
-                <div class="feature-box">
-                    <div class="feature-icon">✔️</div>
-                    <h6>Quality Assured</h6>
-                    <p>Premium quality products</p>
-                </div>
-            </div>
-
-            <div class="col-12 col-md-6 col-lg">
-                <div class="feature-box">
-                    <div class="feature-icon">🎧</div>
-                    <h6>24/7 Support</h6>
-                    <p>We're here to help</p>
+            <div class="col-6 col-md-3 d-flex align-items-center gap-3">
+                <div class="fs-2" style="color: #ff6a00;"><i class="bi bi-headset"></i></div>
+                <div>
+                    <h6 class="mb-1 fw-bold" style="font-size: 14px;">24/7 Support</h6>
+                    <p class="mb-0 text-muted" style="font-size: 12px;">Dedicated support</p>
                 </div>
             </div>
 
@@ -88,161 +82,102 @@ Home
 </section>
 
 <!-- =========================
-     Shop by Category
+     Shop by Category (Circular Icons Layout)
 ========================= -->
-
 <section class="category-section py-5">
     <div class="container">
 
-        <!-- Section Heading -->
         <div class="section-header d-flex justify-content-between align-items-center mb-4">
-
             <div>
-                <h2 class="section-title">Shop by Category</h2>
-                <p class="section-subtitle">
-                    Discover products for every corner of your home.
+                <h2 class="section-title fw-bold" style="font-size: 24px;">Shop by Category</h2>
+                <p class="section-subtitle text-muted mb-0" style="font-size: 14px;">
+                    Explore our wide range of top categories.
                 </p>
             </div>
-
-            <a href="#" class="view-all-btn">
+            <a href="#" class="view-all-btn text-decoration-none fw-semibold" style="color: #ff6a00;">
                 View All →
             </a>
-
         </div>
 
-        <div class="row g-4">
-
-            <!-- Category Card -->
-            <div class="col-6 col-md-4 col-lg">
-                <div class="category-card">
-                    <img src="{% static 'images/categories/kitchen.jpg' %}" alt="Kitchen">
-                    <h6>Kitchen</h6>
-                </div>
+        <div class="row g-4 text-center">
+            {% for category in categories %}
+            <div class="col-4 col-md-3 col-lg-2">
+                <a href="{% url 'category_products' category.id %}" class="text-decoration-none">
+                    <div class="category-card p-3 bg-white rounded-circle shadow-sm mx-auto mb-2 d-flex align-items-center justify-content-center border" style="width: 100px; height: 100px; border-color: #eee !important;">
+                        {% if category.image %}
+                            <img src="{{ category.image.url }}" alt="{{ category.name }}" class="rounded-circle w-100 h-100 object-fit-cover">
+                        {% else %}
+                            <img src="{% static 'images/categories/decor.jpg' %}" alt="{{ category.name }}" class="rounded-circle w-100 h-100 object-fit-cover">
+                        {% endif %}
+                    </div>
+                    <h6 class="text-dark fw-medium mt-2" style="font-size: 14px;">{{ category.name }}</h6>
+                </a>
             </div>
-
-            <div class="col-6 col-md-4 col-lg">
-                <div class="category-card">
-                    <img src="{% static 'images/categories/cookware.jpg' %}" alt="Cookware">
-                    <h6>Cookware</h6>
-                </div>
+            {% empty %}
+            <div class="col-12">
+                <p class="text-muted">No categories available at the moment.</p>
             </div>
-
-            <div class="col-6 col-md-4 col-lg">
-                <div class="category-card">
-                    <img src="{% static 'images/categories/tableware.jpg' %}" alt="Tableware">
-                    <h6>Tableware</h6>
-                </div>
-            </div>
-
-            <div class="col-6 col-md-4 col-lg">
-                <div class="category-card">
-                    <img src="{% static 'images/categories/decor.jpg' %}" alt="Decor">
-                    <h6>Home Decor</h6>
-                </div>
-            </div>
-
-            <div class="col-6 col-md-4 col-lg">
-                <div class="category-card">
-                    <img src="{% static 'images/categories/storage.jpg' %}" alt="Storage">
-                    <h6>Storage</h6>
-                </div>
-            </div>
-
-            <div class="col-6 col-md-4 col-lg">
-                <div class="category-card">
-                    <img src="{% static 'images/categories/wall.jpg' %}" alt="Wall Decor">
-                    <h6>Wall Decor</h6>
-                </div>
-            </div>
-
-            <div class="col-6 col-md-4 col-lg">
-                <div class="category-card">
-                    <img src="{% static 'images/categories/light.jpg' %}" alt="Lighting">
-                    <h6>Lighting</h6>
-                </div>
-            </div>
-
+            {% endfor %}
         </div>
 
     </div>
 </section>
+
 <!-- =========================
      Featured Products
 ========================= -->
-
-<section class="featured-products py-5">
+<section class="featured-products py-5 bg-white">
     <div class="container">
 
         <div class="section-header d-flex justify-content-between align-items-center mb-5">
             <div>
-                <h2 class="section-title">Featured Products</h2>
-                <p class="section-subtitle">
+                <h2 class="section-title fw-bold" style="font-size: 24px;">Featured Products</h2>
+                <p class="section-subtitle text-muted mb-0" style="font-size: 14px;">
                     Handpicked products for your modern home.
                 </p>
             </div>
-
-            <a href="#" class="view-all-btn">
+            <a href="#" class="view-all-btn text-decoration-none fw-semibold" style="color: #ff6a00;">
                 View All →
             </a>
         </div>
 
         <div class="row g-4">
-
-            <!-- Product Card -->
+            {% for product in featured_products %}
             <div class="col-12 col-sm-6 col-lg-3">
-
-                <div class="product-card">
-
-                    <span class="discount-badge">
+                <div class="product-card border rounded-3 p-3 position-relative h-100 shadow-sm bg-white" style="border-color: #eee !important;">
+                    <span class="discount-badge position-absolute top-0 start-0 m-3 badge text-white px-2 py-1" style="background-color: #ff3b30; font-size: 11px;">
                         -20%
                     </span>
-
-                    <button class="wishlist-btn">
-                        ❤
+                    <button class="wishlist-btn position-absolute top-0 end-0 m-3 border-0 bg-transparent fs-5 text-muted">
+                        <i class="bi bi-heart"></i>
                     </button>
-
-                    <div class="product-image">
-                        <img src="{% static 'images/products/product1.jpg' %}" alt="">
+                    <div class="product-image text-center my-3">
+                        {% if product.image %}
+                            <img src="{{ product.image.url }}" alt="{{ product.name }}" class="img-fluid rounded" style="height: 180px; object-fit: cover; width: 100%;">
+                        {% else %}
+                            <img src="{% static 'images/products/product1.jpg' %}" alt="" class="img-fluid rounded" style="height: 180px; object-fit: cover; width: 100%;">
+                        {% endif %}
                     </div>
-
                     <div class="product-body">
-
-                        <small class="product-category">
-                            Kitchen
-                        </small>
-
-                        <h5>
-                            Ceramic Coffee Mug
-                        </h5>
-
-                        <div class="rating">
-                            ⭐⭐⭐⭐⭐
+                        <small class="product-category text-muted text-uppercase" style="font-size: 11px;">{{ product.category.name|default:"General" }}</small>
+                        <h5 class="fw-semibold text-dark mt-1" style="font-size: 16px;">{{ product.name }}</h5>
+                        <div class="rating text-warning mb-2" style="font-size: 12px;">
+                            ★★★★★
                         </div>
-
-                        <div class="price">
-
-                            <span class="new-price">
-                                ₹599
-                            </span>
-
-                            <span class="old-price">
-                                ₹799
-                            </span>
-
+                        <div class="price d-flex align-items-center gap-2 mb-3">
+                            <span class="new-price fw-bold text-dark" style="font-size: 16px;">₹{{ product.price }}</span>
                         </div>
-
-                        <button class="cart-btn">
+                        <button class="cart-btn btn w-100 text-white fw-semibold py-2" style="background-color: #ff6a00; border-radius: 8px; font-size: 14px;">
                             Add to Cart
                         </button>
-
                     </div>
-
                 </div>
-
             </div>
-
-            <!-- Duplicate this card for more products -->
-
+            {% empty %}
+            <div class="col-12">
+                <p class="text-muted">No featured products available.</p>
+            </div>
+            {% endfor %}
         </div>
 
     </div>
@@ -251,342 +186,164 @@ Home
 <!-- =========================
      Promotional Banner
 ========================= -->
-
 <section class="promo-banner py-5">
     <div class="container">
-
-        <div class="promo-content">
-
-            <div class="promo-overlay"></div>
-
-            <div class="promo-text">
-
-                <span class="promo-tag">
+        <div class="promo-content position-relative rounded-4 overflow-hidden p-5 text-white shadow-sm" style="background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('{% static "images/banner/promo-banner.jpg" %}') center/cover no-repeat;">
+            <div class="promo-text py-4" style="max-width: 600px;">
+                <span class="promo-tag badge mb-2 px-3 py-2 rounded-pill fw-semibold text-uppercase" style="background-color: #ff6a00; color: #fff; font-size: 11px;">
                     Exclusive Collection
                 </span>
-
-                <h2>
-                    Transform Your Home <br>
-                    Into a Beautiful Living Space
+                <h2 class="fw-bold mb-3 text-white display-6">
+                    Transform Your Home Into a Beautiful Living Space
                 </h2>
-
-                <p>
-                    Discover premium décor, kitchen essentials and stylish
-                    accessories carefully selected for modern living.
+                <p class="mb-4" style="font-size: 15px; opacity: 0.9;">
+                    Discover premium décor, kitchen essentials and stylish accessories carefully selected for modern living.
                 </p>
-
-                <a href="#" class="promo-btn">
+                <a href="#" class="promo-btn btn btn-light px-4 py-3 fw-semibold text-dark shadow-sm" style="border-radius: 8px; font-size: 14px;">
                     Shop Collection →
                 </a>
-
             </div>
-
         </div>
-
     </div>
 </section>
 
 <!-- =========================
      New Arrivals
 ========================= -->
-
-<section class="new-arrivals py-5">
-
+<section class="new-arrivals py-5 bg-white">
     <div class="container">
 
         <div class="section-header d-flex justify-content-between align-items-center mb-5">
-
             <div>
-                <h2 class="section-title">
-                    New Arrivals
-                </h2>
-
-                <p class="section-subtitle">
+                <h2 class="section-title fw-bold" style="font-size: 24px;">New Arrivals</h2>
+                <p class="section-subtitle text-muted mb-0" style="font-size: 14px;">
                     Fresh additions to elevate your home.
                 </p>
             </div>
-
         </div>
 
-        <div class="swiper arrivalSwiper">
-
+        <div class="swiper arrivalSwiper position-relative px-4">
             <div class="swiper-wrapper">
-
-                <!-- Product -->
-
+                {% for product in new_arrivals %}
                 <div class="swiper-slide">
-
-                    <div class="arrival-card">
-
-                        <img src="{% static 'images/products/product1.jpg' %}" alt="">
-
+                    <div class="arrival-card border rounded-3 p-3 h-100 shadow-sm bg-white" style="border-color: #eee !important;">
+                        {% if product.image %}
+                            <img src="{{ product.image.url }}" alt="{{ product.name }}" class="img-fluid rounded mb-3 w-100" style="height: 180px; object-fit: cover;">
+                        {% else %}
+                            <img src="{% static 'images/products/product1.jpg' %}" alt="" class="img-fluid rounded mb-3 w-100" style="height: 180px; object-fit: cover;">
+                        {% endif %}
                         <div class="arrival-body">
-
-                            <small>Kitchen</small>
-
-                            <h5>Ceramic Vase</h5>
-
-                            <div class="rating">
-                                ⭐⭐⭐⭐⭐
-                            </div>
-
-                            <h4>₹899</h4>
-
-                            <button class="arrival-btn">
+                            <small class="text-muted text-uppercase" style="font-size: 11px;">{{ product.category.name|default:"General" }}</small>
+                            <h5 class="fw-semibold text-dark mt-1" style="font-size: 16px;">{{ product.name }}</h5>
+                            <div class="rating text-warning mb-2" style="font-size: 12px;">★★★★★</div>
+                            <h4 class="fw-bold text-dark mb-3" style="font-size: 16px;">₹{{ product.price }}</h4>
+                            <button class="arrival-btn btn w-100 text-white fw-semibold py-2" style="background-color: #ff6a00; border-radius: 8px; font-size: 14px;">
                                 Add to Cart
                             </button>
-
                         </div>
-
                     </div>
-
                 </div>
-
-                <!-- Duplicate this slide -->
-                <!-- product2 -->
-                <!-- product3 -->
-                <!-- product4 -->
-
+                {% empty %}
+                <div class="swiper-slide">
+                    <p class="text-muted">No new arrivals available.</p>
+                </div>
+                {% endfor %}
             </div>
-
-            <div class="swiper-button-next"></div>
-
-            <div class="swiper-button-prev"></div>
-
+            <div class="swiper-button-next text-dark"></div>
+            <div class="swiper-button-prev text-dark"></div>
         </div>
 
     </div>
-
 </section>
+
 <!-- =========================
-     Why Choose Casaio
+     Vendor Partnership / Sell on Casaio CTA
 ========================= -->
-
-<section class="why-choose py-5">
+<section class="vendor-cta-section py-5">
     <div class="container">
-
-        <div class="text-center mb-5">
-
-            <h2 class="section-title">
-                Why Choose Casaio
-            </h2>
-
-            <p class="section-subtitle">
-                We deliver quality products with exceptional service.
-            </p>
-
+        <div class="row align-items-center bg-white p-5 rounded-4 shadow-sm border" style="border-color: #eee !important;">
+            <div class="col-lg-8 mb-4 mb-lg-0 text-center text-lg-start">
+                <span class="badge text-uppercase mb-2 px-3 py-2 rounded-pill fw-semibold" style="background-color: #fff3ed; color: #ff6a00;">
+                    Partner With Us
+                </span>
+                <h3 class="fw-bold mb-3" style="color: #222;">Expand Your Business — Become a Casaio Merchant</h3>
+                <p class="text-muted mb-0" style="font-size: 15px;">
+                    Join our high-traffic multi-vendor platform. Manage your inventory effortlessly, scale your brand, and reach customers nationwide.
+                </p>
+            </div>
+            <div class="col-lg-4 text-center text-lg-end">
+                <a href="{% url 'seller_register' %}" class="btn btn-lg px-4 py-3 fw-semibold text-white shadow-sm" style="background-color: #ff6a00; border-color: #ff6a00; border-radius: 10px; transition: background-color 0.2s;">
+                    Start Selling Today →
+                </a>
+            </div>
         </div>
-
-        <div class="row g-4">
-
-            <!-- Card 1 -->
-
-            <div class="col-md-6 col-lg-3">
-
-                <div class="choose-card">
-
-                    <div class="choose-icon">
-                         <i class="bi bi-truck"></i>
-                    </div>
-
-                    <h4>Fast Delivery</h4>
-
-                    <p>
-                        Quick and secure shipping directly to your doorstep.
-                    </p>
-
-                </div>
-
-            </div>
-
-            <!-- Card 2 -->
-
-            <div class="col-md-6 col-lg-3">
-
-                <div class="choose-card">
-
-                    <div class="choose-icon">
-                        🔒
-                    </div>
-
-                    <h4>Secure Payment</h4>
-
-                    <p>
-                        Safe online payments with trusted payment gateways.
-                    </p>
-
-                </div>
-
-            </div>
-
-            <!-- Card 3 -->
-
-            <div class="col-md-6 col-lg-3">
-
-                <div class="choose-card">
-
-                    <div class="choose-icon">
-                        ⭐
-                    </div>
-
-                    <h4>Premium Quality</h4>
-
-                    <p>
-                        Carefully selected products crafted with excellence.
-                    </p>
-
-                </div>
-
-            </div>
-
-            <!-- Card 4 -->
-
-            <div class="col-md-6 col-lg-3">
-
-                <div class="choose-card">
-
-                    <div class="choose-icon">
-                        ↩️
-                    </div>
-
-                    <h4>Easy Returns</h4>
-
-                    <p>
-                        Hassle-free returns for complete customer satisfaction.
-                    </p>
-
-                </div>
-
-            </div>
-
-        </div>
-
     </div>
 </section>
 
 <!-- =========================
      Customer Testimonials
 ========================= -->
-
-<section class="testimonials py-5">
+<section class="testimonials py-5 bg-white">
     <div class="container">
 
         <div class="text-center mb-5">
-
-            <h2 class="section-title">
-                What Our Customers Say
-            </h2>
-
-            <p class="section-subtitle">
+            <h2 class="section-title fw-bold" style="font-size: 24px;">What Our Customers Say</h2>
+            <p class="section-subtitle text-muted" style="font-size: 14px;">
                 Trusted by thousands of happy customers across India.
             </p>
-
         </div>
 
         <div class="row g-4">
-
             <!-- Testimonial 1 -->
-
             <div class="col-md-6 col-lg-4">
-
-                <div class="testimonial-card">
-
-                    <div class="stars">
-                        ★★★★★
-                    </div>
-
-                    <p class="review">
-
+                <div class="testimonial-card border rounded-4 p-4 h-100 shadow-sm bg-light border-0">
+                    <div class="stars text-warning mb-3" style="font-size: 14px;">★★★★★</div>
+                    <p class="review text-muted fst-italic mb-4" style="font-size: 14px;">
                         "The quality exceeded my expectations. The décor pieces perfectly match my living room and delivery was super fast."
-
                     </p>
-
-                    <div class="customer">
-
-                        <img src="{% static 'images/testimonials/customer1.jpg' %}" alt="Customer">
-
+                    <div class="customer d-flex align-items-center gap-3">
+                        <img src="{% static 'images/testimonials/customer1.jpg' %}" alt="Customer" class="rounded-circle object-fit-cover" width="45" height="45">
                         <div>
-
-                            <h6>Ananya Sharma</h6>
-
-                            <span>Bangalore, India</span>
-
+                            <h6 class="mb-0 fw-semibold text-dark" style="font-size: 14px;">Ananya Sharma</h6>
+                            <span class="text-muted" style="font-size: 12px;">Bangalore, India</span>
                         </div>
-
                     </div>
-
                 </div>
-
             </div>
 
             <!-- Testimonial 2 -->
-
             <div class="col-md-6 col-lg-4">
-
-                <div class="testimonial-card">
-
-                    <div class="stars">
-                        ★★★★★
-                    </div>
-
-                    <p class="review">
-
+                <div class="testimonial-card border rounded-4 p-4 h-100 shadow-sm bg-light border-0">
+                    <div class="stars text-warning mb-3" style="font-size: 14px;">★★★★★</div>
+                    <p class="review text-muted fst-italic mb-4" style="font-size: 14px;">
                         "Beautiful products and excellent customer support. I'll definitely shop again."
-
                     </p>
-
-                    <div class="customer">
-
-                        <img src="{% static 'images/testimonials/customer2.jpg' %}" alt="Customer">
-
+                    <div class="customer d-flex align-items-center gap-3">
+                        <img src="{% static 'images/testimonials/customer2.jpg' %}" alt="Customer" class="rounded-circle object-fit-cover" width="45" height="45">
                         <div>
-
-                            <h6>Rahul Nair</h6>
-
-                            <span>Kochi, India</span>
-
+                            <h6 class="mb-0 fw-semibold text-dark" style="font-size: 14px;">Rahul Nair</h6>
+                            <span class="text-muted" style="font-size: 12px;">Kochi, India</span>
                         </div>
-
                     </div>
-
                 </div>
-
             </div>
 
             <!-- Testimonial 3 -->
-
             <div class="col-md-6 col-lg-4">
-
-                <div class="testimonial-card">
-
-                    <div class="stars">
-                        ★★★★★
-                    </div>
-
-                    <p class="review">
-
+                <div class="testimonial-card border rounded-4 p-4 h-100 shadow-sm bg-light border-0">
+                    <div class="stars text-warning mb-3" style="font-size: 14px;">★★★★★</div>
+                    <p class="review text-muted fst-italic mb-4" style="font-size: 14px;">
                         "Amazing experience from ordering to delivery. The packaging and product quality are outstanding."
-
                     </p>
-
-                    <div class="customer">
-
-                        <img src="{% static 'images/testimonials/customer3.jpg' %}" alt="Customer">
-
+                    <div class="customer d-flex align-items-center gap-3">
+                        <img src="{% static 'images/testimonials/customer3.jpg' %}" alt="Customer" class="rounded-circle object-fit-cover" width="45" height="45">
                         <div>
-
-                            <h6>Priya Menon</h6>
-
-                            <span>Chennai, India</span>
-
+                            <h6 class="mb-0 fw-semibold text-dark" style="font-size: 14px;">Priya Menon</h6>
+                            <span class="text-muted" style="font-size: 12px;">Chennai, India</span>
                         </div>
-
                     </div>
-
                 </div>
-
             </div>
-
         </div>
 
     </div>
@@ -595,60 +352,32 @@ Home
 <!-- =========================
      Newsletter Section
 ========================= -->
-
 <section class="newsletter-section py-5">
     <div class="container">
-
-        <div class="newsletter-box">
-
+        <div class="newsletter-box p-5 rounded-4 shadow-sm text-white" style="background-color: #222;">
             <div class="row align-items-center">
-
-                <!-- Left Content -->
-                <div class="col-lg-6">
-
-                    <span class="newsletter-tag">
+                <div class="col-lg-6 mb-4 mb-lg-0">
+                    <span class="newsletter-tag badge mb-2 px-3 py-2 rounded-pill fw-semibold text-uppercase" style="background-color: #ff6a00; color: #fff; font-size: 11px;">
                         Stay Connected
                     </span>
-
-                    <h2>
-                        Join the Casaio Community
-                    </h2>
-
-                    <p>
-                        Subscribe to receive exclusive offers, new arrivals,
-                        home décor inspiration, and special discounts directly
-                        to your inbox.
+                    <h2 class="fw-bold mb-2 text-white" style="font-size: 26px;">Join the Casaio Community</h2>
+                    <p class="text-muted mb-0" style="font-size: 14px; color: #aaa !important;">
+                        Subscribe to receive exclusive offers, new arrivals, home décor inspiration, and special discounts.
                     </p>
-
                 </div>
-
-                <!-- Right Form -->
-                <div class="col-lg-6 mt-4 mt-lg-0">
-
-                    <form class="newsletter-form">
-
-                        <input
-                            type="email"
-                            class="form-control"
-                            placeholder="Enter your email address"
-                        >
-
-                        <button type="submit">
+                <div class="col-lg-6">
+                    <form class="newsletter-form d-flex gap-2">
+                        <input type="email" class="form-control px-4 py-3 border-0" placeholder="Enter your email address" style="border-radius: 8px; font-size: 14px;">
+                        <button type="submit" class="btn px-4 text-white fw-semibold text-nowrap" style="background-color: #ff6a00; border-radius: 8px; font-size: 14px;">
                             Subscribe
                         </button>
-
                     </form>
-
-                    <small class="newsletter-note">
+                    <small class="newsletter-note d-block mt-2 text-muted" style="font-size: 12px;">
                         We respect your privacy. No spam, unsubscribe anytime.
                     </small>
-
                 </div>
-
             </div>
-
         </div>
-
     </div>
 </section>
 

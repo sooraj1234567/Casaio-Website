@@ -64,9 +64,9 @@ class Order(models.Model):
     )
 
     razorpay_order_id = models.CharField(
-    max_length=255,
-    blank=True,
-    null=True
+        max_length=255,
+        blank=True,
+        null=True
     )
 
     razorpay_payment_id = models.CharField(
@@ -84,17 +84,11 @@ class Order(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     def save(self, *args, **kwargs):
-
         if not self.order_number:
-
             super().save(*args, **kwargs)
-
             date = timezone.now().strftime("%Y%m%d")
-
             self.order_number = f"CAS-{date}-{self.id:06d}"
-
             super().save(update_fields=["order_number"])
-
             return
 
         super().save(*args, **kwargs)
@@ -102,7 +96,16 @@ class Order(models.Model):
     def __str__(self):
         return self.order_number or f"Order #{self.id}"
 
+
 class OrderItem(models.Model):
+
+    STATUS_CHOICES = (
+        ("pending", "Pending"),
+        ("confirmed", "Confirmed"),
+        ("shipped", "Shipped"),
+        ("delivered", "Delivered"),
+        ("cancelled", "Cancelled"),
+    )
 
     order = models.ForeignKey(
         Order,
@@ -122,12 +125,19 @@ class OrderItem(models.Model):
         decimal_places=2
     )
 
+    status = models.CharField(
+        max_length=20,
+        choices=STATUS_CHOICES,
+        default="pending"
+    )
+
     @property
     def total_price(self):
         return self.selling_price * self.quantity
 
     def __str__(self):
-        return self.product.name
+        return f"{self.product.name} - {self.status}"
+
 
 class Coupon(models.Model):
 
@@ -187,5 +197,4 @@ class Coupon(models.Model):
     )
 
     def __str__(self):
-
         return self.code

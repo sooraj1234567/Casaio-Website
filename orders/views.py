@@ -68,7 +68,7 @@ def place_order(request):
             order=order,
             product=item.product,
             quantity=item.quantity,
-            price=item.product.selling_price,
+            selling_price=item.product.selling_price,
         )
 
     if payment_method == "cod":

@@ -10,7 +10,6 @@ from django.db.models import Avg
 
 
 def product_list(request):
-
     products = Product.objects.filter(
         is_available=True
     ).select_related("category")
@@ -38,10 +37,10 @@ def product_list(request):
     sort = request.GET.get("sort")
 
     if sort == "low":
-        products = products.order_by("price")
+        products = products.order_by("selling_price")
 
     elif sort == "high":
-        products = products.order_by("-price")
+        products = products.order_by("-selling_price")
 
     elif sort == "new":
         products = products.order_by("-created_at")
@@ -74,8 +73,8 @@ def product_list(request):
         context
     )
 
-def product_detail(request, slug):
 
+def product_detail(request, slug):
     product = get_object_or_404(
         Product,
         slug=slug,
@@ -89,7 +88,6 @@ def product_detail(request, slug):
     user_review = None
 
     if request.user.is_authenticated:
-
         user_review = reviews.filter(
             user=request.user
         ).first()
@@ -105,7 +103,6 @@ def product_detail(request, slug):
     rating_counts = {}
 
     for i in range(5, 0, -1):
-
         rating_counts[i] = reviews.filter(
             rating=i
         ).count()

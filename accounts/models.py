@@ -29,5 +29,18 @@ class CustomUser(AbstractUser):
         default=False
     )
 
+    business_name = models.CharField(
+        max_length=255,
+        blank=True,
+        null=True
+    )
+
+    business_category = models.ForeignKey(
+        'category.Category',
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True
+    )
+
     def __str__(self):
-        return self.email
+        return self.email or self.username

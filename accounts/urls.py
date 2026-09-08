@@ -11,4 +11,16 @@ urlpatterns = [
     path('forgot_password_otp/', views.forgot_password_otp, name='forgot_password_otp'),
     path('reset-password/', views.reset_password, name='reset_password'),
     path('logout/', views.user_logout, name='logout'),
+    
+    # Category Products Endpoint
+    path('category/<int:category_id>/', views.category_products, name='category_products'),
+    
+    # Seller Onboarding & Dashboard Endpoints
+    path('seller/register/', views.seller_register, name='seller_register'),
+    path('seller/dashboard/', views.seller_dashboard, name='seller_dashboard'),
+    path('seller/products/', views.seller_products, name='seller_products'),
+    path('seller/products/add/', views.add_product, name='add_product'),
+    path('seller/products/edit/<int:product_id>/', views.edit_product, name='edit_product'),
+    path('seller/products/delete/<int:product_id>/', views.delete_product, name='delete_product'),
+    path('seller/order/update/<int:item_id>/', views.update_order_status, name='update_order_status'),
 ]

@@ -1,9 +1,18 @@
+from django.conf import settings
 from django.db import models
 from django.utils.text import slugify
 from category.models import Category
 
 
 class Product(models.Model):
+
+    seller = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name="products",
+        null=True,
+        blank=True
+    )
 
     category = models.ForeignKey(
         Category,
@@ -52,7 +61,6 @@ class Product(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def save(self, *args, **kwargs):
-
         if not self.slug:
             self.slug = slugify(self.name)
 
@@ -87,6 +95,7 @@ class Product(models.Model):
     def __str__(self):
         return self.name
 
+
 class ProductImage(models.Model):
     product = models.ForeignKey(
         Product,
@@ -98,6 +107,7 @@ class ProductImage(models.Model):
 
     def __str__(self):
         return f"{self.product.name} Image"
+
 
 class ProductVariant(models.Model):
     product = models.ForeignKey(

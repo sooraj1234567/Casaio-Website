@@ -1,43 +1,43 @@
 <aside class="sidebar">
 
     <div class="logo">
-
         <h2>Casaio</h2>
-
-        <span>Admin Panel</span>
-
+        <span>{% if request.user.role == 'seller' %}Seller Panel{% else %}Admin Panel{% endif %}</span>
     </div>
 
     <ul class="menu">
 
-        <li class="active">
-            <a href="#">
+        <li class="{% if request.resolver_match.url_name == 'seller_dashboard' %}active{% endif %}">
+            <a href="{% if request.user.role == 'seller' %}{% url 'seller_dashboard' %}{% else %}#{% endif %}">
                 <i class="fas fa-chart-line"></i>
                 Dashboard
             </a>
         </li>
 
-        <li>
-            <a href="{% url 'dashboard:product_list' %}">
+        <li class="{% if 'product' in request.resolver_match.url_name %}active{% endif %}">
+            <a href="{% if request.user.role == 'seller' %}{% url 'seller_products' %}{% else %}{% url 'dashboard:product_list' %}{% endif %}">
                 <i class="fas fa-box"></i>
                 Products
             </a>
         </li>
 
+        {% if request.user.role != 'seller' %}
         <li>
-			<a href="{% url 'dashboard:category_list' %}">
+            <a href="{% url 'dashboard:category_list' %}">
                 <i class="fas fa-list"></i>
                 Categories
             </a>
         </li>
+        {% endif %}
 
         <li>
-            <a href="{% url 'dashboard:order_list' %}">
+            <a href="{% if request.user.role == 'seller' %}{% url 'seller_dashboard' %}{% else %}{% url 'dashboard:order_list' %}{% endif %}">
                 <i class="fas fa-shopping-cart"></i>
                 Orders
             </a>
         </li>
 
+        {% if request.user.role != 'seller' %}
         <li>
             <a href="{% url 'dashboard:customer_list' %}">
                 <i class="fas fa-users"></i>
@@ -58,9 +58,10 @@
                 Reports
             </a>
         </li>
+        {% endif %}
 
         <li>
-            <a href="#">
+            <a href="{% url 'logout' %}">
                 <i class="fas fa-right-from-bracket"></i>
                 Logout
             </a>
