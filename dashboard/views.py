@@ -16,6 +16,7 @@ from reportlab.lib import colors
 from reportlab.lib.styles import getSampleStyleSheet
 from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer
 
+from accounts.models import SellerApplication
 from orders.models import Order, OrderItem, Coupon
 from product.models import Product, ProductImage
 from product.form import ProductForm
@@ -3121,6 +3122,86 @@ def seller_toggle_status(request, pk):
             )
 
     return redirect("dashboard:seller_detail", pk=seller.pk)
+
+def seller_application_list(request):
+    applications = SellerApplication.objects.select_related(
+        "user",
+        "business_category"
+    ).order_by("-applied_at")
+
+    return render(
+        request,
+        "dashboard/sellers/application_list.html",
+        {
+            "applications": applications,
+        }
+    )
+
+def seller_application_detail(request, pk):
+    application = get_object_or_404(
+        SellerApplication.objects.select_related(
+            "user",
+            "business_category"
+        ),
+        pk=pk
+    )
+
+    return render(
+        request,
+        "dashboard/sellers/application_detail.html",
+        {
+            "application": application,
+        }
+    )
+
+def seller_application_approve(request, pk):
+    application = get_object_or_404(
+        SellerApplication.objects.select_related("user"),
+        pk=pk
+    )
+
+    if request.method == "POST":
+        user = application.user
+
+        # Convert the existing customer account into a seller
+        user.role = "seller"
+        user.save(update_fields=["role"])
+
+        application.status = "approved"
+        application.reviewed_at = timezone.now()
+        application.save(update_fields=["status", "reviewed_at"])
+
+        messages.success(
+            request,
+            f"{user.username} has been approved as a seller."
+        )
+
+    return redirect(
+        "dashboard:seller_application_detail",
+        pk=application.pk
+    )
+
+
+def seller_application_reject(request, pk):
+    application = get_object_or_404(
+        SellerApplication.objects.select_related("user"),
+        pk=pk
+    )
+
+    if request.method == "POST":
+        application.status = "rejected"
+        application.reviewed_at = timezone.now()
+        application.save(update_fields=["status", "reviewed_at"])
+
+        messages.success(
+            request,
+            f"Seller application for {application.user.username} has been rejected."
+        )
+
+    return redirect(
+        "dashboard:seller_application_detail",
+        pk=application.pk
+    )
 
 # =========================
 # REVIEWS & RATINGS

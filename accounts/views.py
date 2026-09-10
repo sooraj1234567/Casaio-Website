@@ -7,6 +7,7 @@ from django.core.mail import send_mail
 from django.shortcuts import get_object_or_404, redirect, render
 
 from category.models import Category
+from accounts.models import SellerApplication
 from product.models import Product
 from orders.models import OrderItem
 
@@ -64,9 +65,9 @@ def register(request):
 
     return render(request, "account/register.html")
 
-
 def seller_register(request):
     categories = Category.objects.all()
+
     if request.method == "POST":
         full_name = request.POST.get("full_name")
         username = request.POST.get("username")
@@ -76,39 +77,80 @@ def seller_register(request):
         confirm_password = request.POST.get("confirm_password")
         business_name = request.POST.get("business_name")
         business_category = request.POST.get("business_category")
-        role = "seller"
 
         if password != confirm_password:
             messages.error(request, "Passwords do not match.")
             return redirect("seller_register")
 
-        if User.objects.filter(username=username).exists():
-            messages.error(request, "Username already exists")
-            return redirect("seller_register")
+        # Check whether the email already belongs to an existing account
+        existing_user = User.objects.filter(email=email).first()
 
-        if User.objects.filter(email=email).exists():
-            messages.error(request, "Email already exists")
-            return redirect("seller_register")
+        if existing_user:
+            # Existing customer can use the same account
+            if existing_user.role == "seller":
+                messages.error(
+                    request,
+                    "You already have a seller account with this email."
+                )
+                return redirect("seller_register")
 
-        otp = str(random.randint(100000, 999999))
+            if existing_user.role == "admin":
+                messages.error(
+                    request,
+                    "This email belongs to an admin account."
+                )
+                return redirect("seller_register")
 
-        otp_storage[email] = {
-            "otp": otp,
-            "full_name": full_name,
-            "username": username,
-            "password": password,
-            "phone": phone,
-            "business_name": business_name,
-            "business_category": business_category,
-            "role": role,
-        }
+            # Existing customer
+            if existing_user.username != username:
+                messages.error(
+                    request,
+                    "This email is already registered. Please use your existing username."
+                )
+                return redirect("seller_register")
+
+            # Store seller application information temporarily
+            otp = str(random.randint(100000, 999999))
+
+            otp_storage[email] = {
+                "otp": otp,
+                "user_id": existing_user.id,
+                "full_name": full_name,
+                "username": existing_user.username,
+                "phone": phone,
+                "business_name": business_name,
+                "business_category": business_category,
+                "role": "seller",
+                "existing_user": True,
+            }
+
+        else:
+            # New user applying directly as a seller
+            if User.objects.filter(username=username).exists():
+                messages.error(request, "Username already exists")
+                return redirect("seller_register")
+
+            otp = str(random.randint(100000, 999999))
+
+            otp_storage[email] = {
+                "otp": otp,
+                "full_name": full_name,
+                "username": username,
+                "password": password,
+                "phone": phone,
+                "business_name": business_name,
+                "business_category": business_category,
+                "role": "seller",
+                "existing_user": False,
+            }
 
         request.session["email"] = email
 
         send_mail(
             subject="Casaio Seller Verification",
             message=(
-                f"Your Casaio seller verification OTP is: {otp}\n\nThis OTP is valid for 10 minutes."
+                f"Your Casaio seller verification OTP is: {otp}\n\n"
+                "This OTP is valid for 10 minutes."
             ),
             from_email=settings.EMAIL_HOST_USER,
             recipient_list=[email],
@@ -118,8 +160,11 @@ def seller_register(request):
         messages.success(request, "OTP sent to your email.")
         return redirect("verify_otp")
 
-    return render(request, "account/seller_register.html", {"categories": categories})
-
+    return render(
+        request,
+        "account/seller_register.html",
+        {"categories": categories}
+    )
 
 def verify_otp(request):
     if request.method == "POST":
@@ -129,15 +174,57 @@ def verify_otp(request):
         if email in otp_storage and otp_storage[email]["otp"] == entered_otp:
             data = otp_storage[email]
 
-            # Safely fetch the Category instance using ID or name from form data
+            # Safely fetch the Category instance
             category_instance = None
             cat_val = data.get("business_category")
+
             if cat_val:
                 try:
                     category_instance = Category.objects.get(id=cat_val)
                 except (Category.DoesNotExist, ValueError, TypeError):
-                    category_instance = Category.objects.filter(name=cat_val).first()
+                    category_instance = Category.objects.filter(
+                        name=cat_val
+                    ).first()
 
+            # -------------------------------------------------
+            # EXISTING CUSTOMER → SELLER APPLICATION
+            # -------------------------------------------------
+            if data.get("existing_user"):
+                user = User.objects.get(id=data["user_id"])
+
+                # Update seller-related information
+                user.first_name = data.get("full_name", "")
+                user.phone_number = data.get("phone", "")
+                user.business_name = data.get("business_name", "")
+                user.business_category = category_instance
+
+                # Keep role as customer until admin approves
+                user.save()
+
+                # Create a SellerApplication instance
+                SellerApplication.objects.update_or_create(
+                    user=user,
+                    defaults={
+                        "business_name": data.get("business_name", ""),
+                        "business_category": category_instance,
+                        "status": "pending",    
+                    },
+                )
+
+                del otp_storage[email]
+                request.session.pop("email", None)
+
+                messages.success(
+                    request,
+                    "Seller application submitted successfully. "
+                    "Your application is now pending admin approval."
+                )
+
+                return redirect("login")
+
+            # -------------------------------------------------
+            # NEW SELLER → CREATE NEW ACCOUNT
+            # -------------------------------------------------
             user = User.objects.create_user(
                 username=data["username"],
                 email=email,
@@ -150,8 +237,13 @@ def verify_otp(request):
             )
 
             del otp_storage[email]
+            request.session.pop("email", None)
 
-            messages.success(request, "Account created successfully.")
+            messages.success(
+                request,
+                "Account created successfully."
+            )
+
             return redirect("login")
 
         else:
@@ -166,26 +258,58 @@ def user_login(request):
         password = request.POST.get("password")
 
         user = None
+
         if login_input:
             if "@" in login_input:
                 try:
                     matched_user = User.objects.get(email=login_input)
-                    user = authenticate(request, username=matched_user.username, password=password)
+                    user = authenticate(
+                        request,
+                        username=matched_user.username,
+                        password=password
+                    )
                 except User.DoesNotExist:
                     user = None
             else:
-                user = authenticate(request, username=login_input, password=password)
+                user = authenticate(
+                    request,
+                    username=login_input,
+                    password=password
+                )
 
         if user:
+            # ==========================================
+            # ADMIN LOGIN
+            # Admin does NOT require OTP
+            # ==========================================
+            if getattr(user, "role", None) == "admin":
+                login(
+                    request,
+                    user,
+                    backend="django.contrib.auth.backends.ModelBackend"
+                )
+
+                messages.success(request, "Admin login successful.")
+
+                return redirect("dashboard:dashboard")
+
+            # ==========================================
+            # SELLER / CUSTOMER LOGIN
+            # OTP REQUIRED
+            # ==========================================
             otp = str(random.randint(100000, 999999))
 
-            otp_storage[user.email] = {"otp": otp, "user_id": user.id}
+            otp_storage[user.email] = {
+                "otp": otp,
+                "user_id": user.id,
+                "purpose": "login",
+            }
 
             request.session["login_email"] = user.email
 
             send_mail(
                 subject="Casaio Login OTP",
-                message=f"Your login OTP is: {otp}",
+                message=f"Your Casaio login OTP is: {otp}",
                 from_email=settings.EMAIL_HOST_USER,
                 recipient_list=[user.email],
                 fail_silently=False,
@@ -207,8 +331,13 @@ def login_otp(request):
         email = request.session.get("login_email")
 
         if email in otp_storage:
-            if otp_storage[email]["otp"] == entered_otp:
-                user = User.objects.get(id=otp_storage[email]["user_id"])
+            data = otp_storage[email]
+
+            if (
+                data.get("otp") == entered_otp
+                and data.get("purpose") == "login"
+            ):
+                user = User.objects.get(id=data["user_id"])
 
                 login(
                     request,
@@ -217,15 +346,22 @@ def login_otp(request):
                 )
 
                 del otp_storage[email]
+                request.session.pop("login_email", None)
 
                 messages.success(request, "Login Successful")
 
+                # Seller → Seller Dashboard
                 if getattr(user, "role", None) == "seller":
                     return redirect("seller_dashboard")
+
+                # Customer → Home
                 return redirect("home")
 
             else:
                 messages.error(request, "Invalid OTP")
+
+        else:
+            messages.error(request, "OTP expired or invalid. Please login again.")
 
     return render(request, "account/login_otp.html")
 

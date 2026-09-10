@@ -122,6 +122,30 @@ path(
 path("sellers/", views.seller_list, name="seller_list"),
 
 path(
+    "sellers/applications/",
+    views.seller_application_list,
+    name="seller_application_list"
+),
+
+path(
+    "sellers/applications/<int:pk>/",
+    views.seller_application_detail,
+    name="seller_application_detail"
+),
+
+path(
+    "seller-applications/<int:pk>/approve/",
+    views.seller_application_approve,
+    name="seller_application_approve"
+),
+
+path(
+    "seller-applications/<int:pk>/reject/",
+    views.seller_application_reject,
+    name="seller_application_reject"
+),
+
+path(
     "sellers/<int:pk>/",
     views.seller_detail,
     name="seller_detail"

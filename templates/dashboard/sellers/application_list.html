@@ -1,0 +1,104 @@
+{% extends "dashboard/AdBase.html" %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'dashboard/seller_detail.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div>
+        <h1>Seller Applications</h1>
+        <p>Review and manage seller applications.</p>
+    </div>
+</div>
+
+<div class="card">
+
+    <div class="table-container">
+
+        <table class="data-table">
+
+            <thead>
+                <tr>
+                    <th>Applicant</th>
+                    <th>Email</th>
+                    <th>Business Name</th>
+                    <th>Category</th>
+                    <th>Status</th>
+                    <th>Applied On</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+
+            <tbody>
+
+                {% for application in applications %}
+
+                <tr>
+
+                    <td>
+                        {{ application.user.get_full_name|default:application.user.username }}
+                    </td>
+
+                    <td>
+                        {{ application.user.email }}
+                    </td>
+
+                    <td>
+                        {{ application.business_name }}
+                    </td>
+
+                    <td>
+                        {% if application.business_category %}
+                        {{ application.business_category.name }}
+                        {% else %}
+                        —
+                        {% endif %}
+                    </td>
+
+                    <td>
+                        <span class="status {{ application.status }}">
+                            {{ application.get_status_display }}
+                        </span>
+                    </td>
+
+                    <td>
+                        {{ application.applied_at|date:"d M Y, h:i A" }}
+                    </td>
+
+                    <td>
+                        {% if application.status == "pending" %}
+                        <a href="{% url 'dashboard:seller_application_detail' application.pk %}"
+                            class="btn btn-primary">
+                            Review
+                        </a>
+                        {% else %}
+                        <a href="{% url 'dashboard:seller_application_detail' application.pk %}"
+                            class="btn btn-secondary">
+                            View
+                        </a>
+                        {% endif %}
+                    </td>
+
+                </tr>
+
+                {% empty %}
+
+                <tr>
+                    <td colspan="7" class="empty-state">
+                        No seller applications found.
+                    </td>
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+{% endblock %}

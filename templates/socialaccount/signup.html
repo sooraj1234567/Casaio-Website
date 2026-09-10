@@ -1,0 +1,187 @@
+{% load socialaccount %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Continue with Google - Casaio</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f5f7fb;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .signup-container {
+            width: 100%;
+            max-width: 460px;
+            background: #ffffff;
+            border-radius: 18px;
+            padding: 40px;
+            box-shadow: 0 10px 35px rgba(0, 0, 0, 0.08);
+        }
+
+        .logo {
+            text-align: center;
+            margin-bottom: 28px;
+        }
+
+        .logo h1 {
+            font-size: 34px;
+            font-weight: 700;
+            color: #111827;
+            letter-spacing: -1px;
+        }
+
+        .logo span {
+            display: block;
+            margin-top: 6px;
+            font-size: 14px;
+            color: #6b7280;
+        }
+
+        .title {
+            text-align: center;
+            margin-bottom: 12px;
+        }
+
+        .title h2 {
+            font-size: 24px;
+            color: #111827;
+            margin-bottom: 10px;
+        }
+
+        .description {
+            text-align: center;
+            color: #6b7280;
+            font-size: 14px;
+            line-height: 1.6;
+            margin-bottom: 28px;
+        }
+
+        .google-account {
+            background: #f8fafc;
+            border: 1px solid #e5e7eb;
+            border-radius: 10px;
+            padding: 14px 16px;
+            margin-bottom: 24px;
+            text-align: center;
+            color: #374151;
+            font-size: 14px;
+            word-break: break-word;
+        }
+
+        .google-account strong {
+            color: #111827;
+        }
+
+        .signup-btn {
+            width: 100%;
+            height: 50px;
+            border: none;
+            border-radius: 10px;
+            background: #111827;
+            color: white;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s ease;
+        }
+
+        .signup-btn:hover {
+            background: #000000;
+            transform: translateY(-1px);
+        }
+
+        .cancel-link {
+            display: block;
+            text-align: center;
+            margin-top: 18px;
+            color: #6b7280;
+            font-size: 14px;
+            text-decoration: none;
+        }
+
+        .cancel-link:hover {
+            color: #111827;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 28px;
+            font-size: 12px;
+            color: #9ca3af;
+        }
+
+        @media (max-width: 500px) {
+            .signup-container {
+                padding: 30px 22px;
+            }
+
+            .logo h1 {
+                font-size: 30px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="signup-container">
+
+        <div class="logo">
+            <h1>Casaio</h1>
+            <span>Your trusted shopping destination</span>
+        </div>
+
+        <div class="title">
+            <h2>Complete Your Sign Up</h2>
+        </div>
+
+        <p class="description">
+            You're signing in to Casaio using your Google account.
+            Please confirm your account details to continue.
+        </p>
+
+        <div class="google-account">
+            <strong>Google Account</strong><br>
+            {{ form.email.value }}
+        </div>
+
+        <form method="post">
+            {% csrf_token %}
+
+            <input type="hidden" name="email" value="{{ form.email.value }}">
+
+            <button type="submit" class="signup-btn">
+                Continue to Casaio
+            </button>
+        </form>
+
+        <a href="{% url 'login' %}" class="cancel-link">
+            ← Back to Login
+        </a>
+
+        <div class="footer">
+            © 2026 Casaio. All rights reserved.
+        </div>
+
+    </div>
+
+</body>
+
+</html>

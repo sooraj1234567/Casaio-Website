@@ -71,6 +71,13 @@
             </a>
         </li>
 
+        <li class="{% if 'seller_application' in request.resolver_match.url_name %}active{% endif %}">
+            <a href="{% url 'dashboard:seller_application_list' %}">
+                <i class="fas fa-user-clock"></i>
+                Seller Applications
+            </a>
+        </li>
+
 
         <!-- Coupons -->
         <li>
