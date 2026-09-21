@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/6.0/ref/settings/
 """
 
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -55,6 +56,7 @@ INSTALLED_APPS = [
     'wishlist',
     'reviews',
     'dashboard',
+    'analytics',
 ]
 
 SITE_ID = 1
@@ -86,6 +88,7 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
 
+                'casaio.context_processors.store_chrome',
                 'wishlist.context_processors.wishlist_count',
                 'cart.context_processors.cart_count',
             ],
@@ -188,5 +191,16 @@ ACCOUNT_SIGNUP_FIELDS = ['email*', 'password1*', 'password2*']
 
 ACCOUNT_EMAIL_VERIFICATION = "none"
 
-RAZORPAY_KEY_ID = "rzp_test_TG53W1mpRT4O5V"
-RAZORPAY_KEY_SECRET = "BMbVboQIoiFSxcFg9RgFagRn"
+RAZORPAY_MODE = os.getenv("RAZORPAY_MODE", "live").strip().lower()
+RAZORPAY_KEY_ID = os.getenv("RAZORPAY_KEY_ID", "").strip()
+RAZORPAY_KEY_SECRET = os.getenv("RAZORPAY_KEY_SECRET", "").strip()
+
+if RAZORPAY_MODE not in {"test", "live"}:
+    raise ValueError("RAZORPAY_MODE must be either 'test' or 'live'.")
+
+if RAZORPAY_KEY_ID:
+    expected_prefix = "rzp_live_" if RAZORPAY_MODE == "live" else "rzp_test_"
+    if not RAZORPAY_KEY_ID.startswith(expected_prefix):
+        raise ValueError(
+            f"RAZORPAY_KEY_ID does not match RAZORPAY_MODE={RAZORPAY_MODE}."
+        )

@@ -34,6 +34,7 @@ urlpatterns = [
     path('payments/', include('payments.urls', namespace='payments')),
     path('wishlist/', include('wishlist.urls', namespace='wishlist')),
     path('reviews/', include('reviews.urls', namespace='reviews')),
+    path('notifications/', include('notifications.urls')),
 
     path('dashboard/', include('dashboard.urls', namespace='dashboard')),
 ]

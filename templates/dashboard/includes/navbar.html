@@ -1,36 +1,33 @@
-<nav class="main-navbar bg-white border-bottom shadow-sm">
-    <div class="container d-flex align-items-center justify-content-between py-2">
+<nav class="seller-navbar" aria-label="Seller navigation">
+    <div class="seller-navbar-context">
+        <span class="seller-navbar-kicker">Casaio</span>
+        <span class="seller-navbar-divider" aria-hidden="true"></span>
+        <span class="seller-navbar-title">Seller operations</span>
+    </div>
 
-        <!-- Left: Categories Dropdown Toggle -->
-        <div class="dropdown category-dropdown-wrapper">
-            <button class="btn text-white px-4 py-2 d-flex align-items-center gap-2 rounded-2 fw-semibold" type="button" id="allCategoriesDropdown" data-bs-toggle="dropdown" aria-expanded="false" style="background-color: #ff6a00;">
-                <i class="bi bi-list fs-5"></i> All Categories
-            </button>
-            <ul class="dropdown-menu shadow-sm border-0 py-2 w-100" aria-labelledby="allCategoriesDropdown" style="border-radius: 8px;">
-                {% for cat in categories %}
-                    <li><a class="dropdown-item py-2 px-3" href="#">{{ cat.name }}</a></li>
-                {% empty %}
-                    <li><a class="dropdown-item py-2 px-3 text-muted" href="#">No categories found</a></li>
-                {% endfor %}
-            </ul>
+    <div class="seller-navbar-actions">
+        <a href="{% url 'home' %}" class="seller-nav-link seller-nav-store">
+            <i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i>
+            <span>View store</span>
+        </a>
+        <a href="{% url 'orders:seller_orders' %}" class="seller-nav-link">
+            <i class="fa-solid fa-truck-fast" aria-hidden="true"></i>
+            <span>Orders</span>
+        </a>
+        <a href="{% url 'add_product' %}" class="seller-nav-primary">
+            <i class="fa-solid fa-plus" aria-hidden="true"></i>
+            <span>Add product</span>
+        </a>
+        <a href="{% url 'seller_payout_profile' %}" class="seller-nav-link">
+            <i class="fa-solid fa-building-columns" aria-hidden="true"></i>
+            <span>Payouts</span>
+        </a>
+        <div class="seller-nav-account">
+            <span class="seller-nav-avatar" aria-hidden="true">{{ request.user.username|slice:":1"|upper }}</span>
+            <span class="seller-nav-user">{{ request.user.first_name|default:request.user.username }}</span>
         </div>
-
-        <!-- Center: Navigation Links -->
-        <ul class="nav align-items-center d-none d-lg-flex gap-4 mb-0" style="list-style: none;">
-            <li><a href="{% url 'home' %}" class="text-dark fw-medium text-decoration-none px-2 py-1">Home</a></li>
-            <li><a href="#" class="text-dark fw-medium text-decoration-none px-2 py-1">Shop All</a></li>
-            <li><a href="#" class="text-dark fw-medium text-decoration-none px-2 py-1">New Arrivals</a></li>
-            <li><a href="#" class="text-dark fw-medium text-decoration-none px-2 py-1">Best Sellers</a></li>
-            <li><a href="#" class="text-dark fw-medium text-decoration-none px-2 py-1">Deals <span class="badge text-white ms-1" style="background-color: #ff3b30; font-size: 10px;">Sale</span></a></li>
-            <li><a href="#" class="text-dark fw-medium text-decoration-none px-2 py-1">Contact</a></li>
-        </ul>
-
-        <!-- Right: Dedicated Seller Onboarding Button -->
-        <div class="d-flex align-items-center">
-            <a href="{% url 'seller_register' %}" class="btn px-3 py-2 fw-semibold d-flex align-items-center gap-2 rounded-2 text-white shadow-sm" style="background-color: #ff6a00; font-size: 14px; transition: all 0.2s;">
-                <i class="bi bi-shop"></i> Sell on Casaio
-            </a>
-        </div>
-
+        <a href="{% url 'logout' %}" class="seller-nav-icon" title="Log out" aria-label="Log out">
+            <i class="fa-solid fa-arrow-right-from-bracket" aria-hidden="true"></i>
+        </a>
     </div>
 </nav>

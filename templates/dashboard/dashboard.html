@@ -106,7 +106,7 @@ Dashboard
 
         <h3>Recent Orders</h3>
 
-        <a href="#" class="view-all">
+        <a href="{% url 'dashboard:order_list' %}" class="view-all">
             View All
         </a>
 
@@ -162,11 +162,11 @@ Dashboard
 
                         {% if order.payment_method == "cod" %}
 
-                            Cash on Delivery
+                        Cash on Delivery
 
                         {% else %}
 
-                            Razorpay
+                        Razorpay
 
                         {% endif %}
 

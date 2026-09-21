@@ -24,6 +24,7 @@ from reviews.models import Review
 from category.models import Category
 from category.forms import CategoryForm
 from category.utils import get_category_tree
+from accounts.decorators import admin_required
 
 import json
 
@@ -3066,6 +3067,7 @@ def download_sales_report_excel(request):
 # SELLER MANAGEMENT
 # =========================
 
+@admin_required
 def seller_list(request):
 
     sellers = User.objects.filter(
@@ -3080,6 +3082,7 @@ def seller_list(request):
         }
     )
 
+@admin_required
 def seller_detail(request, pk):
 
     seller = get_object_or_404(
@@ -3097,6 +3100,7 @@ def seller_detail(request, pk):
     )
 
 
+@admin_required
 def seller_toggle_status(request, pk):
 
     seller = get_object_or_404(
@@ -3123,6 +3127,7 @@ def seller_toggle_status(request, pk):
 
     return redirect("dashboard:seller_detail", pk=seller.pk)
 
+@admin_required
 def seller_application_list(request):
     applications = SellerApplication.objects.select_related(
         "user",
@@ -3137,6 +3142,7 @@ def seller_application_list(request):
         }
     )
 
+@admin_required
 def seller_application_detail(request, pk):
     application = get_object_or_404(
         SellerApplication.objects.select_related(
@@ -3154,6 +3160,7 @@ def seller_application_detail(request, pk):
         }
     )
 
+@admin_required
 def seller_application_approve(request, pk):
     application = get_object_or_404(
         SellerApplication.objects.select_related("user"),
@@ -3182,6 +3189,7 @@ def seller_application_approve(request, pk):
     )
 
 
+@admin_required
 def seller_application_reject(request, pk):
     application = get_object_or_404(
         SellerApplication.objects.select_related("user"),

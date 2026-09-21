@@ -21,39 +21,54 @@
             <div class="card border-0 shadow-sm rounded-4 p-4 bg-white">
                 <form method="POST" enctype="multipart/form-data">
                     {% csrf_token %}
+                    {{ form.non_field_errors }}
                     <div class="mb-3">
                         <label class="form-label fw-bold">Product Name</label>
-                        <input type="text" name="name" value="{{ product.name }}" class="form-control" required>
+                        {{ form.name }}
+                        {{ form.name.errors }}
                     </div>
 
                     <div class="mb-3">
                         <label class="form-label fw-bold">Description</label>
-                        <textarea name="description" rows="4" class="form-control" required>{{ product.description }}</textarea>
+                        {{ form.description }}
+                        {{ form.description.errors }}
                     </div>
 
                     <div class="row">
                         <div class="col-md-6 mb-3">
-                            <label class="form-label fw-bold">Regular Price (₹)</label>
-                            <input type="number" step="0.01" name="regular_price" value="{{ product.regular_price }}" class="form-control" required>
+                            <label class="form-label fw-bold">Supplier Price (₹)</label>
+                            {{ form.supplier_price }}
+                            {{ form.supplier_price.errors }}
                         </div>
                         <div class="col-md-6 mb-3">
                             <label class="form-label fw-bold">Selling Price (₹)</label>
-                            <input type="number" step="0.01" name="selling_price" value="{{ product.selling_price }}" class="form-control" required>
+                            {{ form.selling_price }}
+                            {{ form.selling_price.errors }}
                         </div>
                     </div>
 
                     <div class="row">
                         <div class="col-md-6 mb-3">
-                            <label class="form-label fw-bold">Stock Quantity</label>
-                            <input type="number" name="stock" value="{{ product.stock }}" class="form-control" min="0" required>
+                            <label class="form-label fw-bold">Category</label>
+                            {{ form.category }}
+                            {{ form.category.errors }}
                         </div>
                         <div class="col-md-6 mb-3">
+                            <label class="form-label fw-bold">Stock Quantity</label>
+                            {{ form.stock }}
+                            {{ form.stock.errors }}
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
                             <label class="form-label fw-bold">Product Image</label>
-                            <input type="file" name="image" class="form-control">
+                            {{ form.image }}
+                            {{ form.image.errors }}
                             {% if product.image %}
-                                <div class="mt-2">
-                                    <small class="text-muted">Current: {{ product.image.name }}</small>
-                                </div>
+                            <div class="mt-2">
+                                <small class="text-muted">Current: {{ product.image.name }}</small>
+                            </div>
                             {% endif %}
                         </div>
                     </div>

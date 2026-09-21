@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 
-from .models import CustomUser
+from .models import CustomUser, SellerPayoutProfile, SellerPayoutRequest
 
 
 @admin.register(CustomUser)
@@ -61,3 +61,32 @@ class CustomUserAdmin(UserAdmin):
             },
         ),
     )
+
+
+@admin.register(SellerPayoutProfile)
+class SellerPayoutProfileAdmin(admin.ModelAdmin):
+    list_display = (
+        "seller",
+        "bank_name",
+        "masked_account_number",
+        "ifsc_code",
+        "is_verified",
+        "updated_at",
+    )
+    list_filter = ("is_verified", "bank_name")
+    search_fields = ("seller__username", "seller__email", "account_holder_name", "ifsc_code")
+    readonly_fields = ("masked_account_number", "created_at", "updated_at")
+
+
+@admin.register(SellerPayoutRequest)
+class SellerPayoutRequestAdmin(admin.ModelAdmin):
+    list_display = (
+        "seller",
+        "amount",
+        "status",
+        "payout_reference",
+        "requested_at",
+    )
+    list_filter = ("status", "requested_at")
+    search_fields = ("seller__username", "seller__email", "payout_reference")
+    readonly_fields = ("requested_at", "processed_at")

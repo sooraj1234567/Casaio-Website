@@ -28,6 +28,11 @@ urlpatterns = [
         name="add_product"
     ),
     path(
+        "seller/import-csv/",
+        views.seller_csv_import,
+        name="seller_csv_import"
+    ),
+    path(
         "seller/inventory/",
         views.seller_inventory,
         name="seller_inventory"

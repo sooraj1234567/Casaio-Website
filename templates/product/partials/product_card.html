@@ -1,20 +1,18 @@
 <div class="related-card">
 
-    <a href="{% url 'product:product_detail' product.slug %}">
+    <a href="{% url 'product_detail' product.slug %}">
 
         <div class="card-image">
 
-            <img
-                src="{{ product.image.url }}"
-                alt="{{ product.name }}">
+            <img src="{{ product.image.url }}" alt="{{ product.name }}">
 
             {% if product.discount_percentage %}
 
-                <span class="discount-tag">
+            <span class="discount-tag">
 
-                    {{ product.discount_percentage }}% OFF
+                {{ product.discount_percentage }}% OFF
 
-                </span>
+            </span>
 
             {% endif %}
 
@@ -26,7 +24,7 @@
 
         <h5>
 
-            <a href="{% url 'product:product_detail' product.slug %}">
+            <a href="{% url 'product_detail' product.slug %}">
 
                 {{ product.name }}
 
@@ -38,25 +36,25 @@
 
             {% if product.offer_price %}
 
-                <span class="offer-price">
+            <span class="offer-price">
 
-                    ₹{{ product.offer_price }}
+                ₹{{ product.offer_price }}
 
-                </span>
+            </span>
 
-                <span class="old-price">
+            <span class="old-price">
 
-                    ₹{{ product.selling_price }}
+                ₹{{ product.selling_price }}
 
-                </span>
+            </span>
 
             {% else %}
 
-                <span class="offer-price">
+            <span class="offer-price">
 
-                    ₹{{ product.selling_price }}
+                ₹{{ product.selling_price }}
 
-                </span>
+            </span>
 
             {% endif %}
 
@@ -64,17 +62,13 @@
 
         <div class="card-actions">
 
-            <button
-                class="wishlist-btn"
-                data-product-id="{{ product.id }}">
+            <button class="wishlist-btn" data-product-id="{{ product.id }}">
 
                 <i class="far fa-heart"></i>
 
             </button>
 
-            <button
-                class="cart-btn"
-                data-product-id="{{ product.id }}">
+            <button class="cart-btn" data-product-id="{{ product.id }}">
 
                 <i class="fas fa-shopping-cart"></i>
 

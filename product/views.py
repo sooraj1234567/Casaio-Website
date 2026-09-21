@@ -12,6 +12,9 @@ from wishlist.models import Wishlist
 from reviews.models import Review
 from reviews.forms import ReviewForm
 from orders.models import OrderItem
+from accounts.decorators import seller_required
+from .form import ProductForm
+from .csv_import import sync_csv_feed_to_products
 
 
 def product_list(request):
@@ -143,7 +146,7 @@ def product_detail(request, slug):
     )
 
 
-@login_required
+@seller_required
 def seller_dashboard(request):
     if request.user.is_superuser:
         products = Product.objects.all().order_by("-created_at")
@@ -178,7 +181,7 @@ def seller_dashboard(request):
     return render(request, "seller/dashboard.html", context)
 
 
-@login_required
+@seller_required
 def seller_products(request):
     if request.user.is_superuser:
         products = Product.objects.all().order_by("-created_at")
@@ -192,36 +195,42 @@ def seller_products(request):
     )
 
 
-@login_required
+@seller_required
 def add_product(request):
-    if request.method == "POST":
-        name = request.POST.get("name")
-        description = request.POST.get("description")
-        selling_price = request.POST.get("selling_price")
-        stock = request.POST.get("stock", 0)
-        category_id = request.POST.get("category")
-        image = request.FILES.get("image")
+    form = ProductForm(request.POST or None, request.FILES or None)
 
-        category = get_object_or_404(Category, id=category_id) if category_id else None
-
-        product = Product.objects.create(
-            seller=request.user,
-            name=name,
-            description=description,
-            selling_price=selling_price,
-            stock=stock,
-            category=category,
-            image=image,
-            is_available=True
-        )
+    if form.is_valid():
+        product = form.save(commit=False)
+        product.seller = request.user
+        product.save()
         messages.success(request, f"Product '{product.name}' added successfully.")
         return redirect("seller_products")
 
-    categories = Category.objects.filter(is_active=True)
-    return render(request, "seller/add_product.html", {"categories": categories})
+    return render(request, "seller/add_product.html", {"form": form})
 
 
-@login_required
+@seller_required
+def seller_csv_import(request):
+    if request.method == "POST":
+        csv_file = request.FILES.get("csv_file")
+        if not csv_file:
+            messages.error(request, "Please upload a CSV file.")
+            return redirect("seller_csv_import")
+
+        try:
+            result = sync_csv_feed_to_products(csv_file, seller=request.user)
+            messages.success(
+                request,
+                f"CSV import complete: {result['created']} created, {result['updated']} updated.",
+            )
+            return redirect("seller_products")
+        except ValueError as exc:
+            messages.error(request, str(exc))
+
+    return render(request, "seller/csv_import.html")
+
+
+@seller_required
 def seller_inventory(request):
     if request.user.is_superuser:
         products = Product.objects.all().order_by("stock")
@@ -235,7 +244,7 @@ def seller_inventory(request):
     )
 
 
-@login_required
+@seller_required
 @require_POST
 def update_stock(request, product_id):
     product = get_object_or_404(Product, id=product_id)
@@ -258,7 +267,7 @@ def update_stock(request, product_id):
     return redirect("seller_inventory")
 
 
-@login_required
+@seller_required
 def edit_product(request, product_id):
     product = get_object_or_404(Product, id=product_id)
 
@@ -266,23 +275,21 @@ def edit_product(request, product_id):
         messages.error(request, "You do not have permission to edit this product.")
         return redirect("seller_products")
 
-    if request.method == "POST":
-        product.name = request.POST.get("name", product.name)
-        product.description = request.POST.get("description", product.description)
-        product.selling_price = request.POST.get("selling_price", product.selling_price)
-        product.stock = request.POST.get("stock", product.stock)
-        
-        if "image" in request.FILES:
-            product.image = request.FILES["image"]
+    form = ProductForm(
+        request.POST or None,
+        request.FILES or None,
+        instance=product,
+    )
 
-        product.save()
+    if form.is_valid():
+        form.save()
         messages.success(request, f"Product '{product.name}' updated successfully.")
         return redirect("seller_products")
 
-    return render(request, "seller/edit_product.html", {"product": product})
+    return render(request, "seller/edit_product.html", {"form": form, "product": product})
 
 
-@login_required
+@seller_required
 @require_POST
 def delete_product(request, product_id):
     product = get_object_or_404(Product, id=product_id)
@@ -297,7 +304,7 @@ def delete_product(request, product_id):
     return redirect("seller_products")
 
 
-@login_required
+@seller_required
 def seller_reviews(request):
     if request.user.is_superuser:
         reviews = Review.objects.all().select_related("product", "user").order_by("-created_at")

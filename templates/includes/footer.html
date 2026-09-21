@@ -39,15 +39,15 @@
 
                 <ul>
 
-                    <li><a href="/">Home</a></li>
+                    <li><a href="{% url 'home' %}">Home</a></li>
 
-                    <li><a href="#">Shop</a></li>
+                    <li><a href="{% url 'product_list' %}">Shop</a></li>
 
-                    <li><a href="#">Categories</a></li>
+                    <li><a href="{% url 'category_list' %}">Categories</a></li>
 
-                    <li><a href="#">Offers</a></li>
+                    <li><a href="{% url 'product_list' %}">Offers</a></li>
 
-                    <li><a href="#">Contact</a></li>
+                    <li><a href="mailto:support@casaio.com">Contact</a></li>
 
                 </ul>
 
@@ -61,11 +61,11 @@
 
                 <ul>
 
-                    <li><a href="#">My Account</a></li>
+                    <li><a href="{% url 'login' %}">My Account</a></li>
 
-                    <li><a href="#">Wishlist</a></li>
+                    <li><a href="{% url 'wishlist:wishlist' %}">Wishlist</a></li>
 
-                    <li><a href="#">Track Order</a></li>
+                    <li><a href="{% url 'orders:my_orders' %}">Track Order</a></li>
 
                     <li><a href="#">Shipping Policy</a></li>
 

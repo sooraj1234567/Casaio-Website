@@ -1,26 +1,22 @@
 import random
+from decimal import Decimal, InvalidOperation
+
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import authenticate, get_user_model, login, logout
-from django.contrib.auth.decorators import user_passes_test
 from django.core.mail import send_mail
 from django.shortcuts import get_object_or_404, redirect, render
 
 from category.models import Category
-from accounts.models import SellerApplication
+from accounts.models import SellerApplication, SellerPayoutProfile, SellerPayoutRequest
 from product.models import Product
 from orders.models import OrderItem
+from .decorators import seller_required
+from .forms import SellerPayoutProfileForm
 
 User = get_user_model()
 
 otp_storage = {}
-
-
-def seller_required(function):
-    return user_passes_test(
-        lambda u: u.is_authenticated and getattr(u, "role", None) == "seller",
-        login_url="/login/",
-    )(function)
 
 
 def register(request):
@@ -166,6 +162,83 @@ def seller_register(request):
         {"categories": categories}
     )
 
+
+@seller_required
+def seller_payout_profile(request):
+    profile, _ = SellerPayoutProfile.objects.get_or_create(
+        seller=request.user
+    )
+
+    form = SellerPayoutProfileForm(
+        request.POST or None,
+        instance=profile,
+    )
+
+    if request.method == "POST" and form.is_valid():
+        payout_profile = form.save(commit=False)
+        payout_profile.seller = request.user
+        payout_profile.is_verified = False
+        payout_profile.save()
+        messages.success(
+            request,
+            "Payout details saved. They will be verified before the first payout.",
+        )
+        return redirect("seller_payout_profile")
+
+    return render(
+        request,
+        "seller/payout_profile.html",
+        {"form": form, "profile": profile},
+    )
+
+
+@seller_required
+def seller_request_payout(request):
+    profile = getattr(request.user, "payout_profile", None)
+    if not profile:
+        messages.error(request, "Please add your payout profile before requesting a payout.")
+        return redirect("seller_payout_profile")
+
+    if not profile.is_verified:
+        messages.error(request, "Your payout profile must be verified by admin before you can request a payout.")
+        return redirect("seller_payout_profile")
+
+    if request.method == "POST":
+        amount_value = request.POST.get("amount", "").strip()
+        try:
+            amount = Decimal(amount_value)
+        except (InvalidOperation, TypeError, ValueError):
+            messages.error(request, "Enter a valid payout amount.")
+            return redirect("seller_request_payout")
+
+        if amount <= 0:
+            messages.error(request, "Payout amount must be greater than zero.")
+            return redirect("seller_request_payout")
+
+        existing_request = SellerPayoutRequest.objects.filter(
+            seller=request.user,
+            status__in=["pending", "approved", "in_transit"],
+        ).exists()
+        if existing_request:
+            messages.error(request, "You already have an active payout request in progress.")
+            return redirect("orders:seller_earnings")
+
+        SellerPayoutRequest.objects.create(
+            seller=request.user,
+            payout_profile=profile,
+            amount=amount,
+            status="pending",
+        )
+        messages.success(request, "Your payout request has been submitted and is awaiting admin verification.")
+        return redirect("orders:seller_earnings")
+
+    recent_requests = SellerPayoutRequest.objects.filter(seller=request.user).order_by("-requested_at")[:5]
+    return render(
+        request,
+        "seller/request_payout.html",
+        {"profile": profile, "recent_requests": recent_requests},
+    )
+
 def verify_otp(request):
     if request.method == "POST":
         email = request.session.get("email")
@@ -223,17 +296,25 @@ def verify_otp(request):
                 return redirect("login")
 
             # -------------------------------------------------
-            # NEW SELLER → CREATE NEW ACCOUNT
+            # NEW SELLER → CREATE ACCOUNT AND PENDING APPLICATION
             # -------------------------------------------------
             user = User.objects.create_user(
                 username=data["username"],
                 email=email,
                 password=data["password"],
-                role=data.get("role", "customer"),
+                role="customer",
                 first_name=data.get("full_name", ""),
                 phone_number=data.get("phone", ""),
                 business_name=data.get("business_name", ""),
                 business_category=category_instance,
+                email_verified=True,
+            )
+
+            SellerApplication.objects.create(
+                user=user,
+                business_name=data.get("business_name", ""),
+                business_category=category_instance,
+                status="pending",
             )
 
             del otp_storage[email]
@@ -241,7 +322,7 @@ def verify_otp(request):
 
             messages.success(
                 request,
-                "Account created successfully."
+                "Registration complete. Your seller application is pending admin approval."
             )
 
             return redirect("login")
@@ -373,9 +454,22 @@ def user_logout(request):
 
 
 def home(request):
-    categories = Category.objects.all()
+    categories = Category.objects.filter(is_active=True).order_by("name")[:8]
+    featured_products = (
+        Product.objects.filter(is_available=True)
+        .select_related("category")
+        .order_by("-created_at")[:8]
+    )
+    new_arrivals = (
+        Product.objects.filter(is_available=True)
+        .select_related("category")
+        .order_by("-created_at")[:6]
+    )
+
     context = {
         "categories": categories,
+        "featured_products": featured_products,
+        "new_arrivals": new_arrivals,
     }
     return render(request, "home/home.html", context)
 

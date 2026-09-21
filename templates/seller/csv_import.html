@@ -1,0 +1,46 @@
+{% extends 'dashboard/AdBase.html' %}
+{% load static %}
+
+{% block title %}CSV Product Import{% endblock %}
+
+{% block content %}
+<div class="container-fluid px-4 py-4">
+    <div class="row justify-content-center">
+        <div class="col-xl-8">
+            <div class="card border-0 shadow-sm rounded-4 p-4 p-lg-5 bg-white">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <div>
+                        <span class="badge rounded-pill text-bg-light border px-3 py-2">Supplier feed</span>
+                        <h1 class="h3 fw-bold mt-3 mb-0">Import products from CSV</h1>
+                    </div>
+                    <a href="{% url 'seller_products' %}" class="btn btn-outline-secondary">Back</a>
+                </div>
+
+                <p class="text-muted mb-4">
+                    Upload a CSV with columns: <strong>name, description, supplier_price, selling_price, stock,
+                        category_name</strong>.
+                </p>
+
+                <div class="alert alert-light border mb-4">
+                    <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+                        <span>Need a starter file? Download the sample template.</span>
+                        <a href="{% static 'samples/supplier_product_template.csv' %}"
+                            class="btn btn-sm btn-outline-primary" download>
+                            Download sample CSV
+                        </a>
+                    </div>
+                </div>
+
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="csv_file" class="form-label fw-semibold">CSV file</label>
+                        <input type="file" class="form-control" id="csv_file" name="csv_file" accept=".csv" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary px-4">Import products</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

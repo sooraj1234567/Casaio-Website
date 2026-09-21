@@ -12,6 +12,8 @@ from cart.models import Cart
 from checkout.models import Address
 
 from .models import Order, OrderItem, Coupon
+from accounts.decorators import seller_required
+from notifications.services import send_email_notification, send_order_whatsapp_notification
 
 import razorpay
 from django.conf import settings
@@ -54,8 +56,14 @@ def place_order(request):
 
     subtotal = 0
 
-    for item in cart.items.all():
-        subtotal += item.product.selling_price * item.quantity
+    for item in cart.items.select_related("product"):
+        if not item.product.is_available or item.product.stock < item.quantity:
+            messages.error(
+                request,
+                f"{item.product.name} does not have enough stock for this order.",
+            )
+            return redirect("cart:cart_page")
+        subtotal += item.product.current_price * item.quantity
 
     order = Order.objects.create(
         user=request.user,
@@ -72,7 +80,7 @@ def place_order(request):
             order=order,
             product=item.product,
             quantity=item.quantity,
-            selling_price=item.product.selling_price,
+            selling_price=item.product.current_price,
         )
 
     if payment_method == "cod":
@@ -90,13 +98,36 @@ def place_order(request):
 
     elif payment_method == "razorpay":
 
+        if not settings.RAZORPAY_KEY_ID or not settings.RAZORPAY_KEY_SECRET:
+            messages.error(
+                request,
+                "Online payments are temporarily unavailable. Please try again later."
+            )
+            order.delete()
+            return redirect("checkout:checkout")
+
+        send_email_notification(
+            subject="Order placed",
+            recipient=request.user.email,
+            message=(
+                f"Hello {request.user.username},\n\n"
+                f"Your order {order.order_number or order.id} has been placed successfully.\n"
+                "Once payment is confirmed, we will notify you once it is shipped."
+            ),
+        )
+
         amount = int(order.total * 100)
 
         try:
             razorpay_order = client.order.create({
                 "amount": amount,
                 "currency": "INR",
-                "payment_capture": 1
+                "payment_capture": 1,
+                "receipt": order.order_number,
+                "notes": {
+                    "casaio_order_id": str(order.id),
+                    "customer_id": str(request.user.id),
+                },
             })
 
             order.razorpay_order_id = razorpay_order["id"]
@@ -198,7 +229,7 @@ def delete_order(request, order_id):
     return redirect("orders:my_orders")
 
 
-@login_required
+@seller_required
 @require_POST
 def update_order_status(request, item_id):
     item = get_object_or_404(OrderItem, id=item_id)
@@ -215,20 +246,63 @@ def update_order_status(request, item_id):
     new_status = request.POST.get("status", "").strip().lower()
     valid_statuses = [choice[0] for choice in OrderItem.STATUS_CHOICES]
 
-    if new_status in valid_statuses:
+    allowed_transitions = {
+        "pending": {"confirmed", "cancelled"},
+        "confirmed": {"shipped", "cancelled"},
+        "shipped": {"delivered"},
+        "delivered": set(),
+        "cancelled": set(),
+    }
+
+    if new_status not in valid_statuses:
+        messages.error(request, "Invalid status selected.")
+    elif new_status == item.status:
+        messages.info(request, "The order item already has that status.")
+    elif new_status not in allowed_transitions.get(item.status, set()):
+        messages.error(
+            request,
+            f"An order item cannot move from {item.get_status_display()} to {new_status.capitalize()}.",
+        )
+    else:
         item.status = new_status
         item.save()
 
         order.update_status_from_items()
 
+        if new_status in {"shipped", "delivered", "cancelled"} and order.user.email:
+            status_message = {
+                "shipped": "has been shipped and is on the way.",
+                "delivered": "has been delivered successfully.",
+                "cancelled": "has been cancelled.",
+            }.get(new_status, "status was updated.")
+            send_email_notification(
+                subject=f"Order {new_status.capitalize()}",
+                recipient=order.user.email,
+                message=(
+                    f"Hello {order.user.username},\n\n"
+                    f"Your order {order.order_number or order.id} {status_message}\n"
+                    "Thank you for shopping with Casaio."
+                ),
+            )
+
+            whatsapp_template = {
+                "shipped": "order_shipped",
+                "delivered": "order_delivered",
+                "cancelled": "order_cancelled",
+            }.get(new_status, "order_status")
+            send_order_whatsapp_notification(
+                phone_number=getattr(order.user, "phone_number", "") or getattr(order.address, "phone_number", ""),
+                order_number=order.order_number or str(order.id),
+                template_name=whatsapp_template,
+                amount=f"₹{order.total}",
+            )
+
         messages.success(request, f"Order #{order.id} item status updated to {new_status.capitalize()}.")
-    else:
-        messages.error(request, "Invalid status selected.")
 
     return redirect("seller_dashboard")
 
 
-@login_required
+@seller_required
 def seller_orders(request):
     if request.user.is_superuser:
         order_items = OrderItem.objects.all().select_related("order", "product", "order__user", "order__address").order_by("-order__created_at")
@@ -251,13 +325,15 @@ def seller_orders(request):
     })
 
 
-@login_required
+@seller_required
 def seller_coupons(request):
-    coupons = Coupon.objects.all().order_by("-created_at")
+    coupons = Coupon.objects.filter(
+        seller=request.user
+    ).order_by("-created_at")
     return render(request, "seller/seller_coupons.html", {"coupons": coupons})
 
 
-@login_required
+@seller_required
 def add_coupon(request):
     if request.method == "POST":
         code = request.POST.get("code")
@@ -270,6 +346,7 @@ def add_coupon(request):
 
         try:
             Coupon.objects.create(
+                seller=request.user,
                 code=code,
                 discount_type=discount_type,
                 discount_value=discount_value,
@@ -286,17 +363,21 @@ def add_coupon(request):
     return render(request, "seller/add_coupon.html")
 
 
-@login_required
+@seller_required
 @require_POST
 def toggle_coupon(request, coupon_id):
-    coupon = get_object_or_404(Coupon, id=coupon_id)
+    coupon = get_object_or_404(
+        Coupon,
+        id=coupon_id,
+        seller=request.user,
+    )
     coupon.is_active = not coupon.is_active
     coupon.save()
     messages.success(request, f"Coupon {coupon.code} status updated.")
     return redirect("orders:seller_coupons")
 
 
-@login_required
+@seller_required
 def seller_earnings(request):
     if request.user.is_superuser:
         order_items = OrderItem.objects.all().select_related("order", "product")
@@ -315,7 +396,7 @@ def seller_earnings(request):
     })
 
 
-@login_required
+@seller_required
 def export_sales_csv(request):
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="sales_report.csv"'

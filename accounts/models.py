@@ -82,3 +82,65 @@ class SellerApplication(models.Model):
 
     def __str__(self):
         return f"{self.user.email} - {self.status}"
+
+
+class SellerPayoutProfile(models.Model):
+    seller = models.OneToOneField(
+        CustomUser,
+        on_delete=models.CASCADE,
+        related_name="payout_profile",
+    )
+
+    account_holder_name = models.CharField(max_length=150)
+    bank_name = models.CharField(max_length=150)
+    account_number = models.CharField(max_length=34)
+    ifsc_code = models.CharField(max_length=11)
+    upi_id = models.CharField(max_length=120, blank=True)
+    is_verified = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    @property
+    def masked_account_number(self):
+        if len(self.account_number) <= 4:
+            return self.account_number
+        return f"{'*' * (len(self.account_number) - 4)}{self.account_number[-4:]}"
+
+    def __str__(self):
+        return f"Payout profile for {self.seller.username}"
+
+
+class SellerPayoutRequest(models.Model):
+    STATUS_CHOICES = (
+        ("pending", "Pending"),
+        ("approved", "Approved"),
+        ("in_transit", "In Transit"),
+        ("paid", "Paid"),
+        ("rejected", "Rejected"),
+        ("failed", "Failed"),
+    )
+
+    seller = models.ForeignKey(
+        CustomUser,
+        on_delete=models.CASCADE,
+        related_name="payout_requests",
+    )
+
+    payout_profile = models.ForeignKey(
+        SellerPayoutProfile,
+        on_delete=models.PROTECT,
+        related_name="payout_requests",
+    )
+
+    amount = models.DecimalField(max_digits=12, decimal_places=2)
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default="pending")
+    requested_at = models.DateTimeField(auto_now_add=True)
+    processed_at = models.DateTimeField(null=True, blank=True)
+    payout_reference = models.CharField(max_length=120, blank=True, null=True)
+    notes = models.TextField(blank=True)
+
+    class Meta:
+        ordering = ["-requested_at"]
+
+    def __str__(self):
+        return f"{self.seller.username} - ₹{self.amount} ({self.status})"

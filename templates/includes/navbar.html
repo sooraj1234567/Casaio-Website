@@ -2,9 +2,7 @@
 
     <div class="container">
 
-        <button class="navbar-toggler" type="button"
-                data-bs-toggle="collapse"
-                data-bs-target="#navbarMenu">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMenu">
             <span class="navbar-toggler-icon"></span>
         </button>
 
@@ -19,45 +17,43 @@
                 </li>
 
                 <li class="nav-item">
-                    <a class="nav-link" href="#">
+                    <a class="nav-link" href="{% url 'product_list' %}">
                         Shop
                     </a>
                 </li>
 
                 <li class="nav-item dropdown">
 
-                    <a class="nav-link dropdown-toggle"
-                       href="#"
-                       data-bs-toggle="dropdown">
+                    <a class="nav-link dropdown-toggle" href="{% url 'category_list' %}" data-bs-toggle="dropdown">
                         Categories
                     </a>
 
                     <ul class="dropdown-menu shadow border-0">
 
-                        <li><a class="dropdown-item" href="#">Kitchen Accessories</a></li>
-                        <li><a class="dropdown-item" href="#">Home Decor</a></li>
-                        <li><a class="dropdown-item" href="#">Furniture</a></li>
-                        <li><a class="dropdown-item" href="#">Lighting</a></li>
-                        <li><a class="dropdown-item" href="#">Storage</a></li>
+                        <li><a class="dropdown-item" href="{% url 'category_list' %}">Kitchen Accessories</a></li>
+                        <li><a class="dropdown-item" href="{% url 'category_list' %}">Home Decor</a></li>
+                        <li><a class="dropdown-item" href="{% url 'category_list' %}">Furniture</a></li>
+                        <li><a class="dropdown-item" href="{% url 'category_list' %}">Lighting</a></li>
+                        <li><a class="dropdown-item" href="{% url 'category_list' %}">Storage</a></li>
 
                     </ul>
 
                 </li>
 
                 <li class="nav-item">
-                    <a class="nav-link" href="#">
+                    <a class="nav-link" href="{% url 'product_list' %}?sort=new">
                         New Arrivals
                     </a>
                 </li>
 
                 <li class="nav-item">
-                    <a class="nav-link" href="#">
+                    <a class="nav-link" href="{% url 'product_list' %}">
                         Best Sellers
                     </a>
                 </li>
 
                 <li class="nav-item">
-                    <a class="nav-link" href="#">
+                    <a class="nav-link" href="{% url 'product_list' %}">
                         Deals
                         <span class="badge bg-danger ms-1">
                             Sale
@@ -66,7 +62,7 @@
                 </li>
 
                 <li class="nav-item">
-                    <a class="nav-link" href="#">
+                    <a class="nav-link" href="mailto:support@casaio.com">
                         Contact
                     </a>
                 </li>
@@ -77,17 +73,17 @@
 
                 {% if user.is_authenticated %}
 
-                    <!-- User is logged in, profile dropdown is in header -->
+                <!-- User is logged in, profile dropdown is in header -->
 
                 {% else %}
 
-                    <a href="{% url 'login' %}" class="btn btn-outline-dark btn-sm">
-                        Login
-                    </a>
+                <a href="{% url 'login' %}" class="btn btn-outline-dark btn-sm">
+                    Login
+                </a>
 
-                    <a href="{% url 'register' %}" class="btn btn-warning btn-sm text-white">
-                        Register
-                    </a>
+                <a href="{% url 'register' %}" class="btn btn-warning btn-sm text-white">
+                    Register
+                </a>
 
                 {% endif %}
 

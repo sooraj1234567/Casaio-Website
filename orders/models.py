@@ -1,4 +1,5 @@
 from django.conf import settings
+from django.conf import settings
 from django.db import models
 from django.utils import timezone
 
@@ -175,6 +176,14 @@ class OrderItem(models.Model):
 
 
 class Coupon(models.Model):
+
+    seller = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.SET_NULL,
+        related_name="seller_coupons",
+        null=True,
+        blank=True,
+    )
 
     DISCOUNT_CHOICES = (
         ("percentage", "Percentage"),

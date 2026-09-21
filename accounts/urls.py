@@ -17,10 +17,6 @@ urlpatterns = [
     
     # Seller Onboarding & Dashboard Endpoints
     path('seller/register/', views.seller_register, name='seller_register'),
-    path('seller/dashboard/', views.seller_dashboard, name='seller_dashboard'),
-    path('seller/products/', views.seller_products, name='seller_products'),
-    path('seller/products/add/', views.add_product, name='add_product'),
-    path('seller/products/edit/<int:product_id>/', views.edit_product, name='edit_product'),
-    path('seller/products/delete/<int:product_id>/', views.delete_product, name='delete_product'),
-    path('seller/order/update/<int:item_id>/', views.update_order_status, name='update_order_status'),
+    path('seller/payout-profile/', views.seller_payout_profile, name='seller_payout_profile'),
+    path('seller/request-payout/', views.seller_request_payout, name='seller_request_payout'),
 ]

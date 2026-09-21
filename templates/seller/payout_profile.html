@@ -1,0 +1,75 @@
+{% extends 'dashboard/AdBase.html' %}
+
+{% block title %}Payout Details{% endblock %}
+
+{% block content %}
+<div class="container-fluid px-4 py-4">
+    <div class="row g-4 justify-content-center">
+        <div class="col-xl-8">
+            <div class="mb-4">
+                <span class="badge rounded-pill text-bg-light border px-3 py-2">Seller finance</span>
+                <h1 class="h2 fw-bold mt-3 mb-2">Payout details</h1>
+                <p class="text-muted mb-0">Add the bank account where your approved seller earnings should be settled.
+                </p>
+            </div>
+
+            <div class="card border-0 shadow-sm rounded-4 p-4 p-lg-5 bg-white">
+                {% if profile.account_number %}
+                <div
+                    class="alert {% if profile.is_verified %}alert-success{% else %}alert-warning{% endif %} d-flex align-items-center gap-2">
+                    <i class="fa-solid {% if profile.is_verified %}fa-circle-check{% else %}fa-clock{% endif %}"></i>
+                    <span>{% if profile.is_verified %}Your payout profile is verified.{% else %}Your payout profile is
+                        saved and awaiting verification.{% endif %}</span>
+                </div>
+                {% endif %}
+
+                <form method="post" novalidate>
+                    {% csrf_token %}
+                    {% if form.non_field_errors %}
+                    <div class="alert alert-danger">{{ form.non_field_errors }}</div>
+                    {% endif %}
+
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold"
+                                for="{{ form.account_holder_name.id_for_label }}">Account holder name</label>
+                            {{ form.account_holder_name }}
+                            {{ form.account_holder_name.errors }}
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold" for="{{ form.bank_name.id_for_label }}">Bank
+                                name</label>
+                            {{ form.bank_name }}
+                            {{ form.bank_name.errors }}
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold" for="{{ form.account_number.id_for_label }}">Account
+                                number</label>
+                            {{ form.account_number }}
+                            {{ form.account_number.errors }}
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold" for="{{ form.ifsc_code.id_for_label }}">IFSC
+                                code</label>
+                            {{ form.ifsc_code }}
+                            {{ form.ifsc_code.errors }}
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label fw-semibold" for="{{ form.upi_id.id_for_label }}">UPI ID <span
+                                    class="text-muted fw-normal">(optional)</span></label>
+                            {{ form.upi_id }}
+                            {{ form.upi_id.errors }}
+                        </div>
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-center gap-3 mt-4">
+                        <p class="small text-muted mb-0"><i class="fa-solid fa-lock me-1"></i>Account number shown as {{
+                            profile.masked_account_number|default:"masked" }} after saving.</p>
+                        <button type="submit" class="btn btn-primary px-4">Save payout details</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
