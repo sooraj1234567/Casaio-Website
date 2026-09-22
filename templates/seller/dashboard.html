@@ -167,12 +167,58 @@
 {% block extra_js %}
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-    document.querySelectorAll("[data-current-status]").forEach(function (select) { select.value = select.dataset.currentStatus; });
+    document.querySelectorAll("[data-current-status]").forEach(function (select) {
+        select.value = select.dataset.currentStatus;
+    });
+
     const chartElement = document.getElementById("revenueChart");
+
+    const chartLabels = JSON.parse(
+        document.getElementById("chart-labels").textContent
+    );
+
+    const chartData = JSON.parse(
+        document.getElementById("chart-data").textContent
+    );
+
     new Chart(chartElement, {
         type: "line",
-        data: { labels: {{ chart_labels| safe }}, datasets: [{ label: "Monthly Revenue", data: {{ chart_data| safe }}, borderColor: "#e87928", backgroundColor: "rgba(232, 121, 40, 0.12)", borderWidth: 3, fill: true, tension: 0.35, pointRadius: 3, pointBackgroundColor: "#17212b" }] },
-        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { grid: { display: false } }, y: { beginAtZero: true, grid: { color: "#eee9e1" } } } }
+        data: {
+            labels: chartLabels,
+            datasets: [{
+                label: "Monthly Revenue",
+                data: chartData,
+                borderColor: "#e87928",
+                backgroundColor: "rgba(232, 121, 40, 0.12)",
+                borderWidth: 3,
+                fill: true,
+                tension: 0.35,
+                pointRadius: 3,
+                pointBackgroundColor: "#17212b"
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: false
+                }
+            },
+            scales: {
+                x: {
+                    grid: {
+                        display: false
+                    }
+                },
+                y: {
+                    beginAtZero: true,
+                    grid: {
+                        color: "#eee9e1"
+                    }
+                }
+            }
+        }
     });
 </script>
 <script src="{% static 'js/seller/seller_dashboard.js' %}"></script>
