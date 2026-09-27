@@ -1,8 +1,8 @@
-<nav class="seller-navbar" aria-label="Seller navigation">
+<nav class="seller-navbar {% if request.user.role != 'seller' %}admin-navbar{% endif %}" aria-label="{% if request.user.role == 'seller' %}Seller navigation{% else %}Admin navigation{% endif %}">
     <div class="seller-navbar-context">
         <span class="seller-navbar-kicker">Casaio</span>
         <span class="seller-navbar-divider" aria-hidden="true"></span>
-        <span class="seller-navbar-title">Seller operations</span>
+        <span class="seller-navbar-title">{% if request.user.role == 'seller' %}Seller operations{% else %}Admin workspace{% endif %}</span>
     </div>
 
     <div class="seller-navbar-actions">
@@ -10,6 +10,7 @@
             <i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i>
             <span>View store</span>
         </a>
+        {% if request.user.role == 'seller' %}
         <a href="{% url 'orders:seller_orders' %}" class="seller-nav-link">
             <i class="fa-solid fa-truck-fast" aria-hidden="true"></i>
             <span>Orders</span>
@@ -22,6 +23,16 @@
             <i class="fa-solid fa-building-columns" aria-hidden="true"></i>
             <span>Payouts</span>
         </a>
+        {% else %}
+        <a href="{% url 'dashboard:order_list' %}" class="seller-nav-link">
+            <i class="fa-solid fa-truck-fast" aria-hidden="true"></i>
+            <span>Orders</span>
+        </a>
+        <a href="{% url 'dashboard:report' %}" class="seller-nav-primary">
+            <i class="fa-solid fa-chart-line" aria-hidden="true"></i>
+            <span>View reports</span>
+        </a>
+        {% endif %}
         <div class="seller-nav-account">
             <span class="seller-nav-avatar" aria-hidden="true">{{ request.user.username|slice:":1"|upper }}</span>
             <span class="seller-nav-user">{{ request.user.first_name|default:request.user.username }}</span>
