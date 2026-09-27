@@ -1,15 +1,20 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block title %}Order Details{% endblock %}
 
+{% block css %}
+<link rel="stylesheet" href="{% static 'css/orders.css' %}">
+{% endblock %}
+
 {% block content %}
-<div class="container py-5">
+<div class="container py-5 order-page order-detail-page">
 
     <a href="{% url 'orders:my_orders' %}" class="btn btn-outline-dark mb-4">
         ← Back to My Orders
     </a>
 
-    <div class="card shadow-sm border-0 rounded-4">
+    <div class="card shadow-sm border-0 rounded-4 order-card">
 
         <div class="card-body">
 
@@ -86,6 +91,7 @@
 
             <h5 class="mb-3">Ordered Products</h5>
 
+            <div class="table-responsive">
             <table class="table table-bordered align-middle">
 
                 <thead class="table-light">
@@ -130,6 +136,7 @@
                 </tbody>
 
             </table>
+            </div>
 
             <hr>
 

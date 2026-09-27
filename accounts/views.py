@@ -5,6 +5,7 @@ from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import authenticate, get_user_model, login, logout
 from django.core.mail import send_mail
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, redirect, render
 
 from category.models import Category
@@ -17,6 +18,16 @@ from .forms import SellerPayoutProfileForm
 User = get_user_model()
 
 otp_storage = {}
+
+
+@login_required
+def profile(request):
+    return render(request, "account/profile.html", {"page_title": "My Profile"})
+
+
+@login_required
+def account_settings(request):
+    return render(request, "account/profile.html", {"page_title": "Account Settings"})
 
 
 def register(request):

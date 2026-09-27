@@ -2,59 +2,48 @@
      CART DRAWER
 ========================= -->
 
-<div id="cartDrawer" class="cart-drawer">
+<div id="cartDrawer" class="cart-drawer" role="dialog" aria-modal="true" aria-labelledby="cartDrawerTitle" aria-hidden="true">
 
     <div class="cart-header">
-        <h5>🛒 Added to Cart</h5>
+        <div>
+            <span class="cart-kicker">Your selection</span>
+            <h5 id="cartDrawerTitle" class="cart-drawer-title">Shopping bag</h5>
+            <p class="cart-header-note">Review your pieces before checkout.</p>
+        </div>
 
-        <button id="closeCartDrawer" class="cart-close">
-            &times;
+        <button id="closeCartDrawer" class="cart-close" aria-label="Close cart">
+            <i class="bi bi-x-lg"></i>
         </button>
     </div>
 
-    <div id="cartItemsContainer">
+    <div id="cartItemsContainer" class="cart-body">
+        <div class="cart-empty-state">
+            <div class="empty-icon-wrap"><i class="bi bi-bag"></i></div>
+            <p class="empty-title">Your bag is waiting</p>
+            <p class="empty-text">Add something beautiful to get started.</p>
+            <button id="emptyContinueShopping" class="empty-continue" type="button">Explore the collection</button>
+        </div>
+    </div>
 
-    <div class="text-center py-5 text-muted">
+    <div class="cart-footer">
+        <div class="cart-subtotal">
+            <div>
+                <span class="subtotal-label">Subtotal</span>
+                <small>Shipping calculated at checkout</small>
+            </div>
+            <strong id="drawerSubtotal" class="subtotal-value">₹0</strong>
+        </div>
 
-        <i class="bi bi-cart3 fs-1"></i>
+        <div class="cart-actions">
+            <a href="{% url 'cart:cart_page' %}" class="btn-drawer-primary">
+                View cart <i class="bi bi-arrow-up-right"></i>
+            </a>
+            <button id="continueShopping" class="btn-drawer-outline" type="button">Continue shopping</button>
+        </div>
 
-        <p class="mt-3 mb-0">
-            Your cart is empty
-        </p>
-
+        <p class="cart-secure-note"><i class="bi bi-shield-check"></i> Secure checkout · Free delivery over ₹999</p>
     </div>
 
 </div>
 
-    <hr>
-
-    <div class="cart-subtotal">
-
-        <span>Subtotal</span>
-
-        <strong id="drawerSubtotal">
-            ₹0
-        </strong>
-
-    </div>
-
-	<div class="cart-actions">
-
-		<button
-			id="continueShopping"
-			class="btn btn-light w-100 mb-2">
-
-			Continue Shopping
-
-		</button>
-
-		<a href="{% url 'cart:cart_page' %}" class="btn btn-outline-dark w-100">
-			View Cart
-		</a>
-
-	</div>
-
-</div>
-
-<div id="cartOverlay"></div>
-
+<div id="cartOverlay" class="cart-overlay"></div>

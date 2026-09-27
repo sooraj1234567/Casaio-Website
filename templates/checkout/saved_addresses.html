@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Saved Addresses | Casaio{% endblock %}
+
+{% block css %}
+<link rel="stylesheet" href="{% static 'css/account.css' %}">
+{% endblock %}
+
+{% block content %}
+<section class="account-page saved-addresses-page">
+    <div class="container">
+        <div class="account-heading">
+            <span class="account-eyebrow">Casaio account</span>
+            <h1>Saved Addresses</h1>
+            <p>Manage the addresses you use for deliveries.</p>
+        </div>
+
+        <div class="saved-address-layout">
+            <section class="account-card saved-address-list">
+                <div class="account-card-heading">
+                    <div>
+                        <span class="account-eyebrow">Your locations</span>
+                        <h2>{{ addresses|length }} saved address{{ addresses|length|pluralize }}</h2>
+                    </div>
+                    <i class="bi bi-geo-alt"></i>
+                </div>
+
+                {% for address in addresses %}
+                <article class="saved-address-card {% if address.is_default %}is-default{% endif %}">
+                    <div class="saved-address-heading">
+                        <div>
+                            <h3>{{ address.full_name }}</h3>
+                            {% if address.is_default %}<span class="saved-address-default">Default</span>{% endif %}
+                        </div>
+                        <span class="saved-address-phone">{{ address.phone_number }}</span>
+                    </div>
+                    <p>{{ address.house_name }}, {{ address.area }}</p>
+                    <p>{{ address.city }}, {{ address.state }} {{ address.pincode }}</p>
+                    <div class="saved-address-actions">
+                        <a class="saved-address-link" href="?edit={{ address.id }}#address-form"><i class="bi bi-pencil"></i> Edit</a>
+                        {% if not address.is_default %}
+                        <form method="post">
+                            {% csrf_token %}<input type="hidden" name="address_id" value="{{ address.id }}">
+                            <button class="saved-address-link" name="action" value="default"><i class="bi bi-star"></i> Set as default</button>
+                        </form>
+                        {% endif %}
+                        <form method="post" onsubmit="return confirm('Remove this saved address?');">
+                            {% csrf_token %}<input type="hidden" name="address_id" value="{{ address.id }}">
+                            <button class="saved-address-link is-danger" name="action" value="delete"><i class="bi bi-trash"></i> Remove</button>
+                        </form>
+                    </div>
+                </article>
+                {% empty %}
+                <div class="saved-address-empty">
+                    <i class="bi bi-geo"></i>
+                    <h3>No saved addresses yet</h3>
+                    <p>Add an address here to make checkout quicker.</p>
+                </div>
+                {% endfor %}
+            </section>
+
+            <section class="account-card saved-address-form-card" id="address-form">
+                <div class="account-card-heading">
+                    <div>
+                        <span class="account-eyebrow">{% if editing %}Update details{% else %}New location{% endif %}</span>
+                        <h2>{% if editing %}Edit address{% else %}Add an address{% endif %}</h2>
+                    </div>
+                    <i class="bi bi-house-add"></i>
+                </div>
+                <form method="post" class="saved-address-form">
+                    {% csrf_token %}
+                    <input type="hidden" name="action" value="{% if editing %}edit{% else %}add{% endif %}">
+                    {% if editing %}<input type="hidden" name="address_id" value="{{ editing.id }}">{% endif %}
+                    {% for field in form %}
+                    <label class="saved-address-field" for="{{ field.id_for_label }}">
+                        <span>{{ field.label }}</span>
+                        {{ field }}
+                        {% for error in field.errors %}<small class="text-danger">{{ error }}</small>{% endfor %}
+                    </label>
+                    {% endfor %}
+                    {% if form.non_field_errors %}<div class="text-danger">{{ form.non_field_errors }}</div>{% endif %}
+                    <button type="submit" class="saved-address-submit">{% if editing %}Save changes{% else %}Save address{% endif %}</button>
+                    {% if editing %}<a class="saved-address-cancel" href="{% url 'checkout:saved_addresses' %}">Cancel edit</a>{% endif %}
+                </form>
+            </section>
+        </div>
+    </div>
+</section>
+{% endblock %}

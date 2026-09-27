@@ -10,11 +10,10 @@ Home | Casaio Marketplace
     <div class="container">
         <div class="hero-shell">
             <div class="hero-copy">
-                <span class="eyebrow">Curated home essentials</span>
-                <h1>Elevate your everyday living.</h1>
+                <span class="eyebrow">High-performance design</span>
+                <h1>Choose your riding style</h1>
                 <p>
-                    Explore premium décor, kitchen upgrades, and modern accessories handpicked for stylish,
-                    functional homes.
+                    Premium performance essentials crafted for bold moves, clean lines, and a better daily ride.
                 </p>
                 <div class="hero-actions">
                     <a href="{% url 'product_list' %}" class="primary-btn">Shop now</a>
@@ -107,7 +106,7 @@ Home | Casaio Marketplace
                     {% if category.image %}
                     <img src="{{ category.image.url }}" alt="{{ category.name }}">
                     {% else %}
-                    <img src="{% static 'images/categories/decor.jpg' %}" alt="{{ category.name }}">
+                    <img src="{% static 'images/categories/wall.jpg' %}" alt="{{ category.name }}">
                     {% endif %}
                 </div>
                 <span>{{ category.name }}</span>
@@ -281,7 +280,7 @@ Home | Casaio Marketplace
                 <div class="stars">★★★★★</div>
                 <p>“The home décor pieces completely transformed my dining area. Easy ordering and quick delivery.”</p>
                 <div class="reviewer">
-                    <img src="{% static 'images/testimonials/customer2.jpg' %}" alt="Rahul Nair">
+                    <img src="{% static 'images/testimonials/customer1.jpg' %}" alt="Rahul Nair">
                     <div>
                         <strong>Rahul Nair</strong>
                         <span>Kochi</span>
@@ -293,7 +292,7 @@ Home | Casaio Marketplace
                 <p>“Beautiful styling, honest pricing, and the customer service team was very helpful from the start.”
                 </p>
                 <div class="reviewer">
-                    <img src="{% static 'images/testimonials/customer3.jpg' %}" alt="Priya Menon">
+                    <img src="{% static 'images/testimonials/customer1.jpg' %}" alt="Priya Menon">
                     <div>
                         <strong>Priya Menon</strong>
                         <span>Chennai</span>

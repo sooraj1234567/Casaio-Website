@@ -1,8 +1,15 @@
 {% extends "base.html" %}
+{% load static %}
+
+{% block title %}Order Confirmed{% endblock %}
+
+{% block css %}
+<link rel="stylesheet" href="{% static 'css/orders.css' %}">
+{% endblock %}
 
 {% block content %}
 
-<div class="container py-5 text-center">
+<div class="container py-5 text-center order-page order-success-page">
 
     <i class="bi bi-check-circle-fill text-success display-1"></i>
 

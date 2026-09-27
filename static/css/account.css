@@ -1,0 +1,340 @@
+/* Account profile and settings page */
+.account-page {
+  min-height: 60vh;
+  background: #f7f5f2;
+  padding: 3rem 0 5rem;
+}
+
+.account-heading {
+  margin-bottom: 1.8rem;
+}
+
+.account-eyebrow {
+  color: #ff6600;
+  display: block;
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin-bottom: 0.45rem;
+}
+
+.account-heading h1,
+.account-card h2 {
+  color: #17202a;
+  font-weight: 850;
+  letter-spacing: -0.04em;
+}
+
+.account-heading h1 {
+  font-size: clamp(2rem, 4vw, 3rem);
+  margin: 0;
+}
+
+.account-heading p,
+.account-summary p {
+  color: #64748b;
+  margin: 0.5rem 0 0;
+}
+
+.account-layout {
+  display: grid;
+  grid-template-columns: 280px minmax(0, 1fr);
+  gap: 1.25rem;
+}
+
+.account-card {
+  background: #fff;
+  border: 1px solid #e6e1da;
+  border-radius: 20px;
+  box-shadow: 0 14px 30px rgba(15, 23, 42, 0.05);
+  padding: 1.5rem;
+}
+
+.account-summary {
+  align-self: start;
+  text-align: center;
+}
+
+.account-avatar {
+  width: 72px;
+  height: 72px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 22px;
+  background: #fff1e8;
+  color: #ff6600;
+  font-size: 2rem;
+  margin: 0 auto 1rem;
+}
+
+.account-summary h2 {
+  font-size: 1.2rem;
+  margin: 0;
+}
+
+.account-action {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #ff6600;
+  font-size: 0.82rem;
+  font-weight: 800;
+  margin-top: 1.3rem;
+  text-decoration: none;
+}
+
+.account-card-heading {
+  display: flex;
+  align-items: start;
+  justify-content: space-between;
+  border-bottom: 1px solid #edf0f3;
+  padding-bottom: 1rem;
+}
+
+.account-card-heading h2 {
+  font-size: 1.35rem;
+  margin: 0;
+}
+
+.account-card-heading > i {
+  color: #ff6600;
+  font-size: 1.5rem;
+}
+
+.account-info-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+  padding: 1.3rem 0;
+}
+
+.account-info-grid div {
+  background: #f8fafc;
+  border-radius: 13px;
+  padding: 0.85rem;
+}
+
+.account-info-grid span {
+  display: block;
+  color: #94a3b8;
+  font-size: 0.68rem;
+  font-weight: 700;
+  margin-bottom: 0.35rem;
+  text-transform: uppercase;
+}
+
+.account-info-grid strong {
+  color: #17202a;
+  font-size: 0.9rem;
+  overflow-wrap: anywhere;
+}
+
+.account-links {
+  display: grid;
+  gap: 0.6rem;
+}
+
+.account-links a {
+  display: grid;
+  grid-template-columns: 24px minmax(0, 1fr) 18px;
+  align-items: center;
+  gap: 0.7rem;
+  border: 1px solid #e6e1da;
+  border-radius: 12px;
+  color: #475569;
+  font-size: 0.85rem;
+  font-weight: 700;
+  padding: 0.8rem;
+  text-decoration: none;
+  transition: border-color 160ms ease, color 160ms ease, background-color 160ms ease;
+}
+
+.account-links a > i:first-child {
+  color: #ff6600;
+  font-size: 1.05rem;
+}
+
+.account-links a > i:last-child {
+  color: #94a3b8;
+}
+
+.account-links a:hover {
+  background: #fff8f2;
+  border-color: #ffb285;
+  color: #e85d00;
+}
+
+.saved-address-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.25fr) minmax(300px, 0.75fr);
+  gap: 1.25rem;
+  align-items: start;
+}
+
+.saved-address-list,
+.saved-address-form-card {
+  min-width: 0;
+}
+
+.saved-address-card {
+  margin-top: 1rem;
+  padding: 1.15rem;
+  border: 1px solid #e6e1da;
+  border-radius: 15px;
+  background: #fff;
+}
+
+.saved-address-card.is-default {
+  border-color: #ffc59f;
+  background: #fffaf6;
+}
+
+.saved-address-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: start;
+  gap: 1rem;
+  margin-bottom: 0.6rem;
+}
+
+.saved-address-heading h3 {
+  display: inline;
+  margin: 0 0.5rem 0 0;
+  color: #17202a;
+  font-size: 1rem;
+  font-weight: 800;
+}
+
+.saved-address-default {
+  padding: 0.2rem 0.55rem;
+  border-radius: 999px;
+  background: #fff0e5;
+  color: #e85d00;
+  font-size: 0.68rem;
+  font-weight: 800;
+}
+
+.saved-address-phone,
+.saved-address-card p {
+  color: #64748b;
+  font-size: 0.84rem;
+}
+
+.saved-address-card p {
+  margin: 0.25rem 0;
+}
+
+.saved-address-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+  margin-top: 1rem;
+  padding-top: 0.8rem;
+  border-top: 1px solid #edf0f3;
+}
+
+.saved-address-actions form {
+  margin: 0;
+}
+
+.saved-address-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: #e85d00;
+  font-size: 0.78rem;
+  font-weight: 750;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.saved-address-link.is-danger {
+  color: #dc3545;
+}
+
+.saved-address-empty {
+  padding: 2.2rem 1rem 1rem;
+  color: #64748b;
+  text-align: center;
+}
+
+.saved-address-empty > i {
+  color: #ff8a3d;
+  font-size: 2rem;
+}
+
+.saved-address-empty h3 {
+  margin: 0.6rem 0 0.25rem;
+  color: #17202a;
+  font-size: 1rem;
+  font-weight: 800;
+}
+
+.saved-address-empty p {
+  margin: 0;
+  font-size: 0.85rem;
+}
+
+.saved-address-form {
+  display: grid;
+  gap: 0.85rem;
+  padding-top: 1rem;
+}
+
+.saved-address-field {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.saved-address-field > span {
+  color: #475569;
+  font-size: 0.75rem;
+  font-weight: 750;
+}
+
+.saved-address-field .form-control {
+  min-height: 43px;
+  border-color: #e2e8f0;
+  border-radius: 10px;
+  font-size: 0.88rem;
+}
+
+.saved-address-field .form-control:focus {
+  border-color: #ff9a5c;
+  box-shadow: 0 0 0 3px rgba(255, 106, 0, 0.12);
+}
+
+.saved-address-submit {
+  width: 100%;
+  padding: 0.8rem 1rem;
+  border: 0;
+  border-radius: 10px;
+  background: #ff6a00;
+  color: #fff;
+  font-weight: 800;
+}
+
+.saved-address-submit:hover {
+  background: #e85d00;
+}
+
+.saved-address-cancel {
+  color: #64748b;
+  font-size: 0.82rem;
+  font-weight: 700;
+  text-align: center;
+  text-decoration: none;
+}
+
+@media (max-width: 700px) {
+  .account-layout,
+  .account-info-grid,
+  .saved-address-layout {
+    grid-template-columns: 1fr;
+  }
+}

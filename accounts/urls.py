@@ -11,6 +11,8 @@ urlpatterns = [
     path('forgot_password_otp/', views.forgot_password_otp, name='forgot_password_otp'),
     path('reset-password/', views.reset_password, name='reset_password'),
     path('logout/', views.user_logout, name='logout'),
+    path('profile/', views.profile, name='profile'),
+    path('settings/', views.account_settings, name='account_settings'),
     
     # Category Products Endpoint
     path('category/<int:category_id>/', views.category_products, name='category_products'),

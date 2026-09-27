@@ -3,8 +3,12 @@
 
 {% block title %}My Orders{% endblock %}
 
+{% block css %}
+<link rel="stylesheet" href="{% static 'css/orders.css' %}">
+{% endblock %}
+
 {% block content %}
-<div class="container py-5">
+<div class="container py-5 order-page order-history-page">
 
     <h2 class="mb-4 fw-bold">My Orders</h2>
 
@@ -12,7 +16,7 @@
 
         {% for order in orders %}
 
-        <div class="card shadow-sm mb-4 border-0 rounded-4">
+        <div class="card shadow-sm mb-4 border-0 rounded-4 order-card">
 
             <div class="card-body">
 

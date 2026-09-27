@@ -1,9 +1,7 @@
 {% load static %}
 
 <header class="main-header">
-
     <div class="container">
-
         <div class="header-wrapper">
 
             <!-- Logo -->
@@ -13,17 +11,12 @@
                 </a>
             </div>
 
-            <!-- Search -->
+            <!-- Search Bar -->
             <div class="header-search">
+                <form action="#" method="GET" class="search-form">
+                    <input type="text" name="q" placeholder="Search products..." autocomplete="off">
 
-                <form action="#" method="GET">
-
-                    <input
-                        type="text"
-                        name="q"
-                        placeholder="Search for products...">
-
-                    <select name="category">
+                    <select name="category" class="category-select">
                         <option value="">All Categories</option>
                         <option>Kitchen</option>
                         <option>Furniture</option>
@@ -32,35 +25,27 @@
                         <option>Storage</option>
                     </select>
 
-                    <button type="submit">
+                    <button type="submit" aria-label="Search">
                         <i class="bi bi-search"></i>
                     </button>
-
                 </form>
-
             </div>
 
-            <!-- Header Icons -->
+            <!-- Header Action Icons -->
             <div class="header-icons">
 
                 {% if user.is_authenticated %}
-
-                <!-- User Profile -->
+                <!-- User Profile Dropdown -->
                 <div class="user-profile-dropdown">
-
-                    <button class="user-profile-toggle" id="userProfileToggle">
-                        <i class="bi bi-person-circle"></i>
+                    <button class="user-profile-toggle" id="userProfileToggle" type="button" aria-label="User Menu" aria-expanded="false" aria-controls="userDropdownMenu">
+                        <i class="bi bi-person"></i>
                     </button>
 
                     <div class="user-dropdown-menu" id="userDropdownMenu">
-
-                        <!-- User Header -->
                         <div class="dropdown-user-header">
-
                             <div class="user-avatar">
-                                <i class="bi bi-person-circle"></i>
+                                <i class="bi bi-person-fill"></i>
                             </div>
-
                             <div class="user-info">
                                 <p class="user-name">
                                     {{ user.first_name|default:user.username }}
@@ -69,12 +54,11 @@
                                     {{ user.email }}
                                 </p>
                             </div>
-
                         </div>
 
                         <hr class="dropdown-divider">
 
-                        <a href="#" class="dropdown-item">
+                        <a href="{% url 'profile' %}" class="dropdown-item">
                             <i class="bi bi-person"></i>
                             <span>My Profile</span>
                         </a>
@@ -89,12 +73,12 @@
                             <span>Wishlist</span>
                         </a>
 
-                        <a href="#" class="dropdown-item">
+                        <a href="{% url 'checkout:saved_addresses' %}" class="dropdown-item">
                             <i class="bi bi-map"></i>
                             <span>Saved Addresses</span>
                         </a>
 
-                        <a href="#" class="dropdown-item">
+                        <a href="{% url 'account_settings' %}" class="dropdown-item">
                             <i class="bi bi-gear"></i>
                             <span>Settings</span>
                         </a>
@@ -105,56 +89,34 @@
                             <i class="bi bi-box-arrow-right"></i>
                             <span>Logout</span>
                         </a>
-
                     </div>
-
                 </div>
 
                 {% else %}
-
                 <a href="{% url 'login' %}" class="icon-box">
                     <i class="bi bi-person"></i>
                     <span>Sign In</span>
                 </a>
-
                 {% endif %}
 
-                <a href="{% url 'wishlist:wishlist' %}" class="icon-box position-relative">
-
+                <!-- Wishlist -->
+                <a href="{% url 'wishlist:wishlist' %}" class="icon-box header-badge-wrap" aria-label="Wishlist">
                     <i class="bi bi-heart"></i>
-
-                    <span id="wishlistBadge"
-                          class="badge bg-danger position-absolute top-0 start-100 translate-middle"
-                          {% if wishlist_count == 0 %}style="display:none;"{% endif %}>
-
+                    <span id="wishlistBadge" class="header-badge"{% if wishlist_count == 0 %} style="display:none;"{% endif %}>
                         {{ wishlist_count }}
-
                     </span>
-
                 </a>
 
-                <!-- Cart -->
-                <a href="#"
-                   id="cartToggle"
-                   class="icon-box position-relative">
-
+                <!-- Cart Toggle -->
+                <a href="#" id="cartToggle" class="icon-box header-badge-wrap" aria-label="Cart">
                     <i class="bi bi-cart3"></i>
-
-                    <span
-                        id="cartBadge"
-                        class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
-                        {% if cart_count == 0 %}style="display:none;"{% endif %}>
-
+                    <span id="cartBadge" class="header-badge"{% if cart_count == 0 %} style="display:none;"{% endif %}>
                         {{ cart_count }}
-
                     </span>
-
                 </a>
 
             </div>
 
         </div>
-
     </div>
-
 </header>

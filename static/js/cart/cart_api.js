@@ -112,7 +112,7 @@ function updateCartBadge() {
 // Add To Cart
 // =========================================
 
-function addToCart(productId) {
+function addToCart(productId, quantity = 1) {
 
     return fetch(`/cart/add/${productId}/`, {
 
@@ -121,9 +121,121 @@ function addToCart(productId) {
         headers: {
 
             "X-CSRFToken": getCookie("csrftoken"),
-            "X-Requested-With": "XMLHttpRequest"
+            "X-Requested-With": "XMLHttpRequest",
+            "Content-Type": "application/x-www-form-urlencoded"
+
+        },
+
+        body: new URLSearchParams({ quantity })
+
+    })
+
+    .then(response => response.json())
+
+    .then(data => {
+
+        if (data.total_items !== undefined) {
+
+            setCartBadge(data.total_items);
 
         }
+
+        if (data.login_required && data.login_url) {
+
+            window.location.href = data.login_url;
+
+        }
+
+        return data;
+
+    });
+
+}
+
+// Intercept every add-to-cart form before the browser navigates to the JSON endpoint.
+document.addEventListener("submit", function (event) {
+
+    const form = event.target.closest('form[action*="/cart/add/"]');
+
+    if (!form) return;
+
+    event.preventDefault();
+
+    const productId = form.action.match(/\/cart\/add\/(\d+)\//)?.[1];
+    const quantity = Number(form.querySelector('[name="quantity"]')?.value || 1);
+
+    if (!productId) {
+        console.error("Unable to determine the product id for the cart request.");
+        return;
+    }
+
+    addToCart(productId, quantity)
+        .then(data => {
+            if (data.login_required) {
+                window.location.href = data.login_url;
+            } else if (data.success && typeof openDrawer === "function") {
+                openDrawer();
+            } else if (!data.success) {
+                alert(data.message || "Unable to add product.");
+            }
+        })
+        .catch(error => {
+            console.error("Add to Cart Error:", error);
+            alert("Something went wrong while adding the product.");
+        });
+
+});
+
+// =========================================
+// Remove Cart Item
+// =========================================
+
+function removeCartItem(itemId) {
+
+    return fetch(`/cart/remove/${itemId}/`, {
+
+        method: "POST",
+
+        headers: {
+            "X-CSRFToken": getCookie("csrftoken"),
+            "X-Requested-With": "XMLHttpRequest"
+        }
+
+    })
+
+    .then(response => response.json())
+
+    .then(data => {
+
+        if (data.total_items !== undefined) {
+
+            setCartBadge(data.total_items);
+
+        }
+
+        return data;
+
+    });
+
+}
+
+// =========================================
+// Update Cart Quantity
+// =========================================
+
+function updateCartQuantity(itemId, action) {
+
+    return fetch(`/cart/update/${itemId}/`, {
+
+        method: "POST",
+
+        headers: {
+            "X-CSRFToken": getCookie("csrftoken"),
+            "X-Requested-With": "XMLHttpRequest",
+            "Content-Type": "application/x-www-form-urlencoded"
+        },
+
+        body: new URLSearchParams({ action })
 
     })
 

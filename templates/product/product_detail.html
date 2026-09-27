@@ -3,8 +3,12 @@
 
 {% block title %}{{ product.name }} | Casaio{% endblock %}
 
+{% block css %}
+<link rel="stylesheet" href="{% static 'css/product.css' %}">
+{% endblock %}
+
 {% block content %}
-<div class="container py-4">
+<div class="product-page-shell">
     <!-- Breadcrumb -->
     <nav aria-label="breadcrumb" class="mb-4">
         <ol class="breadcrumb">
@@ -16,29 +20,28 @@
     </nav>
 
     <!-- Product Main Section -->
-    <div class="row g-5">
+    <div class="row g-5 product-main-grid">
         <!-- Left: Image Gallery -->
         <div class="col-lg-6">
-            <div class="card border-0 shadow-sm rounded-4 overflow-hidden mb-3 bg-white text-center p-3">
+            <div class="product-gallery-card mb-3">
                 {% if product.image %}
-                <img id="mainImage" src="{{ product.image.url }}" alt="{{ product.name }}" class="img-fluid rounded-3"
-                    style="max-height: 450px; object-fit: contain;">
+                <img id="mainImage" src="{{ product.image.url }}" alt="{{ product.name }}" class="product-main-image">
                 {% else %}
                 <img id="mainImage" src="{% static 'images/products/product1.jpg' %}" alt="Product Image"
-                    class="img-fluid rounded-3" style="max-height: 450px; object-fit: contain;">
+                    class="product-main-image">
                 {% endif %}
             </div>
             <!-- Thumbnails -->
-            <div class="d-flex gap-2 overflow-auto pb-2">
+            <div class="product-thumbnails d-flex gap-2 overflow-auto pb-2">
                 {% if product.image %}
-                <div class="thumb-box border rounded-3 p-1 bg-white cursor-pointer" style="width: 70px; height: 70px;">
-                    <img src="{{ product.image.url }}" class="w-100 h-100 rounded-2 object-fit-cover"
+                <div class="product-thumb-box">
+                    <img src="{{ product.image.url }}"
                         onclick="changeImage(this.src)" alt="Thumb">
                 </div>
                 {% endif %}
                 {% for img in product.images.all %}
-                <div class="thumb-box border rounded-3 p-1 bg-white cursor-pointer" style="width: 70px; height: 70px;">
-                    <img src="{{ img.image.url }}" class="w-100 h-100 rounded-2 object-fit-cover"
+                <div class="product-thumb-box">
+                    <img src="{{ img.image.url }}"
                         onclick="changeImage(this.src)" alt="Thumb">
                 </div>
                 {% endfor %}
@@ -46,57 +49,56 @@
         </div>
 
         <!-- Right: Product Info & Actions -->
-        <div class="col-lg-6">
-            <span class="badge text-uppercase mb-2 px-3 py-1 rounded-pill fw-semibold"
-                style="background-color: #fff3ed; color: #ff6a00; font-size: 11px;">
+        <div class="col-lg-6 product-info-panel">
+            <span class="product-category-tag">
                 {{ product.category.name|default:"Home Decor" }}
             </span>
-            <h1 class="fw-bold mb-2 text-dark display-6" style="font-size: 26px;">{{ product.name }}</h1>
+            <h1 class="product-title">{{ product.name }}</h1>
 
-            <div class="d-flex align-items-center gap-3 mb-3">
-                <div class="text-warning small">★★★★★ <span class="text-dark fw-bold ms-1">{{
+            <div class="product-rating-row">
+                <div class="product-rating-stars">★★★★★ <span class="text-dark fw-bold ms-1">{{
                         average_rating|floatformat:1 }}</span> <span class="text-muted">({{ reviews.count }}
                         reviews)</span></div>
                 <span class="text-muted">•</span>
                 <span class="text-muted small">320+ sold</span>
             </div>
 
-            <div class="d-flex align-items-baseline gap-3 mb-4">
-                <h2 class="fw-bold text-dark mb-0 fs-2">₹{{ product.current_price }}</h2>
+            <div class="product-price-wrap">
+                <h2 class="product-price mb-0">₹{{ product.current_price }}</h2>
                 {% if product.is_offer_active and product.offer_price %}
-                <span class="text-muted text-decoration-line-through fs-5">₹{{ product.selling_price }}</span>
-                <span class="badge bg-danger text-white px-2 py-1 rounded-pill small">{{ product.discount_percentage }}%
+                <span class="product-old-price">₹{{ product.selling_price }}</span>
+                <span class="product-discount-badge">{{ product.discount_percentage }}%
                     OFF</span>
                 {% endif %}
             </div>
 
-            <p class="text-muted mb-4" style="font-size: 14px; line-height: 1.6;">
+            <p class="product-description">
                 {{ product.description }}
             </p>
 
             <!-- Trust Badges Row -->
-            <div class="row g-2 mb-4 p-3 rounded-4 bg-light border-0">
-                <div class="col-4 text-center border-end">
-                    <i class="bi bi-shield-check text-warning fs-5"></i>
-                    <div class="fw-bold text-dark" style="font-size: 11px;">Premium Quality</div>
-                    <small class="text-muted" style="font-size: 10px;">Durable & long lasting</small>
+            <div class="product-trust-grid">
+                <div class="trust-box">
+                    <i class="bi bi-shield-check"></i>
+                    <strong>Premium Quality</strong>
+                    <small>Durable & long lasting</small>
                 </div>
-                <div class="col-4 text-center border-end">
-                    <i class="bi bi-arrow-counterclockwise text-warning fs-5"></i>
-                    <div class="fw-bold text-dark" style="font-size: 11px;">Easy Returns</div>
-                    <small class="text-muted" style="font-size: 10px;">7-day return policy</small>
+                <div class="trust-box">
+                    <i class="bi bi-arrow-counterclockwise"></i>
+                    <strong>Easy Returns</strong>
+                    <small>7-day return policy</small>
                 </div>
-                <div class="col-4 text-center">
-                    <i class="bi bi-truck text-warning fs-5"></i>
-                    <div class="fw-bold text-dark" style="font-size: 11px;">Free Shipping</div>
-                    <small class="text-muted" style="font-size: 10px;">Orders above ₹999</small>
+                <div class="trust-box">
+                    <i class="bi bi-truck"></i>
+                    <strong>Free Shipping</strong>
+                    <small>Orders above ₹999</small>
                 </div>
             </div>
 
             <!-- Stock Status & Quantity -->
-            <div class="mb-4">
-                <div class="d-flex align-items-center justify-content-between mb-2">
-                    <span class="fw-semibold text-dark" style="font-size: 14px;">Quantity</span>
+            <div class="product-controls mb-4">
+                <div class="product-controls-header">
+                    <span class="fw-semibold">Quantity</span>
                     {% if in_stock %}
                     <span class="text-success small fw-semibold">✔ In Stock ({{ product.stock }} available)</span>
                     {% elif low_stock %}
@@ -106,23 +108,27 @@
                     {% endif %}
                 </div>
                 <div class="d-flex align-items-center gap-3">
-                    <div class="input-group" style="width: 130px;">
-                        <button class="btn btn-outline-secondary px-3" type="button" onclick="decrementQty()">-</button>
-                        <input type="text" id="quantityInput" class="form-control text-center fw-bold" value="1"
-                            readonly>
-                        <button class="btn btn-outline-secondary px-3" type="button" onclick="incrementQty()">+</button>
+                    <div class="product-quantity-control" aria-label="Product quantity">
+                        <button class="quantity-control-btn" type="button" onclick="decrementQty()"
+                            aria-label="Decrease quantity">
+                            <i class="bi bi-dash"></i>
+                        </button>
+                        <input type="text" id="quantityInput" value="1" readonly aria-live="polite">
+                        <button class="quantity-control-btn" type="button" onclick="incrementQty()"
+                            aria-label="Increase quantity">
+                            <i class="bi bi-plus"></i>
+                        </button>
                     </div>
                 </div>
             </div>
 
             <!-- CTA Forms & Buttons -->
-            <div class="row g-3 mb-4">
+            <div class="product-action-row">
                 <div class="col-6">
                     <form id="add-to-cart-form" action="{% url 'cart:add_cart' product.id %}" method="POST">
                         {% csrf_token %}
                         <input type="hidden" name="quantity" id="hidden_qty" value="1">
-                        <button type="submit" class="btn w-100 py-3 text-white fw-semibold shadow-sm"
-                            style="background-color: #ff6a00; border-radius: 10px;">
+                        <button type="submit" class="product-main-btn">
                             <i class="bi bi-cart-fill me-2"></i> Add to Cart
                         </button>
                     </form>
@@ -131,8 +137,7 @@
                     <form action="{% url 'cart:buy_now' product.id %}" method="POST">
                         {% csrf_token %}
                         <input type="hidden" name="quantity" id="hidden_buy_qty" value="1">
-                        <button type="submit" class="btn w-100 py-3 fw-semibold shadow-sm bg-white border"
-                            style="color: #ff6a00; border-color: #ff6a00 !important; border-radius: 10px;">
+                        <button type="submit" class="product-alt-btn">
                             Buy Now
                         </button>
                     </form>
@@ -140,17 +145,15 @@
             </div>
 
             <!-- Wishlist & Share -->
-            <div class="d-flex gap-4 text-muted small">
-                <a href="#" class="text-decoration-none text-muted d-flex align-items-center gap-1"><i
-                        class="bi bi-heart"></i> Add to Wishlist</a>
-                <a href="#" class="text-decoration-none text-muted d-flex align-items-center gap-1"><i
-                        class="bi bi-share"></i> Share Product</a>
+            <div class="product-meta-links">
+                <a href="#"><i class="bi bi-heart"></i> Add to Wishlist</a>
+                <a href="#"><i class="bi bi-share"></i> Share Product</a>
             </div>
         </div>
     </div>
 
     <!-- Tabs Section: Description, Specs, Returns, Reviews -->
-    <div class="row mt-5">
+    <div class="row mt-5 product-tabs-wrap">
         <div class="col-12">
             <ul class="nav nav-tabs border-bottom" id="productTab" role="tablist">
                 <li class="nav-item" role="presentation">
@@ -170,8 +173,7 @@
                         data-bs-target="#reviews" type="button">Reviews ({{ reviews.count }})</button>
                 </li>
             </ul>
-            <div class="tab-content p-4 bg-white rounded-bottom-4 shadow-sm border border-top-0 mb-5"
-                id="productTabContent">
+            <div class="tab-content mb-5" id="productTabContent">
                 <div class="tab-pane fade show active" id="desc" role="tabpanel">
                     <h5 class="fw-bold mb-3 text-dark">Product Description</h5>
                     <p class="text-muted" style="line-height: 1.8;">{{ product.description }}</p>
@@ -221,7 +223,7 @@
     </div>
 
     <!-- Related Products: You May Also Like -->
-    <div class="row mt-4">
+    <div class="row mt-4 related-products-grid">
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h3 class="fw-bold fs-4 text-dark">You May Also Like</h3>
             <a href="{% url 'home' %}" class="text-decoration-none fw-semibold" style="color: #ff6a00;">View All →</a>
@@ -229,22 +231,18 @@
         <div class="row g-4">
             {% for rel_product in related_products %}
             <div class="col-12 col-sm-6 col-lg-3">
-                <div class="card border rounded-3 p-3 h-100 shadow-sm bg-white">
+                <div class="related-card h-100">
                     {% if rel_product.image %}
-                    <img src="{{ rel_product.image.url }}" class="card-img-top rounded"
-                        style="height: 180px; object-fit: cover;" alt="{{ rel_product.name }}">
+                    <img src="{{ rel_product.image.url }}" alt="{{ rel_product.name }}">
                     {% else %}
-                    <img src="{% static 'images/products/product1.jpg' %}" class="card-img-top rounded"
-                        style="height: 180px; object-fit: cover;" alt="Product">
+                    <img src="{% static 'images/products/product1.jpg' %}" alt="Product">
                     {% endif %}
-                    <div class="card-body p-0 pt-3">
-                        <small class="text-muted text-uppercase" style="font-size: 11px;">{{ rel_product.category.name
-                            }}</small>
-                        <h6 class="fw-semibold text-dark mt-1" style="font-size: 15px;">{{ rel_product.name }}</h6>
-                        <div class="fw-bold text-dark mt-2 mb-3">₹{{ rel_product.current_price }}</div>
+                    <div class="related-card-body">
+                        <small>{{ rel_product.category.name }}</small>
+                        <h6>{{ rel_product.name }}</h6>
+                        <div class="related-price">₹{{ rel_product.current_price }}</div>
                         <a href="{% url 'product_detail' rel_product.slug %}"
-                            class="btn btn-sm w-100 text-white fw-semibold"
-                            style="background-color: #ff6a00; border-radius: 8px;">View Details</a>
+                            class="btn w-100">View Details</a>
                     </div>
                 </div>
             </div>
@@ -271,6 +269,9 @@
         input.value = val + 1;
         if (hiddenQty) hiddenQty.value = input.value;
         if (hiddenBuyQty) hiddenBuyQty.value = input.value;
+        input.classList.remove('quantity-changed');
+        void input.offsetWidth;
+        input.classList.add('quantity-changed');
     }
     function decrementQty() {
         let input = document.getElementById('quantityInput');
@@ -281,43 +282,10 @@
             input.value = val - 1;
             if (hiddenQty) hiddenQty.value = input.value;
             if (hiddenBuyQty) hiddenBuyQty.value = input.value;
+            input.classList.remove('quantity-changed');
+            void input.offsetWidth;
+            input.classList.add('quantity-changed');
         }
     }
-
-    // AJAX Handler for Add to Cart form submission
-    document.getElementById('add-to-cart-form').addEventListener('submit', function (e) {
-        e.preventDefault();
-        let form = this;
-        let formData = new FormData(form);
-
-        fetch(form.action, {
-            method: 'POST',
-            body: formData,
-            headers: {
-                'X-Requested-With': 'XMLHttpRequest',
-                'X-CSRFToken': form.querySelector('[name=csrfmiddlewaretoken]').value
-            }
-        })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    document.querySelectorAll('.cart-count-badge').forEach(badge => {
-                        badge.innerText = data.total_items;
-                    });
-
-                    let drawer = document.querySelector('.cart-drawer');
-                    let overlay = document.getElementById('cartOverlay');
-                    if (drawer) drawer.classList.add('active');
-                    if (overlay) overlay.classList.add('active');
-
-                    if (typeof loadCartData === 'function') {
-                        loadCartData();
-                    } else {
-                        location.reload();
-                    }
-                }
-            })
-            .catch(error => console.error('Error:', error));
-    });
 </script>
 {% endblock %}

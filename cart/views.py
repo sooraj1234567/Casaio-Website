@@ -4,14 +4,28 @@ from django.contrib import messages
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views.decorators.http import require_POST
+from urllib.parse import urlencode
 
 from .models import Cart, CartItem
 from product.models import Product
 
 
-@login_required
 @require_POST
 def add_to_cart(request, product_id):
+    if not request.user.is_authenticated:
+        next_url = request.META.get("HTTP_REFERER", "/")
+        login_url = f"/accounts/login/?{urlencode({'next': next_url})}"
+
+        if request.headers.get("X-Requested-With") == "XMLHttpRequest":
+            return JsonResponse({
+                "success": False,
+                "login_required": True,
+                "login_url": login_url,
+                "message": "Please log in to add items to your cart.",
+            }, status=401)
+
+        return redirect(login_url)
+
     product = get_object_or_404(
         Product,
         id=product_id

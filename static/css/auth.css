@@ -1,587 +1,274 @@
-/* =====================================
-   GOOGLE FONT
-===================================== */
+/* =========================================================
+   AUTH PAGES STYLES
+   ========================================================= */
 
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap');
-
-/* =====================================
-   RESET
-===================================== */
-
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-    font-family:'Poppins',sans-serif;
+:root {
+  --auth-bg: #f5f1ec;
+  --auth-panel: #ffffff;
+  --auth-border: rgba(17, 24, 39, 0.08);
+  --auth-text: #1b1d20;
+  --auth-muted: #64748b;
+  --auth-accent: #ff6600;
+  --auth-accent-soft: #fff1e8;
+  --auth-shadow: 0 24px 64px rgba(15, 23, 42, 0.12);
 }
 
-:root{
-
-    --primary:#ff6a00;
-    --primary-light:#ff8c32;
-    --dark:#222;
-    --gray:#666;
-    --light:#fff;
-    --border:#e8e8e8;
-    --background:#f5f7fb;
-
+body {
+  background: linear-gradient(135deg, #f7f3ef 0%, #f3f4f6 100%);
 }
 
-body{
-
-    background:var(--background);
-
+.auth-container {
+  min-height: calc(100vh - 140px);
+  display: grid;
+  grid-template-columns: 1.1fr 1fr;
+  max-width: 1220px;
+  margin: 2rem auto;
+  background: rgba(255, 255, 255, 0.7);
+  border: 1px solid var(--auth-border);
+  border-radius: 28px;
+  overflow: hidden;
+  box-shadow: var(--auth-shadow);
 }
 
-/* =====================================
-   MAIN CONTAINER
-===================================== */
-
-.auth-container{
-
-    width:1150px;
-    max-width:95%;
-    min-height:680px;
-
-    margin:60px auto;
-
-    position:relative;
-
-    display:flex;
-
-    overflow:hidden;
-
-    background:#fff;
-
-    border-radius:25px;
-
-    box-shadow:0 25px 60px rgba(0,0,0,.12);
-
-}
-/* =====================================
-   LEFT PANEL
-===================================== */
-
-.auth-left{
-
-    width:45%;
-
-    background:linear-gradient(135deg,#ff6a00,#ff8c32);
-
-    color:#fff;
-
-    display:flex;
-
-    justify-content:center;
-
-    align-items:center;
-
-    padding:60px;
-
+.auth-left {
+  background: linear-gradient(160deg, #fff7ed 0%, #ffffff 100%);
+  position: relative;
+  padding: 3rem 2.5rem;
 }
 
-.left-content{
-
-    width:100%;
-
+.auth-left::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at top left, rgba(255, 102, 0, 0.14), transparent 38%);
 }
 
-.auth-logo{
-
-    width:180px;
-
-    margin-bottom:35px;
-
+.left-content {
+  position: relative;
+  z-index: 1;
+  color: var(--auth-text);
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
-.left-content h1{
-
-    font-size:42px;
-
-    font-weight:700;
-
-    margin-bottom:20px;
-
+.auth-logo {
+  width: 140px;
+  margin-bottom: 1.5rem;
 }
 
-.left-content p{
-
-    font-size:17px;
-
-    line-height:30px;
-
-    margin-bottom:35px;
-
+.auth-left h1 {
+  font-size: clamp(2.1rem, 4vw, 3.1rem);
+  line-height: 1.1;
+  font-weight: 800;
+  margin-bottom: 1rem;
+  letter-spacing: -0.04em;
 }
 
-.features{
-
-    list-style:none;
-
-    padding:0;
-
+.auth-left p {
+  color: #64748b;
+  font-size: 1rem;
+  line-height: 1.7;
+  max-width: 500px;
 }
 
-.features li{
-
-    margin-bottom:18px;
-
-    font-size:17px;
-
-    font-weight:500;
-
+.features {
+  list-style: none;
+  padding: 0;
+  margin: 1.8rem 0 0;
+  display: grid;
+  gap: 0.8rem;
+  color: var(--auth-text);
+  font-weight: 600;
 }
 
-/* =====================================
-   RIGHT PANEL
-===================================== */
-
-.auth-right{
-
-    width:55%;
-
-    display:flex;
-
-    justify-content:center;
-
-    align-items:center;
-
-    padding:60px;
-
-    background:#fff;
-
+.auth-right {
+  background: #fff;
+  padding: 3rem 2.4rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-/* =====================================
-   FORM BOX
-===================================== */
-
-.form-box{
-
-    width:100%;
-    max-width:430px;
-
+.form-box {
+  width: 100%;
+  max-width: 430px;
 }
 
-.form-box h2{
-
-    font-size:38px;
-
-    color:var(--dark);
-
-    margin-bottom:10px;
-
-    font-weight:700;
-
+.form-box h2 {
+  font-size: clamp(1.9rem, 3vw, 2.5rem);
+  font-weight: 800;
+  color: var(--auth-text);
+  margin: 0 0 0.5rem;
 }
 
-.form-box p{
-
-    color:#777;
-
-    margin-bottom:30px;
-
+.form-box p {
+  color: var(--auth-muted);
+  margin-bottom: 1.8rem;
+  line-height: 1.6;
 }
 
-/* =====================================
-   FORM
-===================================== */
-
-.form-box form{
-
-    width:100%;
-
+.form-box form {
+  display: grid;
+  gap: 1rem;
 }
 
-/* =====================================
-   INPUTS
-===================================== */
-
-.form-box input{
-
-    width:100%;
-
-    height:58px;
-
-    padding:0 18px;
-
-    margin-bottom:18px;
-
-    border:1px solid #ddd;
-
-    border-radius:12px;
-
-    font-size:15px;
-
-    transition:.3s;
-
-    background:#fff;
-
+.form-box input[type="text"],
+.form-box input[type="email"],
+.form-box input[type="password"] {
+  width: 100%;
+  border: 1px solid rgba(148, 163, 184, 0.35);
+  border-radius: 14px;
+  padding: 0.95rem 1rem;
+  background: #fbfbfc;
+  font-size: 0.96rem;
+  color: var(--auth-text);
+  transition: all 0.2s ease;
 }
 
-.form-box input:focus{
-
-    border-color:var(--primary);
-
-    outline:none;
-
-    box-shadow:0 0 12px rgba(255,106,0,.2);
-
+.form-box input:focus {
+  outline: none;
+  border-color: rgba(255, 102, 0, 0.75);
+  box-shadow: 0 0 0 4px rgba(255, 102, 0, 0.1);
+  background: #fff;
 }
 
-/* =====================================
-   BUTTON
-===================================== */
-
-.form-box button{
-
-    width:100%;
-
-    height:58px;
-
-    border:none;
-
-    border-radius:12px;
-
-    background:var(--primary);
-
-    color:#fff;
-
-    font-size:17px;
-
-    font-weight:600;
-
-    cursor:pointer;
-
-    transition:.3s;
-
+.password-box {
+  position: relative;
 }
 
-.form-box button:hover{
-
-    background:#e65d00;
-
+.password-box input {
+  padding-right: 3rem;
 }
 
-/* =====================================
-   LINKS
-===================================== */
-
-.auth-links{
-
-    margin-top:30px;
-
-    text-align:center;
-
+.toggle-password {
+  position: absolute;
+  right: 0.9rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--auth-muted);
+  cursor: pointer;
+  font-size: 1.1rem;
 }
 
-.auth-links a{
-
-    color:var(--primary);
-
-    text-decoration:none;
-
-    font-weight:600;
-
+.remember-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  font-size: 0.9rem;
+  color: var(--auth-muted);
 }
 
-.auth-links p{
-
-    margin-top:18px;
-
+.remember-row label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
-/* =====================================
-   HOVER EFFECT
-===================================== */
-
-.form-box{
-
-    animation:fadeUp .8s ease;
-
+.remember-row input[type="checkbox"] {
+  accent-color: var(--auth-accent);
 }
 
-@keyframes fadeUp{
-
-    from{
-
-        opacity:0;
-
-        transform:translateY(40px);
-
-    }
-
-    to{
-
-        opacity:1;
-
-        transform:translateY(0);
-
-    }
-
+.remember-row a,
+.bottom-text a {
+  color: var(--auth-accent);
+  text-decoration: none;
+  font-weight: 700;
 }
 
-/* =====================================
-   RESPONSIVE
-===================================== */
-
-@media(max-width:992px){
-
-.auth-container{
-
-    flex-direction:column;
-
-    min-height:auto;
-
+.form-box button[type="submit"],
+.google-btn {
+  width: 100%;
+  border: none;
+  border-radius: 14px;
+  padding: 0.95rem 1rem;
+  font-weight: 700;
+  font-size: 0.96rem;
+  transition: all 0.2s ease;
 }
 
-.auth-left{
-
-    width:100%;
-
-    padding:50px 35px;
-
+.form-box button[type="submit"] {
+  background: linear-gradient(135deg, #ff7d32 0%, #ff6600 100%);
+  color: #fff;
+  box-shadow: 0 16px 28px rgba(255, 102, 0, 0.25);
 }
 
-.auth-right{
-
-    width:100%;
-
-    padding:50px 30px;
-
+.form-box button[type="submit"]:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 18px 30px rgba(255, 102, 0, 0.3);
 }
 
-.left-content{
-
-    text-align:center;
-
+.divider {
+  position: relative;
+  text-align: center;
+  margin: 1.5rem 0;
+  color: var(--auth-muted);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
 }
 
-.features{
-
-    display:inline-block;
-
-    text-align:left;
-
+.divider::before {
+  content: "";
+  position: absolute;
+  inset: 50% 0 auto 0;
+  height: 1px;
+  background: rgba(148, 163, 184, 0.35);
 }
 
+.divider span {
+  position: relative;
+  background: #fff;
+  padding: 0 0.85rem;
 }
 
-@media(max-width:576px){
-
-.auth-container{
-
-    border-radius:15px;
-
+.google-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  text-decoration: none;
+  color: var(--auth-text);
+  background: #fff;
+  border: 1px solid rgba(148, 163, 184, 0.4);
+  margin-bottom: 1.2rem;
 }
 
-.auth-left{
-
-    padding:40px 25px;
-
+.google-btn:hover {
+  border-color: rgba(255, 102, 0, 0.45);
+  background: var(--auth-accent-soft);
 }
 
-.auth-right{
-
-    padding:35px 20px;
-
+.google-btn img {
+  width: 18px;
+  height: 18px;
 }
 
-.auth-logo{
-
-    width:150px;
-
+.bottom-text {
+  text-align: center;
+  color: var(--auth-muted);
+  font-size: 0.96rem;
 }
 
-.left-content h1{
-
-    font-size:32px;
-
+.alert {
+  border-radius: 12px;
+  border: 1px solid rgba(148, 163, 184, 0.2);
+  margin-bottom: 1rem;
 }
 
-.form-box h2{
-
-    font-size:30px;
-
-}
-
-.form-box input{
-
-    height:52px;
-
-}
-
-.form-box button{
-
-    height:52px;
-
-}
-
-}
-.password-box{
-    position:relative;
-}
-
-.password-box input{
-    padding-right:50px;
-}
-
-.toggle-password{
-
-    position:absolute;
-
-    top:50%;
-    right:18px;
-
-    transform:translateY(-50%);
-
-    cursor:pointer;
-
-    color:#777;
-
-    font-size:18px;
-
-}
-
-.toggle-password:hover{
-    color:#ff6a00;
-}
-
-/* =====================================
-   REMEMBER ROW
-===================================== */
-
-.remember-row{
-
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-
-    margin:20px 0 25px;
-
-}
-
-.remember-row label{
-
-    display:flex;
-    align-items:center;
-    gap:8px;
-
-    font-size:14px;
-    color:#555;
-
-    cursor:pointer;
-
-}
-
-.remember-row input[type="checkbox"]{
-
-    width:16px;
-    height:16px;
-
-    accent-color:var(--primary);
-
-}
-
-.remember-row a{
-
-    color:var(--primary);
-
-    font-size:14px;
-
-    text-decoration:none;
-
-    font-weight:500;
-
-}
-
-.remember-row a:hover{
-
-    text-decoration:underline;
-
-}
-
-/* =====================================
-   DIVIDER
-===================================== */
-
-.divider{
-
-    display:flex;
-    align-items:center;
-
-    margin:30px 0;
-
-}
-
-.divider::before,
-.divider::after{
-
-    content:"";
-
-    flex:1;
-
-    height:1px;
-
-    background:#ddd;
-
-}
-
-.divider span{
-
-    margin:0 15px;
-
-    color:#888;
-
-    font-size:14px;
-
-    font-weight:500;
-
-}
-/* =====================================
-   GOOGLE BUTTON
-===================================== */
-
-.google-btn{
-
-    width:100%;
-    height:56px;
-
-    border:1px solid #ddd;
-    border-radius:12px;
-
-    background:#fff;
-
-    display:flex;
-    justify-content:center;
-    align-items:center;
-
-    gap:12px;
-
-    font-size:15px;
-    font-weight:600;
-
-    cursor:pointer;
-
-    transition:.3s;
-
-}
-
-.google-btn img{
-
-    width:22px;
-    height:22px;
-
-}
-
-.google-btn:hover{
-
-    background:#f8f8f8;
-
-    border-color:var(--primary);
-
-    transform:translateY(-2px);
-
-    box-shadow:0 8px 20px rgba(0,0,0,.08);
-
+@media (max-width: 991px) {
+  .auth-container {
+    grid-template-columns: 1fr;
+    margin: 1rem;
+  }
+
+  .auth-left {
+    padding: 2rem 1.5rem;
+  }
+
+  .auth-right {
+    padding: 2rem 1.25rem 2.5rem;
+  }
 }

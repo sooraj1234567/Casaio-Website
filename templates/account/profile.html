@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ page_title }} | Casaio{% endblock %}
+
+{% block css %}
+<link rel="stylesheet" href="{% static 'css/account.css' %}">
+{% endblock %}
+
+{% block content %}
+<section class="account-page">
+    <div class="container">
+        <div class="account-heading">
+            <span class="account-eyebrow">Casaio account</span>
+            <h1>{{ page_title }}</h1>
+            <p>Manage your personal details and shopping preferences.</p>
+        </div>
+
+        <div class="account-layout">
+            <aside class="account-card account-summary">
+                <div class="account-avatar"><i class="bi bi-person"></i></div>
+                <h2>{{ user.first_name|default:user.username }}</h2>
+                <p>{{ user.email }}</p>
+                <a class="account-action" href="{% url 'logout' %}">Log out <i class="bi bi-arrow-right"></i></a>
+            </aside>
+
+            <div class="account-card account-details">
+                <div class="account-card-heading">
+                    <div>
+                        <span class="account-eyebrow">Account overview</span>
+                        <h2>Welcome back</h2>
+                    </div>
+                    <i class="bi bi-person-check"></i>
+                </div>
+
+                <div class="account-info-grid">
+                    <div>
+                        <span>Username</span>
+                        <strong>{{ user.username }}</strong>
+                    </div>
+                    <div>
+                        <span>Email address</span>
+                        <strong>{{ user.email|default:'Not added yet' }}</strong>
+                    </div>
+                    <div>
+                        <span>Account type</span>
+                        <strong>{{ user.role|default:'Customer'|title }}</strong>
+                    </div>
+                    <div>
+                        <span>Member since</span>
+                        <strong>{{ user.date_joined|date:'d M Y' }}</strong>
+                    </div>
+                </div>
+
+                <div class="account-links">
+                    <a href="{% url 'checkout:saved_addresses' %}"><i class="bi bi-geo-alt"></i><span>Manage saved addresses</span><i class="bi bi-arrow-up-right"></i></a>
+                    <a href="{% url 'orders:my_orders' %}"><i class="bi bi-bag-check"></i><span>View your orders</span><i class="bi bi-arrow-up-right"></i></a>
+                    <a href="{% url 'wishlist:wishlist' %}"><i class="bi bi-heart"></i><span>Open your wishlist</span><i class="bi bi-arrow-up-right"></i></a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

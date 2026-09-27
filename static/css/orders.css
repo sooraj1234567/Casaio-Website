@@ -1,0 +1,218 @@
+/* Customer order pages */
+.order-page {
+  --order-accent: #ff6a00;
+  --order-ink: #1f2937;
+  --order-muted: #64748b;
+  --order-line: #e9edf2;
+  color: var(--order-ink);
+  min-height: 55vh;
+}
+
+.order-page > .btn-outline-dark {
+  border-color: #d9dee5;
+  border-radius: 10px;
+  color: #374151;
+  font-weight: 600;
+  padding: 0.65rem 1rem;
+  transition: color 160ms ease, background 160ms ease, border-color 160ms ease;
+}
+
+.order-page > .btn-outline-dark:hover {
+  color: #fff;
+  background: var(--order-ink);
+  border-color: var(--order-ink);
+}
+
+.order-page h2,
+.order-page h3,
+.order-page h4,
+.order-page h5 {
+  color: var(--order-ink);
+  letter-spacing: -0.025em;
+}
+
+.order-card {
+  overflow: hidden;
+  border-radius: 18px !important;
+  background: #fff;
+  box-shadow: 0 12px 35px rgba(15, 23, 42, 0.065) !important;
+  transition: transform 180ms ease, box-shadow 180ms ease;
+}
+
+.order-history-page .order-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 18px 42px rgba(15, 23, 42, 0.1) !important;
+}
+
+.order-card > .card-body {
+  padding: clamp(1.15rem, 3vw, 2rem);
+}
+
+.order-history-page > h2 {
+  margin-bottom: 1.5rem !important;
+  font-size: clamp(1.7rem, 3vw, 2.2rem);
+  font-weight: 750 !important;
+}
+
+.order-history-page .order-card h5,
+.order-detail-page h3 {
+  font-weight: 750;
+}
+
+.order-history-page .order-card p,
+.order-detail-page p {
+  color: #596579;
+  line-height: 1.65;
+}
+
+.order-page .badge {
+  padding: 0.42rem 0.7rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+}
+
+.order-page .btn-dark {
+  background: var(--order-accent);
+  border-color: var(--order-accent);
+  border-radius: 9px;
+  font-weight: 650;
+}
+
+.order-page .btn-dark:hover {
+  background: #e85f00;
+  border-color: #e85f00;
+}
+
+.order-page .btn-outline-danger,
+.order-page .btn-danger {
+  border-radius: 9px;
+  font-weight: 600;
+}
+
+.order-detail-page .order-card hr {
+  margin: 1.6rem 0;
+  border-color: var(--order-line);
+  opacity: 1;
+}
+
+.order-detail-page h5 {
+  margin-top: 0.2rem;
+  font-size: 1.05rem;
+  font-weight: 750;
+}
+
+.order-detail-page .table {
+  margin: 0.75rem 0 1rem;
+  border-color: var(--order-line);
+  color: #475569;
+  vertical-align: middle;
+}
+
+.order-detail-page .table thead th {
+  padding: 0.85rem 0.75rem;
+  background: #f8fafc;
+  color: #475569;
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.045em;
+  white-space: nowrap;
+}
+
+.order-detail-page .table td {
+  padding: 0.9rem 0.75rem;
+}
+
+.order-detail-page .table tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.order-detail-page .row > div p {
+  margin-bottom: 0.55rem;
+}
+
+.order-detail-page .row > .text-end h3 {
+  color: var(--order-accent);
+}
+
+.order-success-page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding-top: clamp(4rem, 10vw, 8rem) !important;
+  padding-bottom: clamp(4rem, 10vw, 8rem) !important;
+}
+
+.order-success-page > i {
+  display: grid;
+  width: 96px;
+  height: 96px;
+  place-items: center;
+  border-radius: 50%;
+  background: #ecfdf3;
+  color: #16a34a !important;
+  font-size: 3.5rem !important;
+}
+
+.order-success-page h2 {
+  margin-top: 1.5rem !important;
+  font-size: clamp(1.7rem, 4vw, 2.35rem);
+  font-weight: 800;
+}
+
+.order-success-page p {
+  margin: 0.65rem 0 1.2rem;
+  color: var(--order-muted) !important;
+}
+
+.order-success-page h4 {
+  padding: 0.8rem 1.2rem;
+  border: 1px solid #ffdfca;
+  border-radius: 12px;
+  background: #fff8f3;
+  color: #b94b00;
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.order-success-page .btn {
+  padding: 0.8rem 1.35rem;
+}
+
+@media (max-width: 767.98px) {
+  .order-page.container {
+    padding-top: 2rem !important;
+    padding-bottom: 2.5rem !important;
+  }
+
+  .order-detail-page .table-responsive {
+    overflow-x: auto;
+  }
+
+  .order-detail-page .table {
+    min-width: 680px;
+  }
+
+  .order-detail-page .row > .text-end {
+    margin-top: 1.25rem;
+    text-align: left !important;
+  }
+
+  .order-history-page .order-card .col-md-4 {
+    text-align: left !important;
+  }
+
+  .order-history-page .order-card .d-flex {
+    justify-content: flex-start !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .order-card,
+  .order-page > .btn-outline-dark {
+    transition: none;
+  }
+}

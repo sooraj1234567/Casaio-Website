@@ -9,7 +9,8 @@ document.addEventListener('DOMContentLoaded', function () {
     userProfileToggle.addEventListener('click', function (e) {
 
         e.stopPropagation();
-        userDropdownMenu.classList.toggle('active');
+        const isOpen = userDropdownMenu.classList.toggle('show');
+        userProfileToggle.setAttribute('aria-expanded', String(isOpen));
 
     });
 
@@ -17,7 +18,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
         item.addEventListener('click', function () {
 
-            userDropdownMenu.classList.remove('active');
+            userDropdownMenu.classList.remove('show');
+            userProfileToggle.setAttribute('aria-expanded', 'false');
 
         });
 
@@ -27,7 +29,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
         if (!e.target.closest('.user-profile-dropdown')) {
 
-            userDropdownMenu.classList.remove('active');
+            userDropdownMenu.classList.remove('show');
+            userProfileToggle.setAttribute('aria-expanded', 'false');
 
         }
 
@@ -37,7 +40,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
         if (e.key === 'Escape') {
 
-            userDropdownMenu.classList.remove('active');
+            userDropdownMenu.classList.remove('show');
+            userProfileToggle.setAttribute('aria-expanded', 'false');
 
         }
 

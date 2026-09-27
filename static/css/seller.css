@@ -1,0 +1,223 @@
+/* =========================================================
+   SELLER DASHBOARD STYLES
+   ========================================================= */
+
+.seller-shell {
+  max-width: 1500px;
+  margin: 0 auto;
+  padding-bottom: 3rem;
+}
+
+.seller-hero {
+  background: linear-gradient(135deg, #fff7ed 0%, #ffffff 100%);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 28px;
+  padding: 2rem 2rem 1.5rem;
+  margin-bottom: 1.25rem;
+  box-shadow: 0 20px 48px rgba(15, 23, 42, 0.14);
+}
+
+.seller-eyebrow {
+  color: #ffb07c;
+  font-size: 0.75rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  margin-bottom: 0.8rem;
+}
+
+.seller-hero h1 {
+  margin: 0;
+  color: #17202a;
+  font-size: clamp(2rem, 3vw, 3rem);
+  font-weight: 800;
+  letter-spacing: -0.04em;
+}
+
+.seller-hero p {
+  margin: 0.75rem 0 0;
+  color: #64748b;
+  max-width: 640px;
+}
+
+.seller-hero-actions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.seller-hero .btn-primary,
+.seller-hero .btn-outline-light {
+  border-radius: 12px;
+  padding: 0.72rem 1rem;
+  font-weight: 700;
+}
+
+.seller-hero .btn-outline-light {
+  color: #17202a;
+  border-color: rgba(23, 32, 42, 0.22);
+}
+
+.seller-hero .btn-primary {
+  background: linear-gradient(135deg, #ff7d32 0%, #ff6600 100%);
+  border: none;
+}
+
+.seller-metrics {
+  margin-bottom: 1rem;
+}
+
+.seller-metric {
+  background: #fff;
+  border: 1px solid rgba(148, 163, 184, 0.15);
+  border-radius: 20px;
+  padding: 1.2rem 1.1rem;
+  box-shadow: 0 10px 26px rgba(15, 23, 42, 0.03);
+}
+
+.seller-metric-label {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.8rem;
+  color: #64748b;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.seller-metric-icon {
+  width: 38px;
+  height: 38px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #fff5ee;
+  color: #ff6600;
+}
+
+.seller-metric-value {
+  font-size: clamp(2rem, 3vw, 2.5rem);
+  font-weight: 900;
+  color: #111827;
+  line-height: 1.1;
+  margin-top: 0.7rem;
+}
+
+.seller-panel-link {
+  color: #ff6600;
+  text-decoration: none;
+  font-weight: 700;
+}
+
+.seller-panel {
+  background: #fff;
+  border: 1px solid rgba(148, 163, 184, 0.15);
+  border-radius: 22px;
+  padding: 1.25rem 1.2rem;
+  box-shadow: 0 12px 28px rgba(15, 23, 42, 0.03);
+}
+
+.seller-panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.seller-panel-header h2 {
+  margin: 0;
+  color: #111827;
+  font-size: 1.2rem;
+  font-weight: 800;
+}
+
+.seller-panel-header p {
+  margin: 0.25rem 0 0;
+  color: #64748b;
+  font-size: 0.9rem;
+}
+
+.seller-chart-wrap {
+  height: 260px;
+}
+
+.seller-table {
+  margin-bottom: 0;
+}
+
+.seller-table th {
+  color: #475569;
+  font-size: 0.74rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  border-bottom: 1px solid rgba(148, 163, 184, 0.2);
+}
+
+.seller-table td {
+  color: #111827;
+  vertical-align: middle;
+  padding-top: 0.9rem;
+  padding-bottom: 0.9rem;
+}
+
+.seller-product-name {
+  font-weight: 700;
+}
+
+.seller-stock-low {
+  color: #dc2626;
+  font-weight: 700;
+}
+
+.seller-stock-ok {
+  color: #16a34a;
+  font-weight: 700;
+}
+
+.seller-status {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  padding: 0.35rem 0.75rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.seller-status-active {
+  background: #ebfdf2;
+  color: #15803d;
+}
+
+.seller-status-inactive {
+  background: #f7f7f8;
+  color: #475569;
+}
+
+.seller-order-form {
+  min-width: 200px;
+}
+
+.seller-order-form .form-select,
+.seller-order-form .btn {
+  border-radius: 10px;
+}
+
+.seller-order-form .btn {
+  background: #111827;
+  color: #fff;
+  border: none;
+}
+
+@media (max-width: 991px) {
+  .seller-hero {
+    padding: 1.5rem 1.2rem;
+  }
+
+  .seller-hero-actions {
+    justify-content: flex-start;
+    margin-top: 1rem;
+  }
+}
