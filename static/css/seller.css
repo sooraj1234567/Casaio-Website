@@ -10,7 +10,7 @@
 
 .seller-hero {
   background: linear-gradient(135deg, #fff7ed 0%, #ffffff 100%);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(234, 88, 12, 0.12);
   border-radius: 28px;
   padding: 2rem 2rem 1.5rem;
   margin-bottom: 1.25rem;
@@ -18,7 +18,7 @@
 }
 
 .seller-eyebrow {
-  color: #ffb07c;
+  color: #c2410c;
   font-size: 0.75rem;
   font-weight: 800;
   text-transform: uppercase;
@@ -219,5 +219,232 @@
   .seller-hero-actions {
     justify-content: flex-start;
     margin-top: 1rem;
+  }
+}
+
+/* Shared seller-page styling. These selectors stay scoped so store/admin pages
+   that use the same Bootstrap components keep their existing appearance. */
+.seller-page,
+.seller-shell {
+  --seller-orange: #f97316;
+  --seller-orange-dark: #ea580c;
+  --seller-charcoal: #17212b;
+  --seller-muted: #64748b;
+  --seller-border: #e8edf2;
+  color: var(--seller-charcoal);
+}
+
+.seller-page h1,
+.seller-page h2,
+.seller-page h3,
+.seller-page h4,
+.seller-shell h1,
+.seller-shell h2,
+.seller-shell h3,
+.seller-shell h4 {
+  color: #17212b;
+  letter-spacing: -0.025em;
+}
+
+.seller-page > .d-flex,
+.seller-page > .row,
+.seller-page .seller-page-heading {
+  min-width: 0;
+}
+
+.seller-page .card {
+  border: 1px solid var(--seller-border) !important;
+  border-radius: 18px !important;
+  box-shadow: 0 12px 30px rgba(23, 33, 43, 0.055) !important;
+}
+
+.seller-page .card > .card-body {
+  padding: 1.25rem;
+}
+
+.seller-page hr {
+  border-color: var(--seller-border);
+  opacity: 1;
+}
+
+.seller-page .text-muted {
+  color: var(--seller-muted) !important;
+}
+
+.seller-page .btn {
+  border-radius: 10px;
+  font-weight: 650;
+  transition: background-color 0.18s ease, border-color 0.18s ease,
+    color 0.18s ease, box-shadow 0.18s ease, transform 0.18s ease;
+}
+
+.seller-page .btn-primary,
+.seller-page .btn-success {
+  color: #fff;
+  background: linear-gradient(135deg, #fb843c, #f56613);
+  border-color: #f56613;
+}
+
+.seller-page .btn-primary:hover,
+.seller-page .btn-success:hover {
+  color: #fff;
+  background: #e85b0b;
+  border-color: #e85b0b;
+  box-shadow: 0 6px 16px rgba(234, 88, 12, 0.2);
+  transform: translateY(-1px);
+}
+
+.seller-page .btn-dark {
+  color: #fff;
+  background: var(--seller-charcoal);
+  border-color: var(--seller-charcoal);
+}
+
+.seller-page .btn-outline-primary {
+  color: var(--seller-orange-dark);
+  border-color: rgba(234, 88, 12, 0.45);
+}
+
+.seller-page .btn-outline-primary:hover {
+  color: #fff;
+  background: var(--seller-orange-dark);
+  border-color: var(--seller-orange-dark);
+}
+
+.seller-page .form-label {
+  color: #344256;
+  font-size: 0.92rem;
+}
+
+.seller-page .form-control,
+.seller-page .form-select,
+.seller-page input:not([type="checkbox"]):not([type="radio"]):not([type="hidden"]),
+.seller-page select,
+.seller-page textarea {
+  min-height: 44px;
+  color: #263445;
+  border-color: #dce3e9;
+  border-radius: 10px;
+}
+
+.seller-page textarea {
+  min-height: 120px;
+}
+
+.seller-page .form-control:focus,
+.seller-page .form-select:focus,
+.seller-page input:focus,
+.seller-page select:focus,
+.seller-page textarea:focus {
+  border-color: rgba(249, 115, 22, 0.7);
+  box-shadow: 0 0 0 0.22rem rgba(249, 115, 22, 0.14);
+}
+
+.seller-page input[type="file"] {
+  padding: 0.55rem 0.7rem;
+}
+
+.seller-page .table-responsive {
+  border-radius: 12px;
+  scrollbar-color: #cbd5e1 transparent;
+}
+
+.seller-page .table {
+  min-width: 640px;
+  color: #334155;
+}
+
+.seller-page .table thead th {
+  padding: 0.85rem 0.9rem;
+  color: #526174;
+  background: #f7f8fa;
+  border-bottom: 1px solid #e5eaf0;
+  font-size: 0.76rem;
+  font-weight: 750;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.seller-page .table tbody td {
+  padding: 0.85rem 0.9rem;
+  border-color: #edf0f3;
+  vertical-align: middle;
+}
+
+.seller-page .table tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.seller-page .table tbody tr:hover td {
+  background: #fffaf6;
+}
+
+.seller-page .badge {
+  border-radius: 999px;
+  font-weight: 700;
+}
+
+.seller-page .alert {
+  border-radius: 12px;
+}
+
+.seller-page ul.errorlist {
+  margin: 0.35rem 0 0;
+  padding-left: 1.15rem;
+  color: #b42318;
+  font-size: 0.875rem;
+}
+
+.seller-shell .seller-panel,
+.seller-shell .seller-metric {
+  border-color: var(--seller-border);
+}
+
+@media (max-width: 767.98px) {
+  .seller-page.container,
+  .seller-page.container-fluid {
+    padding-left: 1rem !important;
+    padding-right: 1rem !important;
+  }
+
+  .seller-page.container.py-5 {
+    padding-top: 1.75rem !important;
+    padding-bottom: 1.75rem !important;
+  }
+
+  .seller-page > .d-flex.justify-content-between {
+    align-items: flex-start !important;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .seller-page .card .card-body {
+    padding: 1rem;
+  }
+
+  .seller-page form .d-flex.justify-content-between {
+    align-items: flex-start !important;
+    flex-direction: column;
+  }
+
+  .seller-shell .seller-hero {
+    border-radius: 20px;
+  }
+
+  .seller-shell .seller-panel {
+    padding: 1rem;
+  }
+
+  .seller-shell .seller-panel-header {
+    align-items: flex-start;
+  }
+
+  .seller-shell .seller-chart-wrap {
+    height: 220px;
+  }
+
+  .seller-shell .seller-order-form {
+    min-width: 190px;
   }
 }

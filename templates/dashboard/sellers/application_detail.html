@@ -1,114 +1,59 @@
 {% extends "dashboard/AdBase.html" %}
 {% load static %}
 
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/dashboard/admin-people.css' %}">
+{% endblock %}
+
 {% block content %}
+<section class="people-page" aria-labelledby="application-detail-title">
+    <nav class="people-breadcrumb" aria-label="Breadcrumb">
+        <a href="{% url 'dashboard:seller_application_list' %}"><i class="fas fa-arrow-left" aria-hidden="true"></i> Back to applications</a>
+    </nav>
 
-<div class="page-header">
-    <div>
-        <h1>Seller Application</h1>
-        <p>Review the seller's application details.</p>
-    </div>
-
-    <a href="{% url 'dashboard:seller_application_list' %}" class="btn btn-secondary">
-        ← Back to Applications
-    </a>
-</div>
-
-<div class="card">
-
-    <div class="detail-grid">
-
-        <div class="detail-item">
-            <span class="detail-label">Applicant Name</span>
-            <strong>
-                {{ application.user.get_full_name|default:application.user.username }}
-            </strong>
-        </div>
-
-        <div class="detail-item">
-            <span class="detail-label">Email</span>
-            <strong>{{ application.user.email }}</strong>
-        </div>
-
-        <div class="detail-item">
-            <span class="detail-label">Phone</span>
-            <strong>
-                {{ application.user.phone_number|default:"—" }}
-            </strong>
-        </div>
-
-        <div class="detail-item">
-            <span class="detail-label">Username</span>
-            <strong>{{ application.user.username }}</strong>
-        </div>
-
-        <div class="detail-item">
-            <span class="detail-label">Business Name</span>
-            <strong>{{ application.business_name }}</strong>
-        </div>
-
-        <div class="detail-item">
-            <span class="detail-label">Business Category</span>
-            <strong>
-                {% if application.business_category %}
-                {{ application.business_category.name }}
-                {% else %}
-                —
-                {% endif %}
-            </strong>
-        </div>
-
-        <div class="detail-item">
-            <span class="detail-label">Application Status</span>
-            <strong>{{ application.get_status_display }}</strong>
-        </div>
-
-        <div class="detail-item">
-            <span class="detail-label">Applied On</span>
-            <strong>
-                {{ application.applied_at|date:"d M Y, h:i A" }}
-            </strong>
-        </div>
-
-    </div>
-
-</div>
-
-
-{% if application.status == "pending" %}
-
-<div class="card">
-
-    <div class="page-header">
+    <header class="people-heading">
         <div>
-            <h2>Application Decision</h2>
-            <p>Approve or reject this seller application.</p>
+            <span class="people-eyebrow">Marketplace · Application review</span>
+            <h1 id="application-detail-title">{{ application.business_name }}</h1>
+            <p>Review applicant information and the requested business profile.</p>
         </div>
-    </div>
+        <span class="people-badge people-badge--application people-badge--{{ application.status }}">{{ application.get_status_display }}</span>
+    </header>
 
-    <div class="action-buttons">
+    <section class="people-panel" aria-labelledby="application-info-title">
+        <div class="people-panel-heading">
+            <div><h2 id="application-info-title">Application details</h2><p>Applicant and business information submitted for review.</p></div>
+            <span class="people-heading-icon" aria-hidden="true"><i class="fas fa-file-lines"></i></span>
+        </div>
+        <dl class="people-info-list people-info-grid">
+            <div><dt>Applicant name</dt><dd>{{ application.user.get_full_name|default:application.user.username }}</dd></div>
+            <div><dt>Email</dt><dd>{{ application.user.email|default:"—" }}</dd></div>
+            <div><dt>Phone</dt><dd>{{ application.user.phone_number|default:"—" }}</dd></div>
+            <div><dt>Username</dt><dd>{{ application.user.username }}</dd></div>
+            <div><dt>Business name</dt><dd>{{ application.business_name }}</dd></div>
+            <div><dt>Business category</dt><dd>{% if application.business_category %}{{ application.business_category.name }}{% else %}—{% endif %}</dd></div>
+            <div><dt>Application status</dt><dd><span class="people-badge people-badge--application people-badge--{{ application.status }}">{{ application.get_status_display }}</span></dd></div>
+            <div><dt>Applied on</dt><dd>{{ application.applied_at|date:"d M Y, h:i A" }}</dd></div>
+        </dl>
+    </section>
 
-        <form method="post" action="{% url 'dashboard:seller_application_approve' application.pk %}">
-            {% csrf_token %}
-
-            <button type="submit" class="btn btn-primary">
-                Approve Seller
-            </button>
-        </form>
-
-
-        <form method="post" action="{% url 'dashboard:seller_application_reject' application.pk %}">
-            {% csrf_token %}
-
-            <button type="submit" class="btn btn-danger">
-                Reject Application
-            </button>
-        </form>
-
-    </div>
-
-</div>
-
-{% endif %}
-
+    {% if application.status == "pending" %}
+    <section class="people-panel people-decision-panel" aria-labelledby="application-decision-title">
+        <div class="people-panel-heading">
+            <div><h2 id="application-decision-title">Application decision</h2><p>Choose whether to approve or reject this seller application.</p></div>
+            <span class="people-heading-icon people-heading-icon--secure" aria-hidden="true"><i class="fas fa-scale-balanced"></i></span>
+        </div>
+        <div class="people-decision-actions">
+            <form method="post" action="{% url 'dashboard:seller_application_approve' application.pk %}">
+                {% csrf_token %}
+                <button type="submit" class="people-button people-button--success"><i class="fas fa-check" aria-hidden="true"></i> Approve seller</button>
+            </form>
+            <form method="post" action="{% url 'dashboard:seller_application_reject' application.pk %}">
+                {% csrf_token %}
+                <button type="submit" class="people-button people-button--danger"><i class="fas fa-xmark" aria-hidden="true"></i> Reject application</button>
+            </form>
+        </div>
+    </section>
+    {% endif %}
+</section>
 {% endblock %}

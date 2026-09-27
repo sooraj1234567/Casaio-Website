@@ -1,113 +1,98 @@
 {% extends "dashboard/AdBase.html" %}
-
 {% load static %}
 
 {% block title %}Add Category{% endblock %}
-
 {% block page_title %}Categories{% endblock %}
 
 {% block content %}
-
-<div class="page-header">
-
+<div class="category-editor-heading">
     <div>
-        <h2>Add Category</h2>
-        <p>Create a new category for your store.</p>
+        <a href="{% url 'dashboard:category_list' %}" class="product-back-link">
+            <i class="fas fa-arrow-left" aria-hidden="true"></i>
+            Back to categories
+        </a>
+        <h1>Create a category</h1>
+        <p>Organize your store and help customers find the right products.</p>
     </div>
-
-    <a href="{% url 'dashboard:category_list' %}" class="back-btn">
-        <i class="fas fa-arrow-left"></i>
-        Back
-    </a>
-
+    <span class="editor-step"><i class="fas fa-folder-plus" aria-hidden="true"></i> New category</span>
 </div>
 
-<div class="form-card">
+<form method="POST" enctype="multipart/form-data" class="category-editor-form">
+    {% csrf_token %}
+    <div class="category-editor-layout">
+        <div class="category-editor-main">
+            <section class="editor-section">
+                <div class="editor-section-heading">
+                    <span class="editor-section-icon"><i class="fas fa-sitemap" aria-hidden="true"></i></span>
+                    <div>
+                        <h2>Category details</h2>
+                        <p>Choose a clear name and optional parent category.</p>
+                    </div>
+                </div>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="{{ form.name.id_for_label }}">Category name</label>
+                        {{ form.name }}
+                        {% for error in form.name.errors %}<span class="field-error">{{ error }}</span>{% endfor %}
+                    </div>
+                    <div class="form-group">
+                        <label for="{{ form.parent.id_for_label }}">Parent category</label>
+                        {{ form.parent }}
+                        <small class="field-help">Choose a parent to create a subcategory, or leave at the top level.</small>
+                        {% for error in form.parent.errors %}<span class="field-error">{{ error }}</span>{% endfor %}
+                    </div>
+                    <div class="form-group full-width">
+                        <label for="{{ form.description.id_for_label }}">Description <span class="optional-label">Optional</span></label>
+                        {{ form.description }}
+                        {% for error in form.description.errors %}<span class="field-error">{{ error }}</span>{% endfor %}
+                    </div>
+                </div>
+            </section>
+            <section class="editor-section">
+                <div class="editor-section-heading">
+                    <span class="editor-section-icon"><i class="fas fa-image" aria-hidden="true"></i></span>
+                    <div>
+                        <h2>Category image</h2>
+                        <p>Add an image to give this category a visual identity.</p>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="{{ form.image.id_for_label }}">Upload image <span class="optional-label">Optional</span></label>
+                    {{ form.image }}
+                    <small class="field-help">Choose a clear image that represents the products in this category.</small>
+                    {% for error in form.image.errors %}<span class="field-error">{{ error }}</span>{% endfor %}
+                </div>
+                <div id="image-preview" class="category-image-preview" aria-live="polite"></div>
+            </section>
+        </div>
 
-    <form method="POST" enctype="multipart/form-data">
-
-        {% csrf_token %}
-
-        <div class="form-grid">
-
-            <div class="form-group">
-
-                <label>Category Name</label>
-
-                {{ form.name }}
-
-                {% if form.name.errors %}
-                <small class="error">{{ form.name.errors.0 }}</small>
-                {% endif %}
-
-            </div>
-
-            <div class="form-group">
-
-                <label>Parent Category</label>
-
-                {{ form.parent }}
-
-                {% if form.parent.errors %}
-                <small class="error">{{ form.parent.errors.0 }}</small>
-                {% endif %}
-
-            </div>
-
-            <div class="form-group full-width">
-
-                <label>Description</label>
-
-                {{ form.description }}
-
-                {% if form.description.errors %}
-                <small class="error">{{ form.description.errors.0 }}</small>
-                {% endif %}
-
-            </div>
-
-            <div class="form-group full-width">
-
-                <label>Category Image</label>
-
-                {{ form.image }}
-
-                <div id="image-preview"></div>
-
-                {% if form.image.errors %}
-                <small class="error">{{ form.image.errors.0 }}</small>
-                {% endif %}
-
-            </div>
-
-            <div class="form-group checkbox-group">
-
-                {{ form.is_active }}
-
-                <label for="id_is_active">
-                    Active Category
+        <aside class="category-editor-aside">
+            <section class="editor-section publish-section">
+                <div class="editor-section-heading">
+                    <span class="editor-section-icon"><i class="fas fa-store" aria-hidden="true"></i></span>
+                    <div>
+                        <h2>Visibility</h2>
+                        <p>Control whether customers can browse this category.</p>
+                    </div>
+                </div>
+                <label class="editor-checkbox">
+                    {{ form.is_active }}
+                    <span><strong>Active category</strong><small>Customers can see and browse this category.</small></span>
                 </label>
-
+                {% for error in form.is_active.errors %}<span class="field-error">{{ error }}</span>{% endfor %}
+            </section>
+            {% if form.non_field_errors %}
+            <div class="editor-form-errors" role="alert">
+                {% for error in form.non_field_errors %}<p>{{ error }}</p>{% endfor %}
             </div>
-
-        </div>
-
-        <div class="form-actions">
-
-            <a href="{% url 'dashboard:category_list' %}" class="cancel-btn">
-                Cancel
-            </a>
-
-            <button type="submit" class="save-btn">
-                Save Category
-            </button>
-
-        </div>
-
-    </form>
-
-</div>
-
+            {% endif %}
+            <div class="editor-actions">
+                <a href="{% url 'dashboard:category_list' %}" class="cancel-btn">Cancel</a>
+                <button type="submit" class="save-btn"><i class="fas fa-check" aria-hidden="true"></i> Save category</button>
+            </div>
+        </aside>
+    </div>
+</form>
 {% endblock %}
 
 {% block extra_js %}

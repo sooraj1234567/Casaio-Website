@@ -194,6 +194,7 @@ ACCOUNT_EMAIL_VERIFICATION = "none"
 RAZORPAY_MODE = os.getenv("RAZORPAY_MODE", "live").strip().lower()
 RAZORPAY_KEY_ID = os.getenv("RAZORPAY_KEY_ID", "").strip()
 RAZORPAY_KEY_SECRET = os.getenv("RAZORPAY_KEY_SECRET", "").strip()
+GOOGLE_MAPS_API_KEY = os.getenv("GOOGLE_MAPS_API_KEY", "").strip()
 
 if RAZORPAY_MODE not in {"test", "live"}:
     raise ValueError("RAZORPAY_MODE must be either 'test' or 'live'.")

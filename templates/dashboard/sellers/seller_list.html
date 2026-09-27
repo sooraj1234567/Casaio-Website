@@ -1,182 +1,84 @@
 {% extends "dashboard/AdBase.html" %}
 {% load static %}
 
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/dashboard/admin-people.css' %}">
+{% endblock %}
+
 {% block content %}
-
-<div class="page-header">
-    <div>
-        <h1>Seller Management</h1>
-        <p>Manage and monitor sellers registered on your platform.</p>
-    </div>
-</div>
-
-
-<div class="seller-summary">
-
-    <div class="seller-stat-card">
-        <div class="seller-stat-icon">
-            <i class="fas fa-store"></i>
-        </div>
-
+<section class="people-page" aria-labelledby="seller-list-title">
+    <header class="people-heading">
         <div>
-            <span>Total Sellers</span>
-            <strong>{{ sellers|length }}</strong>
+            <span class="people-eyebrow">Marketplace</span>
+            <h1 id="seller-list-title">Seller management</h1>
+            <p>Manage seller accounts and monitor access to your marketplace.</p>
         </div>
+    </header>
+
+    <div class="people-stats people-stats--single" aria-label="Seller overview">
+        <article class="people-stat">
+            <span class="people-stat-icon" aria-hidden="true"><i class="fas fa-store"></i></span>
+            <div><span class="people-stat-label">Seller accounts</span><strong>{{ sellers|length }}</strong></div>
+        </article>
     </div>
 
-    <div class="seller-stat-card">
-        <div class="seller-stat-icon">
-            <i class="fas fa-user-check"></i>
+    <section class="people-panel" aria-labelledby="seller-directory-title">
+        <div class="people-panel-heading">
+            <div>
+                <h2 id="seller-directory-title">Seller directory</h2>
+                <p>View account details and current access status.</p>
+            </div>
+            <span class="people-count">{{ sellers|length }} sellers</span>
         </div>
-
-        <div>
-            <span>Active Sellers</span>
-            <strong>
-                {{ sellers|length }}
-            </strong>
-        </div>
-    </div>
-
-</div>
-
-
-<div class="seller-card">
-
-    <div class="seller-card-header">
-
-        <div>
-            <h3>
-                <i class="fas fa-store"></i>
-                All Sellers
-            </h3>
-
-            <p>
-                View and manage seller accounts.
-            </p>
-        </div>
-
-    </div>
-
-
-    <div class="seller-table-wrapper">
-
-        {% if sellers %}
-
-        <table class="seller-table">
-
-            <thead>
-                <tr>
-                    <th>SELLER</th>
-                    <th>EMAIL</th>
-                    <th>PHONE</th>
-                    <th>JOINED</th>
-                    <th>STATUS</th>
-                    <th>ACTION</th>
-                </tr>
-            </thead>
-
-            <tbody>
-
-                {% for seller in sellers %}
-
-                <tr>
-
-                    <td>
-                        <div class="seller-info">
-
-                            <div class="seller-avatar">
-                                {{ seller.username|first|upper }}
-                            </div>
-
-                            <div>
-                                <strong>
-                                    {{ seller.get_full_name|default:seller.username }}
-                                </strong>
-
-                                <span>
-                                    @{{ seller.username }}
+        <div class="people-table-scroll" role="region" aria-label="Seller directory table" tabindex="0">
+            {% if sellers %}
+            <table class="people-table people-seller-table">
+                <thead>
+                    <tr>
+                        <th scope="col">Seller</th><th scope="col">Contact</th><th scope="col">Phone</th>
+                        <th scope="col">Joined</th><th scope="col">Status</th>
+                        <th scope="col"><span class="people-sr-only">Actions</span></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for seller in sellers %}
+                    <tr>
+                        <td>
+                            <div class="people-identity">
+                                <span class="people-avatar people-avatar--initial" aria-hidden="true">{{ seller.username|first|upper }}</span>
+                                <span class="people-identity-copy">
+                                    <strong>{{ seller.get_full_name|default:seller.username }}</strong>
+                                    <small>@{{ seller.username }}</small>
                                 </span>
                             </div>
-
-                        </div>
-                    </td>
-
-
-                    <td>
-                        <span class="seller-email">
-                            {{ seller.email|default:"—" }}
-                        </span>
-                    </td>
-
-
-                    <td>
-                        {{ seller.phone_number|default:"—" }}
-                    </td>
-
-
-                    <td>
-                        {{ seller.date_joined|date:"d M Y" }}
-                    </td>
-
-
-                    <td>
-
-                        {% if seller.is_active %}
-
-                        <span class="seller-status active">
-                            <i class="fas fa-circle"></i>
-                            Active
-                        </span>
-
-                        {% else %}
-
-                        <span class="seller-status inactive">
-                            <i class="fas fa-circle"></i>
-                            Inactive
-                        </span>
-
-                        {% endif %}
-
-                    </td>
-
-
-                    <td>
-
-                        <a href="{% url 'dashboard:seller_detail' seller.pk %}" class="seller-view-btn">
-                            <i class="fas fa-eye"></i>
-                            View
-                        </a>
-
-                    </td>
-
-                </tr>
-
-                {% endfor %}
-
-            </tbody>
-
-        </table>
-
-        {% else %}
-
-        <div class="empty-sellers">
-
-            <div class="empty-icon">
-                <i class="fas fa-store"></i>
+                        </td>
+                        <td class="people-contact"><span>{{ seller.email|default:"—" }}</span></td>
+                        <td>{{ seller.phone_number|default:"—" }}</td>
+                        <td class="people-nowrap">{{ seller.date_joined|date:"d M Y" }}</td>
+                        <td>
+                            {% if seller.is_active %}
+                            <span class="people-badge people-badge--active"><span aria-hidden="true"></span>Active</span>
+                            {% else %}
+                            <span class="people-badge people-badge--blocked"><span aria-hidden="true"></span>Inactive</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <a href="{% url 'dashboard:seller_detail' seller.pk %}" class="people-button people-button--quiet">
+                                <i class="fas fa-eye" aria-hidden="true"></i> View seller
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+            <div class="people-empty">
+                <span class="people-empty-icon" aria-hidden="true"><i class="fas fa-store"></i></span>
+                <strong>No sellers found</strong>
+                <p>There are currently no seller accounts registered.</p>
             </div>
-
-            <h3>No sellers found</h3>
-
-            <p>
-                There are currently no seller accounts registered.
-            </p>
-
+            {% endif %}
         </div>
-
-        {% endif %}
-
-    </div>
-
-</div>
-
+    </section>
+</section>
 {% endblock %}

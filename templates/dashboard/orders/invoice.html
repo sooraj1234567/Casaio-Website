@@ -1,197 +1,82 @@
 {% load static %}
-
 <!DOCTYPE html>
-
 <html lang="en">
-
 <head>
-
     <meta charset="UTF-8">
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>
-
-        Invoice {{ order.order_number }}
-
-    </title>
-
+    <title>Invoice {{ order.order_number }} | Casaio</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-
+    <link rel="stylesheet" href="{% static 'css/dashboard/admin-orders.css' %}">
 </head>
-
-<body>
-
-    <div class="invoice-page">
-
-        <div class="invoice-container">
-
-            <div class="invoice-header">
-
-                <div>
-
-                    <div class="logo">
-                        <a href="/">
-                            <img src="{% static 'images/logo.png' %}" alt="Casaio">
-                        </a>
-                    </div>
-                    <p>Premium Home & Living Store</p>
-
+<body class="admin-invoice-body">
+    <main class="admin-invoice">
+        <article class="invoice-sheet" aria-labelledby="invoice-title">
+            <header class="invoice-header">
+                <div class="invoice-brand">
+                    <a href="/" aria-label="Casaio home"><img src="{% static 'images/logo.png' %}" alt="Casaio"></a>
+                    <p>Premium Home &amp; Living Store</p>
                 </div>
-
-                <div class="invoice-info">
-
-                    <h2>Invoice</h2>
-
+                <div class="invoice-meta">
+                    <p class="invoice-kicker">Casaio · Order receipt</p>
+                    <h1 id="invoice-title">Invoice</h1>
                     <p><strong>Invoice No:</strong> {{ order.order_number }}</p>
-
                     <p><strong>Date:</strong> {{ order.created_at|date:"d M Y" }}</p>
-
                 </div>
+            </header>
 
+            <div class="invoice-information">
+                <section aria-labelledby="invoice-bill-to">
+                    <h2 id="invoice-bill-to"><i class="fas fa-location-dot" aria-hidden="true"></i> Bill to</h2>
+                    <address>
+                        <strong>{{ order.address.full_name }}</strong>
+                        <span>{{ order.address.house_name }}</span>
+                        <span>{{ order.address.area }}</span>
+                        <span>{{ order.address.city }}, {{ order.address.state }}</span>
+                        <span>{{ order.address.pincode }}</span>
+                        <span>{{ order.address.phone_number }}</span>
+                    </address>
+                </section>
+                <section aria-labelledby="invoice-payment">
+                    <h2 id="invoice-payment"><i class="fas fa-credit-card" aria-hidden="true"></i> Payment</h2>
+                    <p><strong>Method:</strong> {{ order.get_payment_method_display }}</p>
+                    <p><strong>Status:</strong> {% if order.payment_status %}Paid{% else %}Pending{% endif %}</p>
+                    <p><strong>Order Status:</strong> {{ order.get_status_display }}</p>
+                </section>
             </div>
 
-            <hr>
-
-            <div class="invoice-grid">
-
-                <div>
-
-                    <h3>Bill To</h3>
-
-                    <p><strong>{{ order.address.full_name }}</strong></p>
-                    <p>{{ order.address.house_name }}</p>
-                    <p>{{ order.address.area }}</p>
-                    <p>{{ order.address.city }}, {{ order.address.state }}</p>
-                    <p>{{ order.address.pincode }}</p>
-                    <p>{{ order.address.phone_number }}</p>
-
+            <section class="invoice-items" aria-label="Invoice items">
+                <div class="invoice-table-scroll">
+                    <table class="invoice-table">
+                        <thead>
+                            <tr><th scope="col">Product</th><th scope="col">Qty</th><th scope="col">Price</th><th scope="col">Total</th></tr>
+                        </thead>
+                        <tbody>
+                            {% for item in order.items.all %}
+                            <tr>
+                                <td>{{ item.product.name }}</td>
+                                <td>{{ item.quantity }}</td>
+                                <td>₹{{ item.price }}</td>
+                                <td>₹{{ item.total_price }}</td>
+                            </tr>
+                            {% empty %}
+                            <tr><td colspan="4" class="invoice-empty">No products found.</td></tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
                 </div>
+            </section>
 
-                <div>
+            <footer class="invoice-totals">
+                <div><p>Subtotal</p><p>Total</p></div>
+                <div><p>₹{{ order.subtotal }}</p><h2>₹{{ order.total }}</h2></div>
+            </footer>
+        </article>
 
-                    <h3>Payment</h3>
-
-                    <p>
-                        <strong>Method:</strong>
-                        {{ order.get_payment_method_display }}
-                    </p>
-
-                    <p>
-                        <strong>Status:</strong>
-
-                        {% if order.payment_status %}
-
-                        Paid
-
-                        {% else %}
-
-                        Pending
-
-                        {% endif %}
-
-                    </p>
-
-                    <p>
-                        <strong>Order Status:</strong>
-
-                        {{ order.get_status_display }}
-
-                    </p>
-
-                </div>
-
-            </div>
-
-            <table class="invoice-table">
-
-                <thead>
-
-                    <tr>
-
-                        <th>Product</th>
-                        <th>Qty</th>
-                        <th>Price</th>
-                        <th>Total</th>
-
-                    </tr>
-
-                </thead>
-
-                <tbody>
-
-                    {% for item in order.items.all %}
-
-                    <tr>
-
-                        <td>{{ item.product.name }}</td>
-
-                        <td>{{ item.quantity }}</td>
-
-                        <td>₹{{ item.price }}</td>
-
-                        <td>₹{{ item.total_price }}</td>
-
-                    </tr>
-
-                    {% endfor %}
-
-                </tbody>
-
-            </table>
-
-            <div class="invoice-total">
-
-                <div>
-
-                    <p>Subtotal</p>
-
-                    <p>Total</p>
-
-                </div>
-
-                <div>
-
-                    <p>₹{{ order.subtotal }}</p>
-
-                    <h3>₹{{ order.total }}</h3>
-
-                </div>
-
-            </div>
-
-        </div>
-
-        <div class="invoice-actions">
-
-            <button onclick="window.print()" class="print-btn">
-
-                <i class="fas fa-print"></i>
-
-                Print Invoice
-
-            </button>
-
-            <a href="{% url 'dashboard:download_invoice_pdf' order.id %}" class="pdf-btn">
-
-                <i class="fas fa-file-pdf"></i>
-
-                Download PDF
-
-            </a>
-
-            <a href="{% url 'dashboard:order_detail' order.id %}" class="back-btn">
-
-                <i class="fas fa-arrow-left"></i>
-
-                Back
-
-            </a>
-
-        </div>
-
-    </div>
-
+        <nav class="invoice-actions" aria-label="Invoice actions">
+            <button onclick="window.print()" class="invoice-action invoice-action--primary" type="button"><i class="fas fa-print" aria-hidden="true"></i> Print invoice</button>
+            <a href="{% url 'dashboard:download_invoice_pdf' order.id %}" class="invoice-action invoice-action--secondary"><i class="fas fa-file-pdf" aria-hidden="true"></i> Download PDF</a>
+            <a href="{% url 'dashboard:order_detail' order.id %}" class="invoice-action invoice-action--quiet"><i class="fas fa-arrow-left" aria-hidden="true"></i> Back to order</a>
+        </nav>
+    </main>
 </body>
-
 </html>

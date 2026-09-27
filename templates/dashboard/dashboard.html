@@ -1,209 +1,88 @@
 {% extends "dashboard/AdBase.html" %}
+{% load static %}
 
-{% block title %}
-Dashboard
-{% endblock %}
+{% block title %}Dashboard{% endblock %}
+{% block page_title %}Dashboard{% endblock %}
 
-{% block page_title %}
-Dashboard
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/dashboard/admin-overview.css' %}">
 {% endblock %}
 
 {% block content %}
-
-<div class="dashboard-header">
-
+<div class="overview-welcome">
     <div>
-
-        <h1>Good Morning 👋</h1>
-
-        <p>Here's what's happening with your store today.</p>
-
+        <span class="overview-eyebrow">STORE OVERVIEW</span>
+        <h1>Good morning <span aria-hidden="true">👋</span></h1>
+        <p>Here’s what’s happening with your store today.</p>
     </div>
-
+    <a href="{% url 'dashboard:product_list' %}" class="add-btn">
+        <i class="fas fa-box-open" aria-hidden="true"></i>
+        Manage products
+    </a>
 </div>
 
+<section class="overview-stats" aria-label="Store statistics">
+    <article class="overview-stat-card">
+        <span class="overview-stat-icon overview-revenue"><i class="fas fa-pound-sign" aria-hidden="true"></i></span>
+        <div><span>Total revenue</span><strong>£{{ total_revenue }}</strong><small>Delivered and paid orders</small></div>
+    </article>
+    <article class="overview-stat-card">
+        <span class="overview-stat-icon overview-orders"><i class="fas fa-cart-shopping" aria-hidden="true"></i></span>
+        <div><span>Total orders</span><strong>{{ total_orders }}</strong><small>Orders placed in your store</small></div>
+    </article>
+    <article class="overview-stat-card">
+        <span class="overview-stat-icon overview-customers"><i class="fas fa-users" aria-hidden="true"></i></span>
+        <div><span>Customers</span><strong>{{ total_customers }}</strong><small>Registered store customers</small></div>
+    </article>
+    <article class="overview-stat-card">
+        <span class="overview-stat-icon overview-products"><i class="fas fa-box-open" aria-hidden="true"></i></span>
+        <div><span>Products</span><strong>{{ total_products }}</strong><small>Products in your catalog</small></div>
+    </article>
+</section>
 
-<!-- ===========================
-     STATISTICS CARDS
-=========================== -->
-
-<div class="stats-grid">
-
-    <div class="stat-card">
-
-        <div class="stat-icon revenue">
-            <i class="fas fa-pound-sign"></i>
-        </div>
-
-        <div>
-
-            <h5>Total Revenue</h5>
-
-            <h2>£{{ total_revenue }}</h2>
-
-        </div>
-
-    </div>
-
-    <div class="stat-card">
-
-        <div class="stat-icon orders">
-            <i class="fas fa-cart-shopping"></i>
-        </div>
-
-        <div>
-
-            <h5>Total Orders</h5>
-
-            <h2>{{ total_orders }}</h2>
-
-        </div>
-
-    </div>
-
-    <div class="stat-card">
-
-        <div class="stat-icon users">
-            <i class="fas fa-users"></i>
-        </div>
-
-        <div>
-
-            <h5>Customers</h5>
-
-            <h2>{{ total_customers }}</h2>
-
-        </div>
-
-    </div>
-
-    <div class="stat-card">
-
-        <div class="stat-icon products">
-            <i class="fas fa-box-open"></i>
-        </div>
-
-        <div>
-
-            <h5>Products</h5>
-
-            <h2>{{ total_products }}</h2>
-
-        </div>
-
-    </div>
-
-</div>
-
-
-<!-- ===========================
-     RECENT ORDERS
-=========================== -->
-
-<div class="dashboard-section">
-
+<section class="dashboard-section overview-orders-card">
     <div class="section-header">
-
-        <h3>Recent Orders</h3>
-
-        <a href="{% url 'dashboard:order_list' %}" class="view-all">
-            View All
-        </a>
-
+        <div>
+            <h3>Recent orders</h3>
+            <p class="overview-section-caption">Keep up with the latest activity from your customers.</p>
+        </div>
+        <a href="{% url 'dashboard:order_list' %}" class="view-all">View all orders <i class="fas fa-arrow-right" aria-hidden="true"></i></a>
     </div>
-
     <div class="table-wrapper">
-
-        <table class="orders-table">
-
+        <table class="orders-table overview-recent-orders">
             <thead>
-
                 <tr>
-
-                    <th>Order ID</th>
-
-                    <th>Customer</th>
-
-                    <th>Date</th>
-
-                    <th>Total</th>
-
-                    <th>Payment</th>
-
-                    <th>Status</th>
-
+                    <th scope="col">Order ID</th>
+                    <th scope="col">Customer</th>
+                    <th scope="col">Date</th>
+                    <th scope="col">Total</th>
+                    <th scope="col">Payment</th>
+                    <th scope="col">Status</th>
                 </tr>
-
             </thead>
-
             <tbody>
-
                 {% for order in recent_orders %}
-
                 <tr>
-
-                    <td>
-                        {{ order.order_number|default:"-" }}
-                    </td>
-
-                    <td>
-                        {{ order.user.username }}
-                    </td>
-
-                    <td>
-                        {{ order.created_at|date:"d M Y" }}
-                    </td>
-
-                    <td>
-                        £{{ order.total }}
-                    </td>
-
-                    <td>
-
-                        {% if order.payment_method == "cod" %}
-
-                        Cash on Delivery
-
-                        {% else %}
-
-                        Razorpay
-
-                        {% endif %}
-
-                    </td>
-
-                    <td>
-
-                        <span class="status {{ order.status }}">
-
-                            {{ order.get_status_display }}
-
-                        </span>
-
-                    </td>
-
+                    <td><strong class="overview-order-number">{{ order.order_number|default:"-" }}</strong></td>
+                    <td>{{ order.user.username }}</td>
+                    <td>{{ order.created_at|date:"d M Y" }}</td>
+                    <td><strong>£{{ order.total }}</strong></td>
+                    <td>{% if order.payment_method == "cod" %}Cash on Delivery{% else %}Razorpay{% endif %}</td>
+                    <td><span class="status {{ order.status }}">{{ order.get_status_display }}</span></td>
                 </tr>
-
                 {% empty %}
-
                 <tr>
-
-                    <td colspan="6" class="empty-state">
-
-                        No recent orders found.
-
+                    <td colspan="6">
+                        <div class="product-empty-state">
+                            <span><i class="fas fa-receipt" aria-hidden="true"></i></span>
+                            <strong>No recent orders</strong>
+                            <p>New customer orders will appear here.</p>
+                        </div>
                     </td>
-
                 </tr>
-
                 {% endfor %}
-
             </tbody>
-
         </table>
-
     </div>
-
-</div>
-
+</section>
 {% endblock %}

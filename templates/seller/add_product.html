@@ -1,8 +1,14 @@
 {% extends 'base.html' %}
+{% load static %}
+
 {% block title %}Add Product{% endblock %}
 
+{% block css %}
+<link rel="stylesheet" href="{% static 'css/seller.css' %}">
+{% endblock %}
+
 {% block content %}
-<div class="container mt-4" style="max-width: 600px;">
+<div class="container mt-4 seller-page" style="max-width: 600px;">
     <h2>Add New Product</h2>
     <form method="POST" enctype="multipart/form-data" class="mt-3">
         {% csrf_token %}

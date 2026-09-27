@@ -1,299 +1,123 @@
 {% extends "dashboard/AdBase.html" %}
 {% load static %}
 
+{% block title %}Reviews &amp; Ratings{% endblock %}
+{% block page_title %}Reviews &amp; Ratings{% endblock %}
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/dashboard/admin-engagement.css' %}">
+{% endblock %}
+
 {% block content %}
-
-<div class="page-header">
-    <div>
-        <h1>Reviews & Ratings</h1>
-        <p>Manage customer reviews and product ratings.</p>
-    </div>
-</div>
-
-
-<!-- FILTERS -->
-
-<div class="review-filter-card">
-
-    <form method="GET" class="review-filter-form">
-
-        <div class="review-search">
-            <i class="fas fa-search"></i>
-
-            <input type="text" name="search" value="{{ search }}" placeholder="Search customer, product or review...">
+<div class="engagement-page engagement-reviews">
+    <header class="page-header engagement-page-header">
+        <div>
+            <span class="engagement-eyebrow">Customer feedback</span>
+            <h1>Reviews &amp; Ratings</h1>
+            <p>Explore product feedback and understand the customer experience.</p>
         </div>
+    </header>
 
-
-        <div class="review-rating-filter">
-
-            <select name="rating">
-
-                <option value="">All Ratings</option>
-
-                <option value="5" {% if rating_5_selected %}selected{% endif %}>
-                    ⭐ 5 Stars
-                </option>
-
-                <option value="4" {% if rating_4_selected %}selected{% endif %}>
-                    ⭐ 4 Stars
-                </option>
-
-                <option value="3" {% if rating_3_selected %}selected{% endif %}>
-                    ⭐ 3 Stars
-                </option>
-
-                <option value="2" {% if rating_2_selected %}selected{% endif %}>
-                    ⭐ 2 Stars
-                </option>
-
-                <option value="1" {% if rating_1_selected %}selected{% endif %}>
-                    ⭐ 1 Star
-                </option>
-
+    <form method="GET" class="engagement-filter-bar engagement-review-filters">
+        <div class="engagement-search-field engagement-review-search">
+            <label for="review-search">Search reviews</label>
+            <div class="engagement-input-wrap">
+                <i class="fas fa-search" aria-hidden="true"></i>
+                <input id="review-search" type="search" name="search" value="{{ search }}" placeholder="Customer, product, or review text">
+            </div>
+        </div>
+        <div class="engagement-filter-field">
+            <label for="review-rating">Rating</label>
+            <select id="review-rating" name="rating">
+                <option value="">All ratings</option>
+                <option value="5" {% if rating_5_selected %}selected{% endif %}>5 stars</option>
+                <option value="4" {% if rating_4_selected %}selected{% endif %}>4 stars</option>
+                <option value="3" {% if rating_3_selected %}selected{% endif %}>3 stars</option>
+                <option value="2" {% if rating_2_selected %}selected{% endif %}>2 stars</option>
+                <option value="1" {% if rating_1_selected %}selected{% endif %}>1 star</option>
             </select>
-
         </div>
-
-
-        <button type="submit" class="review-filter-btn">
-            <i class="fas fa-filter"></i>
-            Filter
-        </button>
-
-
+        <button type="submit" class="engagement-secondary-button"><i class="fas fa-filter" aria-hidden="true"></i> Apply filters</button>
         {% if search or rating %}
-
-        <a href="{% url 'dashboard:review_list' %}" class="review-clear-btn">
-            Clear
-        </a>
-
+        <a href="{% url 'dashboard:review_list' %}" class="engagement-clear-link"><i class="fas fa-xmark" aria-hidden="true"></i> Clear filters</a>
         {% endif %}
-
     </form>
 
-</div>
-
-
-<!-- REVIEWS CARD -->
-
-<div class="review-card">
-
-    <div class="review-card-header">
-
-        <div>
-            <h3>
-                <i class="fas fa-star"></i>
-                Customer Reviews
-            </h3>
-
-            <p>
-                View customer feedback and ratings.
-            </p>
+    <section class="engagement-panel">
+        <div class="engagement-panel-heading">
+            <div><h2>Customer reviews</h2><p>Recently submitted ratings and comments.</p></div>
+            <span class="engagement-count">{{ page_obj.paginator.count }} review{{ page_obj.paginator.count|pluralize }}</span>
         </div>
-
-        <span class="review-count">
-            {{ page_obj.paginator.count }} Reviews
-        </span>
-
-    </div>
-
-
-    <div class="review-table-wrapper">
-
         {% if reviews %}
-
-        <table class="review-table">
-
-            <thead>
-
-                <tr>
-                    <th>CUSTOMER</th>
-                    <th>PRODUCT</th>
-                    <th>RATING</th>
-                    <th>REVIEW</th>
-                    <th>DATE</th>
-                    <th>ACTION</th>
-                </tr>
-
-            </thead>
-
-
-            <tbody>
-
-                {% for review in reviews %}
-
-                <tr>
-
-                    <!-- CUSTOMER -->
-
-                    <td>
-
-                        <div class="review-user">
-
-                            <div class="review-avatar">
-                                {{ review.user.username|first|upper }}
+        <div class="engagement-table-scroll">
+            <table class="engagement-table engagement-review-table">
+                <thead>
+                    <tr>
+                        <th scope="col">Customer</th>
+                        <th scope="col">Product</th>
+                        <th scope="col">Rating</th>
+                        <th scope="col">Review</th>
+                        <th scope="col">Date</th>
+                        <th scope="col"><span class="visually-hidden">Action</span></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for review in reviews %}
+                    <tr>
+                        <td>
+                            <div class="engagement-review-user">
+                                <span class="engagement-avatar" aria-hidden="true">{{ review.user.username|first|upper }}</span>
+                                <div>
+                                    <strong>{{ review.user.get_full_name|default:review.user.username }}</strong>
+                                    <span>{{ review.user.email }}</span>
+                                </div>
                             </div>
-
-                            <div>
-
-                                <strong>
-                                    {{ review.user.get_full_name|default:review.user.username }}
-                                </strong>
-
-                                <span>
-                                    {{ review.user.email }}
-                                </span>
-
-                            </div>
-
-                        </div>
-
-                    </td>
-
-
-                    <!-- PRODUCT -->
-
-                    <td>
-
-                        <div class="review-product">
-
-                            <strong>
-                                {{ review.product.name }}
-                            </strong>
-
-                        </div>
-
-                    </td>
-
-
-                    <!-- RATING -->
-
-                    <td>
-
-                        <div class="review-rating">
-
-                            {% for star in "12345" %}
-
-                            {% if forloop.counter <= review.rating %} <i class="fas fa-star"></i>
-
-                                {% else %}
-
-                                <i class="far fa-star"></i>
-
-                                {% endif %}
-
+                        </td>
+                        <td><strong class="engagement-product-name">{{ review.product.name }}</strong></td>
+                        <td>
+                            <div class="engagement-rating" aria-label="{{ review.rating }} out of 5 stars">
+                                <span class="visually-hidden">{{ review.rating }} out of 5 stars</span>
+                                {% for star in "12345" %}
+                                    {% if forloop.counter <= review.rating %}<i class="fas fa-star" aria-hidden="true"></i>{% else %}<i class="far fa-star" aria-hidden="true"></i>{% endif %}
                                 {% endfor %}
-
-                                <span>
-                                    {{ review.rating }}/5
-                                </span>
-
-                        </div>
-
-                    </td>
-
-
-                    <!-- COMMENT -->
-
-                    <td>
-
-                        <div class="review-comment">
-
-                            {{ review.comment|truncatechars:100 }}
-
-                        </div>
-
-                    </td>
-
-
-                    <!-- DATE -->
-
-                    <td>
-
-                        <span class="review-date">
-                            {{ review.created_at|date:"d M Y" }}
-                        </span>
-
-                    </td>
-
-
-                    <!-- ACTION -->
-
-                    <td>
-
-                        <a href="#" class="review-view-btn" title="View Review">
-                            <i class="fas fa-eye"></i>
-                            View
-                        </a>
-
-                    </td>
-
-                </tr>
-
-                {% endfor %}
-
-            </tbody>
-
-        </table>
-
-
-        <!-- PAGINATION -->
+                                <strong>{{ review.rating }}/5</strong>
+                            </div>
+                        </td>
+                        <td><p class="engagement-review-comment" title="{{ review.comment }}">{{ review.comment|truncatechars:150 }}</p></td>
+                        <td><time class="engagement-review-date" datetime="{{ review.created_at|date:'c' }}">{{ review.created_at|date:"d M Y" }}<span>{{ review.created_at|date:"h:i A" }}</span></time></td>
+                        <td>
+                            <a href="#" class="engagement-review-view" title="View review" aria-label="View review by {{ review.user.get_full_name|default:review.user.username }} for {{ review.product.name }}">
+                                <i class="fas fa-eye" aria-hidden="true"></i><span>View</span>
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
 
         {% if page_obj.has_other_pages %}
-
-        <div class="review-pagination">
-
+        <nav class="engagement-pagination" aria-label="Review pages">
             {% if page_obj.has_previous %}
-
-            <a href="?page={{ page_obj.previous_page_number }}{% if search %}&search={{ search|urlencode }}{% endif %}{% if rating %}&rating={{ rating }}{% endif %}"
-                class="pagination-btn">
-                <i class="fas fa-chevron-left"></i>
+            <a class="engagement-page-button" href="?page={{ page_obj.previous_page_number }}{% if search %}&search={{ search|urlencode }}{% endif %}{% if rating %}&rating={{ rating }}{% endif %}" aria-label="Previous page">
+                <i class="fas fa-chevron-left" aria-hidden="true"></i>
             </a>
-
             {% endif %}
-
-
-            <span class="pagination-current">
-                Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
-            </span>
-
-
+            <span class="engagement-page-summary">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
             {% if page_obj.has_next %}
-
-            <a href="?page={{ page_obj.next_page_number }}{% if search %}&search={{ search|urlencode }}{% endif %}{% if rating %}&rating={{ rating }}{% endif %}"
-                class="pagination-btn">
-                <i class="fas fa-chevron-right"></i>
+            <a class="engagement-page-button" href="?page={{ page_obj.next_page_number }}{% if search %}&search={{ search|urlencode }}{% endif %}{% if rating %}&rating={{ rating }}{% endif %}" aria-label="Next page">
+                <i class="fas fa-chevron-right" aria-hidden="true"></i>
             </a>
-
             {% endif %}
-
-        </div>
-
+        </nav>
         {% endif %}
-
-
         {% else %}
-
-        <!-- EMPTY STATE -->
-
-        <div class="empty-reviews">
-
-            <div class="empty-icon">
-                <i class="fas fa-star"></i>
-            </div>
-
-            <h3>No reviews found</h3>
-
-            <p>
-                There are currently no customer reviews matching your search.
-            </p>
-
+        <div class="engagement-empty-state engagement-review-empty">
+            <span class="engagement-empty-icon"><i class="fas fa-star" aria-hidden="true"></i></span>
+            <h3>{% if search or rating %}No matching reviews{% else %}No reviews yet{% endif %}</h3>
+            <p>{% if search or rating %}Try a different search term or rating filter.{% else %}Customer reviews will appear here when they are submitted.{% endif %}</p>
+            {% if search or rating %}<a href="{% url 'dashboard:review_list' %}" class="engagement-secondary-button">Clear filters</a>{% endif %}
         </div>
-
         {% endif %}
-
-    </div>
-
+    </section>
 </div>
-
 {% endblock %}

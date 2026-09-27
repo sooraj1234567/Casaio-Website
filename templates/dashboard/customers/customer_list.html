@@ -1,655 +1,247 @@
 {% extends "dashboard/AdBase.html" %}
+{% load static %}
 
-{% block title %}
-Customers
-{% endblock %}
+{% block title %}Customers{% endblock %}
+{% block page_title %}Customers{% endblock %}
 
-{% block page_title %}
-Customers
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/dashboard/admin-people.css' %}">
 {% endblock %}
 
 {% block content %}
+<section class="people-page" aria-labelledby="customer-list-title">
+    <header class="people-heading">
+        <div>
+            <span class="people-eyebrow">People</span>
+            <h1 id="customer-list-title">Customers</h1>
+            <p>Manage customer accounts, review activity and control access.</p>
+        </div>
+        <form method="GET" class="people-search" role="search" aria-label="Search customers">
+            <label class="people-sr-only" for="customer-search">Search customer accounts</label>
+            <i class="fas fa-search" aria-hidden="true"></i>
+            <input id="customer-search" type="search" name="search" placeholder="Search customers" value="{{ search }}">
+            <button type="submit">Search</button>
+        </form>
+    </header>
 
-<div class="page-header">
-
-    <div>
-
-        <h1>Customers</h1>
-
-        <p>Manage all registered customers.</p>
-
+    <div class="people-stats" aria-label="Customer overview">
+        <article class="people-stat">
+            <span class="people-stat-icon" aria-hidden="true"><i class="fas fa-users"></i></span>
+            <div><span class="people-stat-label">Total customers</span><strong>{{ total_customers }}</strong></div>
+        </article>
+        <article class="people-stat">
+            <span class="people-stat-icon people-stat-icon--green" aria-hidden="true"><i class="fas fa-user-check"></i></span>
+            <div><span class="people-stat-label">Active</span><strong>{{ active_customers }}</strong></div>
+        </article>
+        <article class="people-stat">
+            <span class="people-stat-icon people-stat-icon--red" aria-hidden="true"><i class="fas fa-user-slash"></i></span>
+            <div><span class="people-stat-label">Blocked</span><strong>{{ blocked_customers }}</strong></div>
+        </article>
+        <article class="people-stat">
+            <span class="people-stat-icon people-stat-icon--blue" aria-hidden="true"><i class="fas fa-user-plus"></i></span>
+            <div><span class="people-stat-label">New this month</span><strong>{{ new_customers }}</strong></div>
+        </article>
     </div>
 
-    <form method="GET" class="search-form">
-
-        <input
-            type="text"
-            name="search"
-            placeholder="Search customer..."
-            value="{{ search }}"
-        >
-
-        <button type="submit">
-
-            <i class="fas fa-search"></i>
-
-        </button>
-
+    <form method="GET" action="{% url 'dashboard:customer_list' %}" class="people-filters" aria-label="Filter customers">
+        {% if search %}<input type="hidden" name="search" value="{{ search }}">{% endif %}
+        <div class="people-filter-field">
+            <label for="status-filter">Account status</label>
+            <select id="status-filter" name="status" onchange="this.form.submit()">
+                <option value="" {% if not status %}selected{% endif %}>All customers</option>
+                <option value="active" {% if status == "active" %}selected{% endif %}>Active</option>
+                <option value="blocked" {% if status == "blocked" %}selected{% endif %}>Blocked</option>
+            </select>
+        </div>
+        <div class="people-filter-field">
+            <label for="date-filter">Joined</label>
+            <select id="date-filter" name="date" onchange="this.form.submit()">
+                <option value="" {% if not date_filter %}selected{% endif %}>Any time</option>
+                <option value="today" {% if date_filter == "today" %}selected{% endif %}>Today</option>
+                <option value="week" {% if date_filter == "week" %}selected{% endif %}>This week</option>
+                <option value="month" {% if date_filter == "month" %}selected{% endif %}>This month</option>
+                <option value="year" {% if date_filter == "year" %}selected{% endif %}>This year</option>
+            </select>
+        </div>
+        {% if search or status or date_filter %}
+        <a href="{% url 'dashboard:customer_list' %}" class="people-button people-button--quiet">
+            <i class="fas fa-xmark" aria-hidden="true"></i> Clear filters
+        </a>
+        {% endif %}
     </form>
 
-</div>
-
-<div class="stats-grid">
-
-    <div class="stat-card">
-
-        <i class="fas fa-users"></i>
-
-        <h3>{{ total_customers }}</h3>
-
-        <p>Total Customers</p>
-
-    </div>
-
-    <div class="stat-card">
-
-        <i class="fas fa-user-check"></i>
-
-        <h3>{{ active_customers }}</h3>
-
-        <p>Active</p>
-
-    </div>
-
-    <div class="stat-card">
-
-        <i class="fas fa-user-slash"></i>
-
-        <h3>{{ blocked_customers }}</h3>
-
-        <p>Blocked</p>
-
-    </div>
-
-    <div class="stat-card">
-
-        <i class="fas fa-user-plus"></i>
-
-        <h3>{{ new_customers }}</h3>
-
-        <p>New This Month</p>
-
-    </div>
-
-</div>
-
-<!-- Customer Filters -->
-
-<form
-    method="GET"
-    action="{% url 'dashboard:customer_list' %}"
-    class="customer-filter-bar"
->
-
-    <!-- Preserve Search -->
-    {% if search %}
-        <input
-            type="hidden"
-            name="search"
-            value="{{ search }}"
-        >
-    {% endif %}
-
-
-    <div class="filter-group">
-
-        <label for="status-filter">
-            Status
-        </label>
-
-        <select
-            id="status-filter"
-            name="status"
-            onchange="this.form.submit()"
-        >
-
-            <option
-                value=""
-                {% if not status %}selected{% endif %}
-            >
-                All Customers
-            </option>
-
-            <option
-                value="active"
-                {% if status == "active" %}selected{% endif %}
-            >
-                Active
-            </option>
-
-            <option
-                value="blocked"
-                {% if status == "blocked" %}selected{% endif %}
-            >
-                Blocked
-            </option>
-
-        </select>
-
-    </div>
-
-
-    <div class="filter-group">
-
-        <label for="date-filter">
-            Joined
-        </label>
-
-        <select
-            id="date-filter"
-            name="date"
-            onchange="this.form.submit()"
-        >
-
-            <option
-                value=""
-                {% if not date_filter %}selected{% endif %}
-            >
-                All Time
-            </option>
-
-            <option
-                value="today"
-                {% if date_filter == "today" %}selected{% endif %}
-            >
-                Today
-            </option>
-
-            <option
-                value="week"
-                {% if date_filter == "week" %}selected{% endif %}
-            >
-                This Week
-            </option>
-
-            <option
-                value="month"
-                {% if date_filter == "month" %}selected{% endif %}
-            >
-                This Month
-            </option>
-
-            <option
-                value="year"
-                {% if date_filter == "year" %}selected{% endif %}
-            >
-                This Year
-            </option>
-
-        </select>
-
-    </div>
-
-
-    {% if search or status or date_filter %}
-
-        <a
-            href="{% url 'dashboard:customer_list' %}"
-            class="clear-filters-btn"
-        >
-
-            <i class="fas fa-xmark"></i>
-
-            Clear Filters
-
-        </a>
-
-    {% endif %}
-
-</form>
-
-<div class="table-card">
-
-    <table class="customer-table">
-
-        <thead>
-
-            <tr>
-
-                <th>Profile</th>
-                <th>Name</th>
-                <th>Email</th>
-                <th>Phone</th>
-                <th>Orders</th>
-                <th>Total Spent</th>
-                <th>Joined</th>
-                <th>Last Login</th>
-                <th>Status</th>
-                <th>Action</th>
-
-            </tr>
-
-        </thead>
-
-        <tbody>
-
-            {% for customer in customers %}
-
-            <tr>
-
-                <td>
-
-                    {% if customer.profile_image %}
-
-                        <img
-                            src="{{ customer.profile_image.url }}"
-                            class="customer-avatar"
-                            alt="{{ customer.username }}"
-                        >
-
-                    {% else %}
-
-                        <div class="avatar-placeholder">
-
-                            {{ customer.username|first|upper }}
-
+    <section class="people-panel" aria-labelledby="customer-table-title">
+        <div class="people-panel-heading">
+            <div>
+                <h2 id="customer-table-title">Customer directory</h2>
+                <p>Review customer details and account activity.</p>
+            </div>
+            <span class="people-count">{{ customers.paginator.count }} records</span>
+        </div>
+        <div class="people-table-scroll" role="region" aria-label="Customer directory table" tabindex="0">
+            <table class="people-table people-customer-table">
+                <thead>
+                    <tr>
+                        <th scope="col">Customer</th>
+                        <th scope="col">Contact</th>
+                        <th scope="col">Orders</th>
+                        <th scope="col">Total spent</th>
+                        <th scope="col">Joined</th>
+                        <th scope="col">Last login</th>
+                        <th scope="col">Status</th>
+                        <th scope="col"><span class="people-sr-only">Actions</span></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for customer in customers %}
+                    <tr>
+                        <td>
+                            <div class="people-identity">
+                                {% if customer.profile_image %}
+                                <img src="{{ customer.profile_image.url }}" class="people-avatar" alt="{{ customer.username }}">
+                                {% else %}
+                                <span class="people-avatar people-avatar--initial" aria-hidden="true">{{ customer.username|first|upper }}</span>
+                                {% endif %}
+                                <span class="people-identity-copy"><strong>{{ customer.username }}</strong><small>Customer account</small></span>
+                            </div>
+                        </td>
+                        <td class="people-contact">
+                            <span>{{ customer.email|default:"—" }}</span>
+                            <small>{{ customer.phone_number|default:"—" }}</small>
+                        </td>
+                        <td>{{ customer.total_orders }}</td>
+                        <td class="people-nowrap">₹{{ customer.total_spent|default:"0.00" }}</td>
+                        <td class="people-nowrap">{{ customer.date_joined|date:"d M Y" }}</td>
+                        <td class="people-nowrap">{% if customer.last_login %}{{ customer.last_login|date:"d M Y, h:i A" }}{% else %}Never{% endif %}</td>
+                        <td>
+                            {% if customer.is_active %}
+                            <span class="people-badge people-badge--active"><span aria-hidden="true"></span>Active</span>
+                            {% else %}
+                            <span class="people-badge people-badge--blocked"><span aria-hidden="true"></span>Blocked</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <div class="people-actions">
+                                <a href="{% url 'dashboard:customer_detail' customer.id %}" class="people-icon-button" aria-label="View {{ customer.username }}" title="View customer">
+                                    <i class="fas fa-eye" aria-hidden="true"></i>
+                                </a>
+                                {% if customer.is_active %}
+                                <button type="button" class="people-icon-button people-icon-button--danger" aria-label="Block {{ customer.username }}" title="Block customer" onclick="openCustomerStatusModal('{{ customer.id }}', '{{ customer.username|escapejs }}', 'block')">
+                                    <i class="fas fa-user-slash" aria-hidden="true"></i>
+                                </button>
+                                {% else %}
+                                <button type="button" class="people-icon-button people-icon-button--success" aria-label="Unblock {{ customer.username }}" title="Unblock customer" onclick="openCustomerStatusModal('{{ customer.id }}', '{{ customer.username|escapejs }}', 'unblock')">
+                                    <i class="fas fa-user-check" aria-hidden="true"></i>
+                                </button>
+                                {% endif %}
+                            </div>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr><td colspan="8">
+                        <div class="people-empty">
+                            <span class="people-empty-icon" aria-hidden="true"><i class="fas fa-users"></i></span>
+                            <strong>No customers found</strong>
+                            <p>Try adjusting your search or filters.</p>
                         </div>
+                    </td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </section>
 
-                    {% endif %}
-
-                </td>
-
-                <td>{{ customer.username }}</td>
-
-                <td>{{ customer.email }}</td>
-
-                <td>{{ customer.phone_number|default:"-" }}</td>
-
-                <td>{{ customer.total_orders }}</td>
-
-                <td>${{ customer.total_spent|default:"0.00" }}</td>
-
-                <td>{{ customer.date_joined|date:"d M Y" }}</td>
-
-                <td>
-                {% if customer.last_login %}  
-                {{ customer.last_login|date:"d M Y, h:i A" }}
-                {% else %}
-                    Never
-                {% endif %}
-                </td>
-
-                <td>
-
-                    {% if customer.is_active %}
-
-                        <span class="status active">
-
-                            Active
-
-                        </span>
-
-                    {% else %}
-
-                        <span class="status blocked">
-
-                            Blocked
-
-                        </span>
-
-                    {% endif %}
-
-                </td>
-
-                <td>
-
-                    <div class="customer-actions">
-
-                        <!-- View Customer -->
-
-                        <a
-                            href="{% url 'dashboard:customer_detail' customer.id %}"
-                            class="view-btn"
-                            title="View Customer"
-                        >
-
-                            <i class="fas fa-eye"></i>
-
-                        </a>
-
-
-                        <!-- Block / Unblock -->
-
-                        {% if customer.is_active %}
-
-                            <button
-                                type="button"
-                                class="customer-action-btn block"
-                                title="Block Customer"
-                                onclick="openCustomerStatusModal(
-                                    '{{ customer.id }}',
-                                    '{{ customer.username|escapejs }}',
-                                    'block'
-                                )"
-                            >
-
-                                <i class="fas fa-user-slash"></i>
-
-                            </button>
-
-                        {% else %}
-
-                            <button
-                                type="button"
-                                class="customer-action-btn unblock"
-                                title="Unblock Customer"
-                                onclick="openCustomerStatusModal(
-                                    '{{ customer.id }}',
-                                    '{{ customer.username|escapejs }}',
-                                    'unblock'
-                                )"
-                            >
-
-                                <i class="fas fa-user-check"></i>
-
-                            </button>
-
-                        {% endif %}
-
-                    </div>
-
-                </td>
-
-            </tr>
-
-            {% empty %}
-
-            <tr>
-
-                <td colspan="10" class="empty">
-
-                    No customers found.
-
-                </td>
-
-            </tr>
-
-            {% endfor %}
-
-        </tbody>
-
-    </table>
-
-</div>
-
-{% if customers.paginator.num_pages > 1 %}
-
-<div class="pagination">
-
-    {% if customers.has_previous %}
-
-        <a
-            href="?page={{ customers.previous_page_number }}{% if search %}&search={{ search|urlencode }}{% endif %}{% if status %}&status={{ status }}{% endif %}{% if date_filter %}&date={{ date_filter }}{% endif %}"
-            class="page-btn"
-        >
-            <i class="fas fa-chevron-left"></i>
+    {% if customers.paginator.num_pages > 1 %}
+    <nav class="people-pagination" aria-label="Customer pages">
+        {% if customers.has_previous %}
+        <a class="people-page-link" href="?page={{ customers.previous_page_number }}{% if search %}&search={{ search|urlencode }}{% endif %}{% if status %}&status={{ status }}{% endif %}{% if date_filter %}&date={{ date_filter }}{% endif %}" aria-label="Previous page">
+            <i class="fas fa-chevron-left" aria-hidden="true"></i>
         </a>
-
-    {% endif %}
-
-
-    {% for num in customers.paginator.page_range %}
-
-        {% if customers.number == num %}
-
-            <span class="page-btn active">
-                {{ num }}
-            </span>
-
-        {% elif num > customers.number|add:"-2" and num < customers.number|add:"2" %}
-
-            <a
-                href="?page={{ num }}{% if search %}&search={{ search|urlencode }}{% endif %}{% if status %}&status={{ status }}{% endif %}{% if date_filter %}&date={{ date_filter }}{% endif %}"
-                class="page-btn"
-            >
-                {{ num }}
-            </a>
-
         {% endif %}
-
-    {% endfor %}
-
-
-    {% if customers.has_next %}
-
-        <a
-            href="?page={{ customers.next_page_number }}{% if search %}&search={{ search|urlencode }}{% endif %}{% if status %}&status={{ status }}{% endif %}{% if date_filter %}&date={{ date_filter }}{% endif %}"
-            class="page-btn"
-        >
-            <i class="fas fa-chevron-right"></i>
+        {% for num in customers.paginator.page_range %}
+            {% if customers.number == num %}
+            <span class="people-page-link is-current" aria-current="page">{{ num }}</span>
+            {% elif num > customers.number|add:"-2" and num < customers.number|add:"2" %}
+            <a class="people-page-link" href="?page={{ num }}{% if search %}&search={{ search|urlencode }}{% endif %}{% if status %}&status={{ status }}{% endif %}{% if date_filter %}&date={{ date_filter }}{% endif %}" aria-label="Page {{ num }}">{{ num }}</a>
+            {% endif %}
+        {% endfor %}
+        {% if customers.has_next %}
+        <a class="people-page-link" href="?page={{ customers.next_page_number }}{% if search %}&search={{ search|urlencode }}{% endif %}{% if status %}&status={{ status }}{% endif %}{% if date_filter %}&date={{ date_filter }}{% endif %}" aria-label="Next page">
+            <i class="fas fa-chevron-right" aria-hidden="true"></i>
         </a>
-
+        {% endif %}
+    </nav>
     {% endif %}
+</section>
 
-</div>
-
-{% endif %}
-
-<!-- Customer Status Modal -->
-
-<div
-    id="customer-status-modal"
-    class="customer-status-modal"
->
-
+<div id="customer-status-modal" class="people-customer-status-modal customer-status-modal" role="dialog" aria-modal="true" aria-labelledby="customer-status-title" aria-describedby="customer-status-message">
     <div class="customer-status-modal-content">
-
-        <div
-            id="customer-status-icon"
-            class="customer-status-modal-icon"
-        >
-
-            <i class="fas fa-user-slash"></i>
-
-        </div>
-
-
-        <h3 id="customer-status-title">
-
-            Block Customer?
-
-        </h3>
-
-
-        <p id="customer-status-message">
-
-            Are you sure you want to block this customer?
-
-        </p>
-
-
+        <div id="customer-status-icon" class="customer-status-modal-icon" aria-hidden="true"><i class="fas fa-user-slash"></i></div>
+        <h2 id="customer-status-title">Block Customer?</h2>
+        <p id="customer-status-message">Are you sure you want to block this customer?</p>
         <div class="customer-status-modal-actions">
-
-            <button
-                type="button"
-                class="modal-cancel-btn"
-                onclick="closeCustomerStatusModal()"
-            >
-
-                Cancel
-
-            </button>
-
-
-            <form
-                method="POST"
-                id="customer-status-form"
-            >
-
+            <button type="button" class="modal-cancel-btn" onclick="closeCustomerStatusModal()">Cancel</button>
+            <form method="POST" id="customer-status-form">
                 {% csrf_token %}
-
-                <button
-                    type="submit"
-                    id="customer-status-confirm"
-                    class="modal-block-btn"
-                >
-
-                    Block Customer
-
-                </button>
-
+                <button type="submit" id="customer-status-confirm" class="modal-block-btn">Block Customer</button>
             </form>
-
         </div>
-
     </div>
-
 </div>
 
 <script>
-
 function openCustomerStatusModal(
     customerId,
     customerName,
     action
 ){
+    const modal = document.getElementById("customer-status-modal");
+    const icon = document.getElementById("customer-status-icon");
+    const title = document.getElementById("customer-status-title");
+    const message = document.getElementById("customer-status-message");
+    const confirm = document.getElementById("customer-status-confirm");
+    const form = document.getElementById("customer-status-form");
 
-    const modal =
-        document.getElementById(
-            "customer-status-modal"
-        );
-
-    const icon =
-        document.getElementById(
-            "customer-status-icon"
-        );
-
-    const title =
-        document.getElementById(
-            "customer-status-title"
-        );
-
-    const message =
-        document.getElementById(
-            "customer-status-message"
-        );
-
-    const confirm =
-        document.getElementById(
-            "customer-status-confirm"
-        );
-
-    const form =
-        document.getElementById(
-            "customer-status-form"
-        );
-
-
-    /*
-        Build the Django URL
-    */
-
-    form.action =
-        `/dashboard/customers/${customerId}/toggle-status/`;
-
+    form.action = `/dashboard/customers/${customerId}/toggle-status/`;
 
     if(action === "block"){
-
-        icon.className =
-            "customer-status-modal-icon";
-
-        icon.innerHTML =
-            '<i class="fas fa-user-slash"></i>';
-
-        title.innerText =
-            "Block Customer?";
-
-        message.innerHTML =
-            `Are you sure you want to block
+        icon.className = "customer-status-modal-icon";
+        icon.innerHTML = '<i class="fas fa-user-slash"></i>';
+        title.innerText = "Block Customer?";
+        message.innerHTML = `Are you sure you want to block
             <strong>${customerName}</strong>?
             They will no longer be able to log in.`;
-
-        confirm.innerText =
-            "Block Customer";
-
-        confirm.className =
-            "modal-block-btn";
-
+        confirm.innerText = "Block Customer";
+        confirm.className = "modal-block-btn";
     }
-
     else{
-
-        icon.className =
-            "customer-status-modal-icon unblock";
-
-        icon.innerHTML =
-            '<i class="fas fa-user-check"></i>';
-
-        title.innerText =
-            "Unblock Customer?";
-
-        message.innerHTML =
-            `Are you sure you want to unblock
+        icon.className = "customer-status-modal-icon unblock";
+        icon.innerHTML = '<i class="fas fa-user-check"></i>';
+        title.innerText = "Unblock Customer?";
+        message.innerHTML = `Are you sure you want to unblock
             <strong>${customerName}</strong>?
             They will be able to log in again.`;
-
-        confirm.innerText =
-            "Unblock Customer";
-
-        confirm.className =
-            "modal-unblock-btn";
-
+        confirm.innerText = "Unblock Customer";
+        confirm.className = "modal-unblock-btn";
     }
-
-
     modal.classList.add("show");
-
 }
-
 
 function closeCustomerStatusModal(){
-
-    document
-        .getElementById("customer-status-modal")
-        .classList.remove("show");
-
+    document.getElementById("customer-status-modal").classList.remove("show");
 }
 
-
-/*
-    Close when clicking outside
-*/
-
 window.addEventListener("click", function(event){
-
-    const modal =
-        document.getElementById(
-            "customer-status-modal"
-        );
-
+    const modal = document.getElementById("customer-status-modal");
     if(event.target === modal){
-
         closeCustomerStatusModal();
-
     }
-
 });
-
-
-/*
-    Close with Escape
-*/
 
 document.addEventListener("keydown", function(event){
-
     if(event.key === "Escape"){
-
         closeCustomerStatusModal();
-
     }
-
 });
-
 </script>
-
 {% endblock %}

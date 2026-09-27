@@ -1,617 +1,220 @@
 {% extends "dashboard/AdBase.html" %}
+{% load static %}
 
-{% block title %}
-Coupons
-{% endblock %}
-
-{% block page_title %}
-Coupons
+{% block title %}Coupons{% endblock %}
+{% block page_title %}Coupons{% endblock %}
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/dashboard/admin-engagement.css' %}">
 {% endblock %}
 
 {% block content %}
-
-<div class="page-header">
-
-    <div>
-
-        <h1>Coupons</h1>
-
-        <p>
-            Manage discount coupons and promotions.
-        </p>
-
-    </div>
-
-    <a
-        href="{% url 'dashboard:create_coupon' %}"
-        class="create-coupon-btn"
-    >
-
-        <i class="fas fa-plus"></i>
-
-        Create Coupon
-
-    </a>
-
-</div>
-
-
-<!-- ==========================================
-     STATISTICS
-========================================== -->
-
-<div class="stats-grid">
-
-    <div class="stat-card">
-
-        <i class="fas fa-ticket"></i>
-
-        <h3>{{ total_coupons }}</h3>
-
-        <p>Total Coupons</p>
-
-    </div>
-
-
-    <div class="stat-card">
-
-        <i class="fas fa-circle-check"></i>
-
-        <h3>{{ active_coupons }}</h3>
-
-        <p>Active</p>
-
-    </div>
-
-
-    <div class="stat-card">
-
-        <i class="fas fa-clock"></i>
-
-        <h3>{{ expired_coupons }}</h3>
-
-        <p>Expired</p>
-
-    </div>
-
-
-    <div class="stat-card">
-
-        <i class="fas fa-chart-simple"></i>
-
-        <h3>{{ total_uses }}</h3>
-
-        <p>Total Uses</p>
-
-    </div>
-
-</div>
-
-
-<!-- ==========================================
-     FILTERS
-========================================== -->
-
-<form
-    method="GET"
-    action="{% url 'dashboard:coupon_list' %}"
-    class="coupon-filter-bar"
->
-
-    <div class="filter-group">
-
-        <label for="status-filter">
-            Status
-        </label>
-
-        <select
-            id="status-filter"
-            name="status"
-            onchange="this.form.submit()"
-        >
-
-            <option
-                value=""
-                {% if not status %}selected{% endif %}
-            >
-                All Coupons
-            </option>
-
-            <option
-                value="active"
-                {% if status == "active" %}selected{% endif %}
-            >
-                Active
-            </option>
-
-            <option
-                value="expired"
-                {% if status == "expired" %}selected{% endif %}
-            >
-                Expired
-            </option>
-
-            <option
-                value="inactive"
-                {% if status == "inactive" %}selected{% endif %}
-            >
-                Inactive
-            </option>
-
-        </select>
-
-    </div>
-
-
-    {% if search or status %}
-
-        <a
-            href="{% url 'dashboard:coupon_list' %}"
-            class="clear-filters-btn"
-        >
-
-            <i class="fas fa-xmark"></i>
-
-            Clear Filters
-
+<div class="engagement-page engagement-coupons">
+    <header class="page-header engagement-page-header">
+        <div>
+            <span class="engagement-eyebrow">Promotions</span>
+            <h1>Coupons</h1>
+            <p>Manage discount codes, track usage, and keep promotions on schedule.</p>
+        </div>
+        <a href="{% url 'dashboard:create_coupon' %}" class="engagement-primary-button">
+            <i class="fas fa-plus" aria-hidden="true"></i>
+            Create Coupon
         </a>
-
-    {% endif %}
-
-</form>
-
-
-<!-- ==========================================
-     COUPON TABLE
-========================================== -->
-
-<div class="table-card">
-
-    <table class="coupon-table">
-
-        <thead>
-
-            <tr>
-
-                <th>Coupon</th>
-
-                <th>Discount</th>
-
-                <th>Minimum Order</th>
-
-                <th>Usage</th>
-
-                <th>Valid From</th>
-
-                <th>Valid Until</th>
-
-                <th>Status</th>
-
-                <th>Action</th>
-
-            </tr>
-
-        </thead>
-
-
-        <tbody>
-
-            {% for coupon in coupons %}
-
-            <tr>
-
-                <!-- Coupon -->
-
-                <td>
-
-                    <div class="coupon-code">
-
-                        <i class="fas fa-ticket"></i>
-
-                        <strong>
-                            {{ coupon.code }}
-                        </strong>
-
-                    </div>
-
-                </td>
-
-
-                <!-- Discount -->
-
-                <td>
-
-                    {% if coupon.discount_type == "percentage" %}
-
-                        <strong class="discount-value">
-
-                            {{ coupon.discount_value|floatformat:0 }}%
-
-                        </strong>
-
-                    {% else %}
-
-                        <strong class="discount-value">
-
-                            ₹{{ coupon.discount_value }}
-
-                        </strong>
-
-                    {% endif %}
-
-                </td>
-
-
-                <!-- Minimum Order -->
-
-                <td>
-
-                    ₹{{ coupon.minimum_order_amount }}
-
-                </td>
-
-
-                <!-- Usage -->
-
-                <td>
-
-                    <div class="usage-info">
-
-                        <strong>
-                            {{ coupon.used_count }}
-                        </strong>
-
-                        {% if coupon.usage_limit %}
-
-                            <span>
-                                / {{ coupon.usage_limit }}
-                            </span>
-
-                        {% else %}
-
-                            <span>
-                                / Unlimited
-                            </span>
-
-                        {% endif %}
-
-                    </div>
-
-                </td>
-
-
-                <!-- Valid From -->
-
-                <td>
-
-                    {{ coupon.valid_from|date:"d M Y" }}
-
-                </td>
-
-
-                <!-- Valid Until -->
-
-                <td>
-
-                    {{ coupon.valid_until|date:"d M Y" }}
-
-                </td>
-
-
-                <!-- Status -->
-
-                <td>
-
-                    {% now "U" as current_time %}
-
-                    {% if not coupon.is_active %}
-
-                        <span class="coupon-status inactive">
-
-                            Inactive
-
-                        </span>
-
-                    {% elif coupon.valid_until|date:"U" < current_time %}
-
-                        <span class="coupon-status expired">
-
-                            Expired
-
-                        </span>
-
-                    {% elif coupon.valid_from|date:"U" > current_time %}
-
-                        <span class="coupon-status upcoming">
-
-                            Upcoming
-
-                        </span>
-
-                    {% else %}
-
-                        <span class="coupon-status active">
-
-                            Active
-
-                        </span>
-
-                    {% endif %}
-
-                </td>
-
-
-                <!-- Actions -->
-
-                <td>
-
-                    <div class="coupon-actions">
-
-                        <a
-                            href="{% url 'dashboard:coupon_detail' coupon.id %}"
-                            class="coupon-action view"
-                            title="View Coupon"
-                        >
-
-                            <i class="fas fa-eye"></i>
-
-                        </a>
-
-
-                        <a
-                            href="{% url 'dashboard:edit_coupon' coupon.id %}"
-                            class="coupon-action edit"
-                            title="Edit Coupon"
-                        >
-
-                            <i class="fas fa-pen"></i>
-
-                        </a>
-
-
-                        <button
-                            type="button"
-                            class="coupon-action delete"
-                            title="Delete Coupon"
-                            onclick="openDeleteCouponModal(
-                                '{{ coupon.id }}',
-                                '{{ coupon.code|escapejs }}'
-                            )"
-                        >
-                            <i class="fas fa-trash"></i>
-                        </button>
-
-                    </div>
-
-                </td>
-
-            </tr>
-
-
-            {% empty %}
-
-            <tr>
-
-                <td
-                    colspan="8"
-                    class="empty"
-                >
-
-                    <div class="empty-state">
-
-                        <i class="fas fa-ticket"></i>
-
-                        <h3>No coupons found</h3>
-
-                        <p>
-                            Create your first coupon to offer
-                            discounts to customers.
-                        </p>
-
-                    </div>
-
-                </td>
-
-            </tr>
-
-            {% endfor %}
-
-        </tbody>
-
-    </table>
-
-</div>
-
-
-<!-- ==========================================
-     PAGINATION
-========================================== -->
-
-{% if coupons.paginator.num_pages > 1 %}
-
-<div class="pagination">
-
-    {% if coupons.has_previous %}
-
-        <a
-            href="?page={{ coupons.previous_page_number }}{% if search %}&search={{ search|urlencode }}{% endif %}{% if status %}&status={{ status }}{% endif %}"
-            class="page-btn"
-        >
-
-            <i class="fas fa-chevron-left"></i>
-
+    </header>
+
+    <section class="engagement-stat-grid" aria-label="Coupon statistics">
+        <article class="engagement-stat">
+            <span class="engagement-stat-icon"><i class="fas fa-ticket" aria-hidden="true"></i></span>
+            <div><span class="engagement-stat-label">Total coupons</span><strong>{{ total_coupons }}</strong></div>
+        </article>
+        <article class="engagement-stat engagement-stat-success">
+            <span class="engagement-stat-icon"><i class="fas fa-circle-check" aria-hidden="true"></i></span>
+            <div><span class="engagement-stat-label">Active now</span><strong>{{ active_coupons }}</strong></div>
+        </article>
+        <article class="engagement-stat engagement-stat-muted">
+            <span class="engagement-stat-icon"><i class="fas fa-clock" aria-hidden="true"></i></span>
+            <div><span class="engagement-stat-label">Expired</span><strong>{{ expired_coupons }}</strong></div>
+        </article>
+        <article class="engagement-stat engagement-stat-blue">
+            <span class="engagement-stat-icon"><i class="fas fa-chart-simple" aria-hidden="true"></i></span>
+            <div><span class="engagement-stat-label">Total redemptions</span><strong>{{ total_uses }}</strong></div>
+        </article>
+    </section>
+
+    <form method="GET" action="{% url 'dashboard:coupon_list' %}" class="engagement-filter-bar">
+        <div class="engagement-search-field">
+            <label for="coupon-search">Search coupons</label>
+            <div class="engagement-input-wrap">
+                <i class="fas fa-search" aria-hidden="true"></i>
+                <input id="coupon-search" type="search" name="search" value="{{ search }}" placeholder="Search by coupon code">
+            </div>
+        </div>
+        <div class="engagement-filter-field">
+            <label for="status-filter">Status</label>
+            <select id="status-filter" name="status" onchange="this.form.submit()">
+                <option value="" {% if not status %}selected{% endif %}>All coupons</option>
+                <option value="active" {% if status == "active" %}selected{% endif %}>Active</option>
+                <option value="expired" {% if status == "expired" %}selected{% endif %}>Expired</option>
+                <option value="inactive" {% if status == "inactive" %}selected{% endif %}>Inactive</option>
+            </select>
+        </div>
+        <button type="submit" class="engagement-secondary-button">
+            <i class="fas fa-filter" aria-hidden="true"></i> Apply filters
+        </button>
+        {% if search or status %}
+        <a href="{% url 'dashboard:coupon_list' %}" class="engagement-clear-link">
+            <i class="fas fa-xmark" aria-hidden="true"></i> Clear filters
         </a>
-
-    {% endif %}
-
-
-    {% for num in coupons.paginator.page_range %}
-
-        {% if coupons.number == num %}
-
-            <span class="page-btn active">
-                {{ num }}
-            </span>
-
-        {% elif num > coupons.number|add:"-2"
-              and num < coupons.number|add:"2" %}
-
-            <a
-                href="?page={{ num }}{% if search %}&search={{ search|urlencode }}{% endif %}{% if status %}&status={{ status }}{% endif %}"
-                class="page-btn"
-            >
-
-                {{ num }}
-
-            </a>
-
         {% endif %}
+    </form>
 
-    {% endfor %}
+    <section class="engagement-panel">
+        <div class="engagement-panel-heading">
+            <div>
+                <h2>All coupons</h2>
+                <p>Review discount details, availability, and redemptions.</p>
+            </div>
+            <span class="engagement-count">{{ coupons.paginator.count }} coupon{{ coupons.paginator.count|pluralize }}</span>
+        </div>
+        <div class="engagement-table-scroll">
+            <table class="engagement-table coupon-table">
+                <thead>
+                    <tr>
+                        <th scope="col">Coupon</th>
+                        <th scope="col">Discount</th>
+                        <th scope="col">Minimum order</th>
+                        <th scope="col">Usage</th>
+                        <th scope="col">Valid from</th>
+                        <th scope="col">Valid until</th>
+                        <th scope="col">Status</th>
+                        <th scope="col"><span class="visually-hidden">Actions</span></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for coupon in coupons %}
+                    <tr>
+                        <td>
+                            <div class="engagement-coupon-code">
+                                <span class="engagement-code-icon"><i class="fas fa-ticket" aria-hidden="true"></i></span>
+                                <div><strong>{{ coupon.code }}</strong><span>Created {{ coupon.created_at|date:"d M Y" }}</span></div>
+                            </div>
+                        </td>
+                        <td>
+                            <strong class="engagement-discount">
+                                {% if coupon.discount_type == "percentage" %}{{ coupon.discount_value|floatformat:0 }}%{% else %}₹{{ coupon.discount_value }}{% endif %}
+                            </strong>
+                            <span class="engagement-cell-subtext">{{ coupon.get_discount_type_display }}</span>
+                        </td>
+                        <td>₹{{ coupon.minimum_order_amount }}</td>
+                        <td>
+                            <strong>{{ coupon.used_count }}</strong>
+                            <span class="engagement-cell-subtext">{% if coupon.usage_limit %}of {{ coupon.usage_limit }}{% else %}of unlimited{% endif %}</span>
+                        </td>
+                        <td>{{ coupon.valid_from|date:"d M Y" }}</td>
+                        <td>{{ coupon.valid_until|date:"d M Y" }}</td>
+                        <td>
+                            {% now "U" as current_time %}
+                            {% if not coupon.is_active %}
+                            <span class="engagement-status inactive"><span></span>Inactive</span>
+                            {% elif coupon.valid_until|date:"U" < current_time %}
+                            <span class="engagement-status expired"><span></span>Expired</span>
+                            {% elif coupon.valid_from|date:"U" > current_time %}
+                            <span class="engagement-status upcoming"><span></span>Upcoming</span>
+                            {% else %}
+                            <span class="engagement-status active"><span></span>Active</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <div class="engagement-row-actions">
+                                <a href="{% url 'dashboard:coupon_detail' coupon.id %}" class="engagement-icon-button" aria-label="View coupon {{ coupon.code }}" title="View coupon">
+                                    <i class="fas fa-eye" aria-hidden="true"></i>
+                                </a>
+                                <a href="{% url 'dashboard:edit_coupon' coupon.id %}" class="engagement-icon-button" aria-label="Edit coupon {{ coupon.code }}" title="Edit coupon">
+                                    <i class="fas fa-pen" aria-hidden="true"></i>
+                                </a>
+                                <button type="button" class="engagement-icon-button engagement-delete-button" aria-label="Delete coupon {{ coupon.code }}" title="Delete coupon"
+                                    onclick="openDeleteCouponModal('{{ coupon.id }}', '{{ coupon.code|escapejs }}')">
+                                    <i class="fas fa-trash" aria-hidden="true"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="8">
+                            <div class="engagement-empty-state">
+                                <span class="engagement-empty-icon"><i class="fas fa-ticket" aria-hidden="true"></i></span>
+                                <h3>{% if search or status %}No matching coupons{% else %}No coupons yet{% endif %}</h3>
+                                <p>{% if search or status %}Try adjusting your search or status filters.{% else %}Create your first coupon to start offering discounts to customers.{% endif %}</p>
+                                {% if not search and not status %}
+                                <a href="{% url 'dashboard:create_coupon' %}" class="engagement-secondary-button">Create your first coupon</a>
+                                {% endif %}
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </section>
 
-
-    {% if coupons.has_next %}
-
-        <a
-            href="?page={{ coupons.next_page_number }}{% if search %}&search={{ search|urlencode }}{% endif %}{% if status %}&status={{ status }}{% endif %}"
-            class="page-btn"
-        >
-
-            <i class="fas fa-chevron-right"></i>
-
+    {% if coupons.paginator.num_pages > 1 %}
+    <nav class="engagement-pagination" aria-label="Coupon pages">
+        {% if coupons.has_previous %}
+        <a class="engagement-page-button" href="?page={{ coupons.previous_page_number }}{% if search %}&search={{ search|urlencode }}{% endif %}{% if status %}&status={{ status }}{% endif %}" aria-label="Previous page">
+            <i class="fas fa-chevron-left" aria-hidden="true"></i>
         </a>
-
+        {% endif %}
+        {% for num in coupons.paginator.page_range %}
+            {% if coupons.number == num %}
+            <span class="engagement-page-button current" aria-current="page">{{ num }}</span>
+            {% elif num > coupons.number|add:"-2" and num < coupons.number|add:"2" %}
+            <a class="engagement-page-button" href="?page={{ num }}{% if search %}&search={{ search|urlencode }}{% endif %}{% if status %}&status={{ status }}{% endif %}" aria-label="Page {{ num }}">{{ num }}</a>
+            {% endif %}
+        {% endfor %}
+        {% if coupons.has_next %}
+        <a class="engagement-page-button" href="?page={{ coupons.next_page_number }}{% if search %}&search={{ search|urlencode }}{% endif %}{% if status %}&status={{ status }}{% endif %}" aria-label="Next page">
+            <i class="fas fa-chevron-right" aria-hidden="true"></i>
+        </a>
+        {% endif %}
+    </nav>
     {% endif %}
 
-</div>
-
-{% endif %}
-
-<!-- Delete Coupon Modal -->
-
-<div
-    id="delete-coupon-modal"
-    class="coupon-delete-modal"
->
-
-    <div class="coupon-delete-modal-content">
-
-        <div class="coupon-delete-icon">
-
-            <i class="fas fa-trash"></i>
-
+    <div id="delete-coupon-modal" class="coupon-delete-modal" role="dialog" aria-modal="true" aria-labelledby="delete-coupon-title" aria-describedby="delete-coupon-description">
+        <div class="coupon-delete-modal-content">
+            <div class="coupon-delete-icon"><i class="fas fa-trash" aria-hidden="true"></i></div>
+            <h3 id="delete-coupon-title">Delete coupon?</h3>
+            <p id="delete-coupon-description">Are you sure you want to permanently delete <strong id="delete-coupon-code"></strong>? This action cannot be undone.</p>
+            <div class="coupon-delete-actions">
+                <button type="button" class="coupon-modal-cancel" onclick="closeDeleteCouponModal()">Cancel</button>
+                <form method="POST" id="delete-coupon-form">
+                    {% csrf_token %}
+                    <button type="submit" class="coupon-modal-delete"><i class="fas fa-trash" aria-hidden="true"></i> Delete permanently</button>
+                </form>
+            </div>
         </div>
-
-        <h3>
-            Delete Coupon?
-        </h3>
-
-        <p>
-
-            Are you sure you want to permanently delete
-
-            <strong id="delete-coupon-code"></strong>?
-
-            <br>
-
-            This action cannot be undone.
-
-        </p>
-
-
-        <div class="coupon-delete-actions">
-
-            <button
-                type="button"
-                class="coupon-modal-cancel"
-                onclick="closeDeleteCouponModal()"
-            >
-                Cancel
-            </button>
-
-
-            <form
-                method="POST"
-                id="delete-coupon-form"
-            >
-
-                {% csrf_token %}
-
-                <button
-                    type="submit"
-                    class="coupon-modal-delete"
-                >
-                    <i class="fas fa-trash"></i>
-                    Delete Permanently
-                </button>
-
-            </form>
-
-        </div>
-
     </div>
-
 </div>
 
 <script>
-
 function openDeleteCouponModal(couponId, couponCode) {
-
-    const modal =
-        document.getElementById("delete-coupon-modal");
-
-    const code =
-        document.getElementById("delete-coupon-code");
-
-    const form =
-        document.getElementById("delete-coupon-form");
-
-
-    code.textContent = couponCode;
-
-
-    form.action =
-        `/dashboard/coupons/${couponId}/delete/`;
-
-
+    const modal = document.getElementById("delete-coupon-modal");
+    document.getElementById("delete-coupon-code").textContent = couponCode;
+    document.getElementById("delete-coupon-form").action = `/dashboard/coupons/${couponId}/delete/`;
     modal.classList.add("show");
-
+    modal.querySelector(".coupon-modal-cancel").focus();
 }
-
 
 function closeDeleteCouponModal() {
-
-    document
-        .getElementById("delete-coupon-modal")
-        .classList.remove("show");
-
+    document.getElementById("delete-coupon-modal").classList.remove("show");
 }
 
-
 window.addEventListener("click", function(event) {
-
-    const modal =
-        document.getElementById("delete-coupon-modal");
-
-    if (event.target === modal) {
-
-        closeDeleteCouponModal();
-
-    }
-
+    const modal = document.getElementById("delete-coupon-modal");
+    if (event.target === modal) closeDeleteCouponModal();
 });
-
 
 document.addEventListener("keydown", function(event) {
-
-    if (event.key === "Escape") {
-
-        closeDeleteCouponModal();
-
-    }
-
+    if (event.key === "Escape") closeDeleteCouponModal();
 });
-
 </script>
-
 {% endblock %}

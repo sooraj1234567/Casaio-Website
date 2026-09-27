@@ -2,6 +2,7 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.http import JsonResponse
+from django.conf import settings
 from .forms import AddressForm
 from .models import Address
 from django.shortcuts import get_object_or_404
@@ -78,6 +79,7 @@ def checkout_page(request):
         "cart": cart,
         "subtotal": subtotal,
         "total": subtotal,
+        "google_maps_api_key": settings.GOOGLE_MAPS_API_KEY,
     }
 
     return render(

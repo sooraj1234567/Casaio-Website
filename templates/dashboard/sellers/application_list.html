@@ -1,100 +1,63 @@
 {% extends "dashboard/AdBase.html" %}
 {% load static %}
 
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/dashboard/admin-people.css' %}">
+{% endblock %}
+
 {% block content %}
-<div class="page-header">
-    <div>
-        <h1>Seller Applications</h1>
-        <p>Review and manage seller applications.</p>
-    </div>
-</div>
+<section class="people-page" aria-labelledby="application-list-title">
+    <header class="people-heading">
+        <div>
+            <span class="people-eyebrow">Marketplace</span>
+            <h1 id="application-list-title">Seller applications</h1>
+            <p>Review prospective sellers and follow each application through its decision.</p>
+        </div>
+    </header>
 
-<div class="card">
-
-    <div class="table-container">
-
-        <table class="data-table">
-
-            <thead>
-                <tr>
-                    <th>Applicant</th>
-                    <th>Email</th>
-                    <th>Business Name</th>
-                    <th>Category</th>
-                    <th>Status</th>
-                    <th>Applied On</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-
-            <tbody>
-
-                {% for application in applications %}
-
-                <tr>
-
-                    <td>
-                        {{ application.user.get_full_name|default:application.user.username }}
-                    </td>
-
-                    <td>
-                        {{ application.user.email }}
-                    </td>
-
-                    <td>
-                        {{ application.business_name }}
-                    </td>
-
-                    <td>
-                        {% if application.business_category %}
-                        {{ application.business_category.name }}
-                        {% else %}
-                        —
-                        {% endif %}
-                    </td>
-
-                    <td>
-                        <span class="status {{ application.status }}">
-                            {{ application.get_status_display }}
-                        </span>
-                    </td>
-
-                    <td>
-                        {{ application.applied_at|date:"d M Y, h:i A" }}
-                    </td>
-
-                    <td>
-                        {% if application.status == "pending" %}
-                        <a href="{% url 'dashboard:seller_application_detail' application.pk %}"
-                            class="btn btn-primary">
-                            Review
-                        </a>
-                        {% else %}
-                        <a href="{% url 'dashboard:seller_application_detail' application.pk %}"
-                            class="btn btn-secondary">
-                            View
-                        </a>
-                        {% endif %}
-                    </td>
-
-                </tr>
-
-                {% empty %}
-
-                <tr>
-                    <td colspan="7" class="empty-state">
-                        No seller applications found.
-                    </td>
-                </tr>
-
-                {% endfor %}
-
-            </tbody>
-
-        </table>
-
-    </div>
-
-</div>
-
+    <section class="people-panel" aria-labelledby="application-table-title">
+        <div class="people-panel-heading">
+            <div><h2 id="application-table-title">All applications</h2><p>Most recently submitted applications are shown first.</p></div>
+            <span class="people-count">{{ applications|length }} applications</span>
+        </div>
+        <div class="people-table-scroll" role="region" aria-label="Seller applications table" tabindex="0">
+            <table class="people-table people-application-table">
+                <thead>
+                    <tr>
+                        <th scope="col">Applicant</th><th scope="col">Business</th><th scope="col">Category</th>
+                        <th scope="col">Status</th><th scope="col">Applied on</th><th scope="col"><span class="people-sr-only">Actions</span></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for application in applications %}
+                    <tr>
+                        <td>
+                            <span class="people-identity-copy"><strong>{{ application.user.get_full_name|default:application.user.username }}</strong><small>{{ application.user.email|default:"No email provided" }}</small></span>
+                        </td>
+                        <td><strong class="people-business-name">{{ application.business_name }}</strong></td>
+                        <td>{% if application.business_category %}{{ application.business_category.name }}{% else %}—{% endif %}</td>
+                        <td><span class="people-badge people-badge--application people-badge--{{ application.status }}">{{ application.get_status_display }}</span></td>
+                        <td class="people-nowrap">{{ application.applied_at|date:"d M Y, h:i A" }}</td>
+                        <td>
+                            {% if application.status == "pending" %}
+                            <a href="{% url 'dashboard:seller_application_detail' application.pk %}" class="people-button people-button--primary"><i class="fas fa-clipboard-check" aria-hidden="true"></i> Review</a>
+                            {% else %}
+                            <a href="{% url 'dashboard:seller_application_detail' application.pk %}" class="people-button people-button--quiet"><i class="fas fa-eye" aria-hidden="true"></i> View</a>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr><td colspan="6">
+                        <div class="people-empty">
+                            <span class="people-empty-icon" aria-hidden="true"><i class="fas fa-file-circle-check"></i></span>
+                            <strong>No seller applications found</strong>
+                            <p>New seller applications will appear here when submitted.</p>
+                        </div>
+                    </td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </section>
+</section>
 {% endblock %}

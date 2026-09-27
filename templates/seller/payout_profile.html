@@ -1,9 +1,14 @@
 {% extends 'dashboard/AdBase.html' %}
+{% load static %}
 
 {% block title %}Payout Details{% endblock %}
 
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/seller.css' %}">
+{% endblock %}
+
 {% block content %}
-<div class="container-fluid px-4 py-4">
+<div class="container-fluid px-4 py-4 seller-page">
     <div class="row g-4 justify-content-center">
         <div class="col-xl-8">
             <div class="mb-4">

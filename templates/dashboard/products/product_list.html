@@ -1,241 +1,171 @@
 {% extends "dashboard/AdBase.html" %}
 
 {% block title %}Products{% endblock %}
-
 {% block page_title %}Products{% endblock %}
 
 {% block content %}
-
-<div class="page-header">
-
+<div class="page-header product-list-heading">
     <div>
+        <span class="product-page-eyebrow">CATALOG MANAGEMENT</span>
         <h1>Products</h1>
-        <p>Manage your store products.</p>
+        <p>Manage your catalog, pricing, and inventory in one place.</p>
     </div>
-
     <a href="{% url 'dashboard:product_create' %}" class="add-btn">
-        <i class="fas fa-plus"></i>
-        Add Product
+        <i class="fas fa-plus" aria-hidden="true"></i>
+        Add product
     </a>
-
 </div>
 
-
-<div class="filter-bar">
-
-    <form method="GET" class="search-form">
-
-        <input
-            type="text"
-            name="search"
-            placeholder="Search products..."
-            value="{{ search }}"
-        >
-
-        <button type="submit">
-            <i class="fas fa-search"></i>
-        </button>
-
-    </form>
-
-</div>
-
-
-<div class="table-card">
-
-    <table class="dashboard-table">
-
-        <thead>
-
-        <tr>
-
-            <th>Image</th>
-            <th>Name</th>
-            <th>Category</th>
-            <th>Price</th>
-            <th>Stock</th>
-            <th>Status</th>
-            <th>Actions</th>
-
-        </tr>
-
-        </thead>
-
-        <tbody>
-
-        {% for product in products %}
-
-        <tr>
-
-            <td>
-
-                {% if product.image %}
-                    <img
-                        src="{{ product.image.url }}"
-                        class="product-image"
-                        alt="{{ product.name }}"
-                    >
-                {% else %}
-                    No Image
-                {% endif %}
-
-            </td>
-
-            <td>{{ product.name }}</td>
-
-            <td>{{ product.category.name }}</td>
-
-            <td>
-
-                {% if product.offer_price %}
-                    £{{ product.offer_price }}
-                {% else %}
-                    £{{ product.selling_price }}
-                {% endif %}
-
-            </td>
-
-            <td>{{ product.stock }}</td>
-
-            <td>
-
-                {% if product.stock > 10 %}
-                    <span class="badge success">In Stock</span>
-
-                {% elif product.stock > 0 %}
-                    <span class="badge warning">Low Stock</span>
-
-                {% else %}
-                    <span class="badge danger">Out of Stock</span>
-
-                {% endif %}
-
-            </td>
-
-            <td>
-
-                <a href="{% url 'dashboard:product_update' product.id %}" class="action-btn edit">
-                    <i class="fas fa-edit"></i>
-                </a>
-
-                <a class="action-btn delete" data-bs-toggle="modal"
-                    data-bs-target="#deleteProductModal"
-                    data-product-id="{{ product.id }}"
-                    data-product-name="{{ product.name }}">
-                    <i class="fas fa-trash"></i>
-                </a>
-
-            </td>
-
-        </tr>
-
-        {% empty %}
-
-        <tr>
-
-            <td colspan="7">
-
-                No products found.
-
-            </td>
-
-        </tr>
-
-        {% endfor %}
-
-        </tbody>
-
-    </table>
-
-</div>
-
-<div class="modal fade" id="deleteProductModal" tabindex="-1">
-
-    <div class="modal-dialog modal-dialog-centered">
-
-        <div class="modal-content">
-
-            <div class="modal-header">
-
-                <h5 class="modal-title">
-                    Delete Product
-                </h5>
-
-                <button
-                    type="button"
-                    class="btn-close"
-                    data-bs-dismiss="modal">
-                </button>
-
-            </div>
-
-            <form method="post" id="deleteProductForm">
-
-                {% csrf_token %}
-
-                <div class="modal-body">
-
-                    <p>
-                        Are you sure you want to delete
-                        <strong id="productName"></strong>?
-                    </p>
-
-                    <p class="text-danger mb-0">
-                        This action cannot be undone.
-                    </p>
-
-                </div>
-
-                <div class="modal-footer">
-
-                    <button
-                        type="button"
-                        class="btn btn-secondary"
-                        data-bs-dismiss="modal">
-                        Cancel
-                    </button>
-
-                    <button
-                        type="submit"
-                        class="btn btn-danger">
-                        Delete
-                    </button>
-
-                </div>
-
-            </form>
-
-        </div>
-
+<div class="product-list-summary">
+    <div class="product-summary-icon"><i class="fas fa-boxes-stacked" aria-hidden="true"></i></div>
+    <div>
+        <strong>{{ products.paginator.count }}</strong>
+        <span>products in your catalog</span>
     </div>
-
+    {% if search %}
+    <span class="product-search-context">Showing results for <strong>“{{ search }}”</strong></span>
+    {% endif %}
 </div>
 
+<form method="GET" class="product-search-form">
+    <label class="product-search-field">
+        <i class="fas fa-search" aria-hidden="true"></i>
+        <input type="search" name="search" placeholder="Search products by name or category..." value="{{ search }}" aria-label="Search products">
+    </label>
+    <button type="submit" class="search-btn">Search products</button>
+    {% if search %}<a href="{% url 'dashboard:product_list' %}" class="clear-filters-btn">Clear</a>{% endif %}
+</form>
 
-<div class="pagination">
+<section class="product-table-card">
+    <div class="product-table-heading">
+        <div>
+            <h2>All products</h2>
+            <p>Review and update your store inventory.</p>
+        </div>
+        {% if products.paginator.count %}
+        <span class="product-result-count">{{ products.paginator.count }} total</span>
+        {% endif %}
+    </div>
+    <div class="product-table-scroll">
+        <table class="dashboard-table product-management-table">
+            <thead>
+                <tr>
+                    <th scope="col">Product</th>
+                    <th scope="col">Category</th>
+                    <th scope="col">Price</th>
+                    <th scope="col">Stock</th>
+                    <th scope="col">Status</th>
+                    <th scope="col"><span class="visually-hidden">Actions</span></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for product in products %}
+                <tr>
+                    <td>
+                        <div class="product-table-identity">
+                            {% if product.image %}
+                            <img src="{{ product.image.url }}" class="product-image" alt="">
+                            {% else %}
+                            <span class="product-image-placeholder"><i class="fas fa-image" aria-hidden="true"></i></span>
+                            {% endif %}
+                            <div class="product-table-name">
+                                <strong>{{ product.name }}</strong>
+                                <span>SKU #{{ product.id }}</span>
+                            </div>
+                        </div>
+                    </td>
+                    <td>{{ product.category.name|default:"Uncategorized" }}</td>
+                    <td class="product-price">
+                        {% if product.offer_price %}
+                        <strong>£{{ product.offer_price }}</strong>
+                        <span class="previous-price">£{{ product.selling_price }}</span>
+                        {% else %}
+                        <strong>£{{ product.selling_price }}</strong>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <span class="stock-count {% if product.stock == 0 %}stock-empty{% elif product.stock <= 10 %}stock-low{% endif %}">{{ product.stock }}</span>
+                    </td>
+                    <td>
+                        {% if product.stock > 10 %}
+                        <span class="inventory-badge inventory-available"><span></span>In stock</span>
+                        {% elif product.stock > 0 %}
+                        <span class="inventory-badge inventory-low"><span></span>Low stock</span>
+                        {% else %}
+                        <span class="inventory-badge inventory-empty"><span></span>Out of stock</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <div class="product-row-actions">
+                            <a href="{% url 'dashboard:product_update' product.id %}" class="product-row-action" aria-label="Edit {{ product.name }}" title="Edit product">
+                                <i class="fas fa-pen" aria-hidden="true"></i>
+                            </a>
+                            <button type="button" class="product-row-action product-delete-action" data-bs-toggle="modal"
+                                data-bs-target="#deleteProductModal" data-product-id="{{ product.id }}"
+                                data-product-name="{{ product.name }}" aria-label="Delete {{ product.name }}" title="Delete product">
+                                <i class="fas fa-trash" aria-hidden="true"></i>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="6">
+                        <div class="product-empty-state">
+                            <span><i class="fas fa-box-open" aria-hidden="true"></i></span>
+                            <strong>{% if search %}No matching products{% else %}No products yet{% endif %}</strong>
+                            <p>{% if search %}Try a different search, or clear your filter.{% else %}Add your first product to start building your catalog.{% endif %}</p>
+                            {% if search %}
+                            <a href="{% url 'dashboard:product_list' %}" class="clear-filters-btn">Clear search</a>
+                            {% else %}
+                            <a href="{% url 'dashboard:product_create' %}" class="add-btn"><i class="fas fa-plus" aria-hidden="true"></i> Add product</a>
+                            {% endif %}
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>
 
-    {% if products.has_previous %}
+{% if products.paginator.num_pages > 1 %}
+<nav class="product-pagination" aria-label="Product pages">
+    <span>Page {{ products.number }} of {{ products.paginator.num_pages }}</span>
+    <div>
+        {% if products.has_previous %}
+        <a href="?page={{ products.previous_page_number }}&amp;search={{ search|urlencode }}" aria-label="Previous page"><i class="fas fa-arrow-left" aria-hidden="true"></i> Previous</a>
+        {% else %}
+        <span class="pagination-disabled"><i class="fas fa-arrow-left" aria-hidden="true"></i> Previous</span>
+        {% endif %}
+        {% if products.has_next %}
+        <a href="?page={{ products.next_page_number }}&amp;search={{ search|urlencode }}" aria-label="Next page">Next <i class="fas fa-arrow-right" aria-hidden="true"></i></a>
+        {% else %}
+        <span class="pagination-disabled">Next <i class="fas fa-arrow-right" aria-hidden="true"></i></span>
+        {% endif %}
+    </div>
+</nav>
+{% endif %}
 
-        <a href="?page={{ products.previous_page_number }}&search={{ search }}">
-            Previous
-        </a>
-
-    {% endif %}
-
-    <span>
-
-        Page {{ products.number }} of {{ products.paginator.num_pages }}
-
-    </span>
-
-    {% if products.has_next %}
-
-        <a href="?page={{ products.next_page_number }}&search={{ search }}">
-            Next
-        </a>
-
-    {% endif %}
-
+<div class="modal fade" id="deleteProductModal" tabindex="-1" aria-labelledby="deleteProductModalTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteProductModalTitle">Delete product?</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form method="post" id="deleteProductForm">
+                {% csrf_token %}
+                <div class="modal-body">
+                    <p>Are you sure you want to delete <strong id="productName"></strong>?</p>
+                    <p class="text-danger mb-0">This action cannot be undone.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="cancel-btn" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="delete-btn">Delete product</button>
+                </div>
+            </form>
+        </div>
+    </div>
 </div>
-
 {% endblock %}

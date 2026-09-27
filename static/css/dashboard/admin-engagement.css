@@ -1,0 +1,308 @@
+.engagement-page {
+  --engagement-ink: #202733;
+  --engagement-muted: #778292;
+  --engagement-line: #e8edf2;
+  --engagement-orange: #f36b21;
+  --engagement-orange-dark: #d95712;
+  --engagement-green: #218452;
+  --engagement-red: #c3433c;
+  width: 100%;
+  color: var(--engagement-ink);
+}
+
+.engagement-page * { box-sizing: border-box; }
+.engagement-page h1,.engagement-page h2,.engagement-page h3,.engagement-page p { overflow-wrap: anywhere; }
+.engagement-page-header { align-items: flex-end; margin-bottom: 21px; }
+.engagement-page-header h1,.engagement-form-header h1,.engagement-detail-title h1 {
+  margin: 2px 0 0;
+  color: var(--engagement-ink);
+  font-size: clamp(25px, 3vw, 32px);
+  font-weight: 800;
+  letter-spacing: -.05em;
+  line-height: 1.2;
+}
+.engagement-page-header p,.engagement-form-header > p,.engagement-detail-title p {
+  margin: 7px 0 0;
+  color: var(--engagement-muted);
+  font-size: 13px;
+  line-height: 1.6;
+}
+.engagement-eyebrow {
+  display: block;
+  margin-bottom: 5px;
+  color: var(--engagement-orange-dark);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: .13em;
+  text-transform: uppercase;
+}
+.engagement-primary-button,.engagement-secondary-button {
+  display: inline-flex;
+  min-height: 41px;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 0 15px;
+  border: 1px solid transparent;
+  border-radius: 9px;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 750;
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background .15s ease, border-color .15s ease, color .15s ease, box-shadow .15s ease;
+}
+.engagement-primary-button { background: var(--engagement-orange); color: #fff; box-shadow: 0 5px 12px rgba(243,107,33,.15); }
+.engagement-primary-button:hover { background: var(--engagement-orange-dark); color: #fff; }
+.engagement-secondary-button { border-color: #dfe5ec; background: #fff; color: #566171; }
+.engagement-secondary-button:hover { border-color: #f0c4aa; background: #fff8f4; color: var(--engagement-orange-dark); }
+.engagement-page a:focus-visible,.engagement-page button:focus-visible,.engagement-page input:focus-visible,.engagement-page select:focus-visible {
+  outline: 3px solid rgba(243,107,33,.3);
+  outline-offset: 2px;
+}
+
+/* Summary metrics */
+.engagement-stat-grid { display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); gap: 13px; margin-bottom: 19px; }
+.engagement-stat {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: 13px;
+  padding: 17px 16px;
+  border: 1px solid var(--engagement-line);
+  border-radius: 13px;
+  background: #fff;
+  box-shadow: 0 7px 22px rgba(25,39,55,.045);
+}
+.engagement-stat-icon,.engagement-detail-icon,.engagement-form-icon,.engagement-code-icon,.engagement-empty-icon {
+  display: grid;
+  flex: 0 0 42px;
+  width: 42px;
+  height: 42px;
+  place-items: center;
+  border-radius: 12px;
+  background: #fff0e7;
+  color: var(--engagement-orange);
+  font-size: 16px;
+}
+.engagement-stat-success .engagement-stat-icon { background: #eaf8f0; color: #218452; }
+.engagement-stat-muted .engagement-stat-icon { background: #f1f4f7; color: #768292; }
+.engagement-stat-blue .engagement-stat-icon { background: #edf4ff; color: #3973bd; }
+.engagement-stat > div { display: grid; gap: 3px; min-width: 0; }
+.engagement-stat-label { color: var(--engagement-muted); font-size: 11px; font-weight: 650; }
+.engagement-stat strong { color: var(--engagement-ink); font-size: 24px; font-weight: 800; letter-spacing: -.04em; line-height: 1.1; }
+
+/* Search and filters */
+.engagement-filter-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 11px;
+  margin: 0 0 17px;
+  padding: 14px;
+  border: 1px solid var(--engagement-line);
+  border-radius: 12px;
+  background: #fff;
+}
+.engagement-search-field,.engagement-filter-field { display: grid; gap: 6px; }
+.engagement-search-field { flex: 1 1 260px; min-width: min(100%,220px); }
+.engagement-filter-field { flex: 0 1 185px; }
+.engagement-search-field > label,.engagement-filter-field > label,.engagement-form-field > label {
+  color: #596575;
+  font-size: 11px;
+  font-weight: 750;
+}
+.engagement-input-wrap { display: flex; min-height: 40px; align-items: center; gap: 9px; padding: 0 11px; border: 1px solid #dfe5ec; border-radius: 8px; color: #929daa; }
+.engagement-input-wrap:focus-within { border-color: #f49a69; box-shadow: 0 0 0 3px rgba(243,107,33,.09); }
+.engagement-input-wrap input {
+  flex: 1;
+  width: 100%;
+  min-width: 0;
+  min-height: 37px !important;
+  padding: 0 !important;
+  border: 0 !important;
+  outline: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+.engagement-filter-field select { width: 100%; min-height: 40px !important; }
+.engagement-filter-bar .engagement-secondary-button { min-height: 40px; }
+.engagement-clear-link { display: inline-flex; min-height: 38px; align-items: center; gap: 6px; padding: 0 5px; color: #697586; font-size: 11px; font-weight: 700; text-decoration: none; }
+.engagement-clear-link:hover { color: var(--engagement-orange-dark); }
+
+/* Table panels */
+.engagement-panel { min-width: 0; overflow: hidden; border: 1px solid var(--engagement-line); border-radius: 14px; background: #fff; box-shadow: 0 8px 26px rgba(25,39,55,.05); }
+.engagement-panel-heading { display: flex; align-items: center; justify-content: space-between; gap: 14px; padding: 18px 20px; }
+.engagement-panel-heading h2 { display: flex; align-items: center; gap: 8px; margin: 0; color: var(--engagement-ink); font-size: 16px; font-weight: 800; letter-spacing: -.02em; }
+.engagement-panel-heading h2 > i { color: var(--engagement-orange); }
+.engagement-panel-heading p { margin: 5px 0 0; color: var(--engagement-muted); font-size: 11px; line-height: 1.5; }
+.engagement-count { flex: 0 0 auto; padding: 6px 10px; border: 1px solid #e9edf2; border-radius: 999px; background: #f8fafc; color: #596575; font-size: 10px; font-weight: 750; }
+.engagement-table-scroll { width: 100%; overflow-x: auto; }
+.engagement-page .engagement-table { width: 100%; min-width: 860px; border-collapse: collapse; }
+.engagement-page .engagement-table th,.engagement-page .engagement-table td {
+  padding: 13px 14px;
+  border-bottom: 1px solid #edf0f4;
+  text-align: left;
+  vertical-align: middle;
+}
+.engagement-page .engagement-table th { background: #f8fafc; color: #7b8795; font-size: 9px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; white-space: nowrap; }
+.engagement-page .engagement-table td { color: #515d6b; font-size: 11px; }
+.engagement-page .engagement-table tbody tr:last-child td { border-bottom: 0; }
+.engagement-page .engagement-table tbody tr:hover { background: #fcfdff; }
+.engagement-coupon-code,.engagement-review-user { display: flex; min-width: 150px; align-items: center; gap: 10px; }
+.engagement-code-icon { flex-basis: 35px; width: 35px; height: 35px; border-radius: 10px; font-size: 13px; }
+.engagement-coupon-code > div,.engagement-review-user > div { display: grid; min-width: 0; gap: 3px; }
+.engagement-coupon-code strong,.engagement-review-user strong { color: #323c49; font-size: 11px; font-weight: 800; }
+.engagement-coupon-code > div > span,.engagement-cell-subtext,.engagement-review-user > div > span { display: block; margin-top: 3px; color: #8993a0; font-size: 10px; }
+.engagement-discount { color: var(--engagement-orange-dark); font-size: 12px; font-weight: 800; }
+.engagement-status { display: inline-flex; align-items: center; gap: 6px; padding: 5px 9px; border-radius: 999px; background: #f1f5f9; color: #586474; font-size: 9px; font-weight: 800; white-space: nowrap; }
+.engagement-status > span { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+.engagement-status.active { background: #eaf8f0; color: #218452; }
+.engagement-status.expired,.engagement-status.inactive { background: #fff0ef; color: #c3433c; }
+.engagement-status.upcoming { background: #fff6df; color: #a66b00; }
+.engagement-row-actions { display: flex; align-items: center; gap: 5px; }
+.engagement-icon-button { display: inline-grid; width: 31px; height: 31px; place-items: center; padding: 0; border: 1px solid #e8edf2; border-radius: 8px; background: #fff; color: #697586; font-size: 11px; text-decoration: none; cursor: pointer; }
+.engagement-icon-button:hover { border-color: #ffc5a1; background: #fff7f1; color: var(--engagement-orange-dark); }
+.engagement-icon-button.engagement-delete-button:hover { border-color: #f5c7c4; background: #fff3f2; color: var(--engagement-red); }
+.engagement-empty-state { display: grid; justify-items: center; padding: 42px 18px; text-align: center; }
+.engagement-empty-icon { flex-basis: 48px; width: 48px; height: 48px; margin-bottom: 12px; border-radius: 15px; background: #fff5ef; font-size: 19px; }
+.engagement-empty-state h3 { margin: 0; color: #303a47; font-size: 15px; font-weight: 800; }
+.engagement-empty-state p { max-width: 440px; margin: 6px 0 0; color: var(--engagement-muted); font-size: 11px; line-height: 1.6; }
+.engagement-empty-state .engagement-secondary-button { margin-top: 15px; }
+.engagement-pagination { display: flex; align-items: center; justify-content: center; gap: 6px; margin: 16px 0 0; }
+.engagement-page-button { display: inline-grid; min-width: 34px; height: 34px; place-items: center; padding: 0 9px; border: 1px solid var(--engagement-line); border-radius: 8px; background: #fff; color: #586474; font-size: 11px; text-decoration: none; }
+.engagement-page-button:hover { border-color: #ffc5a1; color: var(--engagement-orange-dark); }
+.engagement-page-button.current { border-color: var(--engagement-orange); background: var(--engagement-orange); color: #fff; }
+.engagement-page-summary { margin: 0 8px; color: #697586; font-size: 11px; font-weight: 650; }
+
+/* Coupon detail */
+.engagement-detail-header { display: flex; align-items: flex-end; justify-content: space-between; gap: 18px; margin: 0 0 19px; }
+.engagement-back-link { display: inline-flex; align-items: center; gap: 7px; margin-bottom: 13px; color: #697586; font-size: 11px; font-weight: 700; text-decoration: none; }
+.engagement-back-link:hover { color: var(--engagement-orange-dark); }
+.engagement-detail-title { display: flex; align-items: center; gap: 13px; }
+.engagement-detail-icon { flex-basis: 48px; width: 48px; height: 48px; border-radius: 14px; font-size: 19px; }
+.engagement-detail-title .engagement-eyebrow { margin: 0; }
+.engagement-detail-title h1 { margin-top: 2px; }
+.engagement-detail-title p { margin-top: 3px; font-size: 11px; }
+.engagement-detail-stats { display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); gap: 12px; margin-bottom: 16px; }
+.engagement-detail-stat { display: grid; align-content: start; gap: 6px; min-width: 0; padding: 16px; border: 1px solid var(--engagement-line); border-radius: 13px; background: #fff; box-shadow: 0 7px 22px rgba(25,39,55,.045); }
+.engagement-detail-stat > span:first-child { color: #778292; font-size: 10px; font-weight: 700; }
+.engagement-detail-stat > strong { min-height: 26px; color: var(--engagement-ink); font-size: 21px; font-weight: 800; letter-spacing: -.04em; }
+.engagement-detail-stat > small { color: #8a94a1; font-size: 10px; }
+.engagement-detail-stat .engagement-status { justify-self: start; font-size: 10px; letter-spacing: 0; }
+.engagement-stat-total { color: #8792a0; font-size: 13px; font-weight: 650; letter-spacing: 0; }
+.engagement-detail-grid { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 14px; }
+.engagement-info-panel .engagement-panel-heading { padding-bottom: 11px; }
+.engagement-info-list { margin: 0; padding: 0 20px 14px; }
+.engagement-info-list > div { display: flex; justify-content: space-between; gap: 14px; padding: 11px 0; border-bottom: 1px solid #edf0f4; font-size: 11px; }
+.engagement-info-list > div:last-child { border-bottom: 0; }
+.engagement-info-list dt { color: #778292; }
+.engagement-info-list dd { margin: 0; color: #384352; font-weight: 750; text-align: right; }
+.engagement-usage-progress { padding: 0 20px 18px; }
+.engagement-usage-progress > div:first-child { display: flex; justify-content: space-between; gap: 10px; margin-bottom: 7px; color: #778292; font-size: 10px; }
+.engagement-usage-progress strong { color: #394453; }
+.engagement-progress-track { height: 7px; overflow: hidden; border-radius: 99px; background: #edf0f4; }
+.engagement-progress-track > span { display: block; max-width: 100%; height: 100%; border-radius: inherit; background: linear-gradient(90deg,#f36b21,#ff9a5d); }
+.engagement-status-callout { display: flex; align-items: center; gap: 13px; margin-top: 14px; padding: 16px 18px; border: 1px solid #dcefe4; border-radius: 12px; background: #f3fbf6; }
+.engagement-status-callout.expired,.engagement-status-callout.inactive { border-color: #f1dfdd; background: #fff7f6; }
+.engagement-status-callout.upcoming { border-color: #f3e6c6; background: #fffbf1; }
+.engagement-status-callout-icon { display: grid; flex: 0 0 38px; width: 38px; height: 38px; place-items: center; border-radius: 11px; background: #e4f5eb; color: #218452; font-size: 16px; }
+.engagement-status-callout.expired .engagement-status-callout-icon,.engagement-status-callout.inactive .engagement-status-callout-icon { background: #fbe9e7; color: #c3433c; }
+.engagement-status-callout.upcoming .engagement-status-callout-icon { background: #fff2d4; color: #a66b00; }
+.engagement-status-callout h2 { margin: 0; color: #334052; font-size: 13px; font-weight: 800; }
+.engagement-status-callout p { margin: 4px 0 0; color: #697586; font-size: 11px; line-height: 1.5; }
+
+/* Coupon editor */
+.engagement-form-header { margin: 0 auto 19px; }
+.engagement-form-header .engagement-back-link { display: flex; width: fit-content; margin-bottom: 17px; }
+.engagement-form-header > p { margin-top: 6px; }
+.engagement-coupon-form { display: grid; gap: 14px; max-width: 1000px; margin: 0 auto; }
+.engagement-form-panel .engagement-panel-heading { padding-bottom: 16px; }
+.engagement-form-panel .engagement-panel-heading h2 { gap: 10px; }
+.engagement-form-icon { flex-basis: 35px; width: 35px; height: 35px; border-radius: 10px; font-size: 13px; }
+.engagement-form-icon.blue { background: #edf4ff; color: #3973bd; }
+.engagement-form-icon.green { background: #eaf8f0; color: #218452; }
+.engagement-form-grid { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 16px; padding: 0 20px 20px; }
+.engagement-form-field { display: grid; align-content: start; gap: 6px; min-width: 0; }
+.engagement-form-field > label > span { color: var(--engagement-orange-dark); }
+.engagement-form-field input,.engagement-form-field select { width: 100%; min-height: 41px !important; border-color: #dfe5ec !important; border-radius: 8px !important; font-size: 12px !important; }
+.engagement-form-field small,.engagement-toggle-copy small { color: #8993a0; font-size: 10px; line-height: 1.5; }
+.engagement-validity-grid { grid-template-columns: repeat(2,minmax(0,1fr)); }
+.engagement-toggle { display: flex; align-items: center; gap: 12px; margin: 0 20px 20px; padding: 14px; border: 1px solid #e8edf2; border-radius: 10px; background: #fafbfd; cursor: pointer; }
+.engagement-toggle > input { position: absolute; width: 1px; height: 1px; opacity: 0; }
+.engagement-toggle-track { position: relative; flex: 0 0 39px; width: 39px; height: 23px; border-radius: 99px; background: #cbd3dd; transition: background .16s ease; }
+.engagement-toggle-track::after { position: absolute; top: 3px; left: 3px; width: 17px; height: 17px; border-radius: 50%; background: #fff; box-shadow: 0 1px 3px rgba(0,0,0,.18); content: ''; transition: transform .16s ease; }
+.engagement-toggle > input:checked + .engagement-toggle-track { background: #42a875; }
+.engagement-toggle > input:checked + .engagement-toggle-track::after { transform: translateX(16px); }
+.engagement-toggle > input:focus-visible + .engagement-toggle-track { outline: 3px solid rgba(243,107,33,.3); outline-offset: 2px; }
+.engagement-toggle-copy { display: grid; gap: 3px; }
+.engagement-toggle-copy strong { color: #384352; font-size: 11px; font-weight: 800; }
+.engagement-form-actions { display: flex; justify-content: flex-end; gap: 9px; padding: 2px 0 5px; }
+
+/* Reviews */
+.engagement-reviews .engagement-review-filters { margin-bottom: 17px; }
+.engagement-review-table { min-width: 990px !important; }
+.engagement-review-user { min-width: 180px; }
+.engagement-avatar { display: grid; flex: 0 0 37px; width: 37px; height: 37px; place-items: center; border-radius: 11px; background: #fff0e7; color: var(--engagement-orange-dark); font-size: 13px; font-weight: 800; }
+.engagement-review-user > div > span { overflow-wrap: anywhere; }
+.engagement-product-name { color: #384352; font-size: 11px; }
+.engagement-rating { display: flex; align-items: center; gap: 2px; color: #e6a629; white-space: nowrap; }
+.engagement-rating i { font-size: 10px; }
+.engagement-rating strong { margin-left: 5px; color: #596575; font-size: 10px; }
+.engagement-review-comment { display: -webkit-box; max-width: 320px; margin: 0; overflow: hidden; color: #667181; font-size: 11px; line-height: 1.55; -webkit-box-orient: vertical; -webkit-line-clamp: 3; }
+.engagement-review-date { display: grid; gap: 3px; color: #596575; font-size: 10px; font-style: normal; white-space: nowrap; }
+.engagement-review-date span { color: #929daa; }
+.engagement-review-view { display: inline-flex; min-height: 31px; align-items: center; gap: 6px; padding: 0 9px; border: 1px solid #e8edf2; border-radius: 8px; color: #647183; font-size: 10px; font-weight: 700; text-decoration: none; }
+.engagement-review-view:hover { border-color: #ffc5a1; background: #fff7f1; color: var(--engagement-orange-dark); }
+.engagement-review-empty { padding: 48px 18px; }
+
+/* Delete confirmation */
+.engagement-page .coupon-delete-modal { position: fixed; z-index: 2000; inset: 0; display: none; align-items: center; justify-content: center; padding: 18px; background: rgba(22,32,44,.52); }
+.engagement-page .coupon-delete-modal.show { display: flex; }
+.engagement-page .coupon-delete-modal-content { width: min(100%,430px); padding: 25px; border: 1px solid #e8edf2; border-radius: 16px; background: #fff; box-shadow: 0 22px 70px rgba(16,24,40,.24); text-align: center; }
+.engagement-page .coupon-delete-icon { display: grid; width: 48px; height: 48px; margin: 0 auto 12px; place-items: center; border-radius: 14px; background: #fff0ef; color: #c3433c; font-size: 18px; }
+.engagement-page .coupon-delete-modal-content h3 { margin: 0; color: #303a47; font-size: 18px; font-weight: 800; }
+.engagement-page .coupon-delete-modal-content p { margin: 8px 0 20px; color: #778292; font-size: 12px; line-height: 1.6; }
+.engagement-page .coupon-delete-modal-content p strong { color: #374151; }
+.engagement-page .coupon-delete-actions { display: flex; justify-content: center; gap: 9px; }
+.engagement-page .coupon-delete-actions form { margin: 0; }
+.engagement-page .coupon-modal-cancel,.engagement-page .coupon-modal-delete { min-height: 39px; padding: 0 13px; border: 1px solid #dfe5ec; border-radius: 8px; background: #fff; color: #5e6876; font: inherit; font-size: 11px; font-weight: 750; cursor: pointer; }
+.engagement-page .coupon-modal-delete { border-color: #c3433c; background: #c3433c; color: #fff; }
+.engagement-page .coupon-modal-delete:hover { border-color: #a9322c; background: #a9322c; }
+
+@media (max-width: 1050px) {
+  .engagement-stat-grid,.engagement-detail-stats { grid-template-columns: repeat(2,minmax(0,1fr)); }
+}
+@media (max-width: 760px) {
+  .engagement-page-header,.engagement-detail-header { align-items: flex-start; }
+  .engagement-detail-grid { grid-template-columns: 1fr; }
+  .engagement-form-grid { gap: 13px; }
+  .engagement-panel-heading { padding: 16px; }
+}
+@media (max-width: 540px) {
+  .engagement-page-header { align-items: stretch; flex-direction: column; }
+  .engagement-page-header .engagement-primary-button { align-self: flex-start; }
+  .engagement-detail-header { align-items: stretch; flex-direction: column; }
+  .engagement-detail-header > .engagement-primary-button { align-self: flex-start; }
+  .engagement-stat-grid,.engagement-detail-stats { grid-template-columns: repeat(2,minmax(0,1fr)); gap: 9px; }
+  .engagement-stat,.engagement-detail-stat { padding: 12px; }
+  .engagement-stat { align-items: flex-start; flex-direction: column; gap: 8px; }
+  .engagement-stat-icon { flex-basis: 36px; width: 36px; height: 36px; }
+  .engagement-stat strong { font-size: 21px; }
+  .engagement-detail-stat > strong { font-size: 18px; }
+  .engagement-filter-bar { align-items: stretch; }
+  .engagement-search-field,.engagement-filter-field { flex-basis: 100%; }
+  .engagement-filter-bar .engagement-secondary-button { flex: 1; }
+  .engagement-panel-heading { align-items: flex-start; }
+  .engagement-count { margin-top: 2px; }
+  .engagement-form-grid,.engagement-validity-grid { grid-template-columns: 1fr; padding: 0 16px 17px; }
+  .engagement-form-actions { justify-content: stretch; }
+  .engagement-form-actions > * { flex: 1; }
+  .engagement-info-list { padding-right: 16px; padding-left: 16px; }
+  .engagement-usage-progress { padding-right: 16px; padding-left: 16px; }
+  .engagement-toggle { margin-right: 16px; margin-left: 16px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .engagement-page *, .engagement-page *::before, .engagement-page *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; }
+}
